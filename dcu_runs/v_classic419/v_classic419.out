@@ -1,0 +1,19 @@
+[CFG] v_classic419 ch=4 L=19 gate=classic leaky=True skipgates=True dil_exp=7 head2=0 params=1476 RF=1035(21.6ms) MACs/s=1148 state=8.1KB
+lgw_dcu2.py:161: UserWarning: Using a target size (torch.Size([192000])) that is different to the input size (torch.Size([1, 192000])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  loss = F.mse_loss(pred, dy[s:s + BATCH])
+ep   0 loss 3.062058 val_corr 0.0318 val_NRMS 1.3943 (48s)
+ep  10 loss 0.052988 val_corr 0.5837 val_NRMS 0.8321 (248s)
+ep  20 loss 0.033832 val_corr 0.6989 val_NRMS 0.7159 (449s)
+ep  30 loss 0.020328 val_corr 0.8111 val_NRMS 0.5869 (649s)
+ep  40 loss 0.015658 val_corr 0.8594 val_NRMS 0.5117 (849s)
+ep  50 loss 0.014399 val_corr 0.8765 val_NRMS 0.4828 (1048s)
+ep  60 loss 0.012316 val_corr 0.8906 val_NRMS 0.4551 (1248s)
+ep  70 loss 0.011184 val_corr 0.8998 val_NRMS 0.4363 (1448s)
+ep  80 loss 0.010745 val_corr 0.9061 val_NRMS 0.4232 (1648s)
+ep  90 loss 0.009480 val_corr 0.9111 val_NRMS 0.4124 (1848s)
+ep  99 loss 0.010008 val_corr 0.9146 val_NRMS 0.4167 (2028s)
+=== FINAL [v_classic419] ===
+[train] corr +0.9359 NRMS 0.3646
+[val] corr +0.9146 NRMS 0.4167
+[test] corr +0.9276 NRMS 0.3953
+saved lgw_v_classic419.pt / lgw_v_classic419_test_out.wav

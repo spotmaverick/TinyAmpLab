@@ -1,0 +1,19 @@
+[CFG] v_sgate814 ch=8 L=14 gate=sgate leaky=True skipgates=True dil_exp=7 head2=1 params=3583 RF=637(13.3ms) MACs/s=3168 state=9.9KB
+lgw_dcu2.py:154: UserWarning: Using a target size (torch.Size([192000])) that is different to the input size (torch.Size([1, 192000])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  loss = F.mse_loss(pred, dy[s:s + BATCH])
+ep   0 loss 0.090997 val_corr 0.5451 val_NRMS 0.9698 (40s)
+ep  10 loss 0.012287 val_corr 0.8957 val_NRMS 0.4630 (195s)
+ep  20 loss 0.008394 val_corr 0.9320 val_NRMS 0.3627 (350s)
+ep  30 loss 0.006892 val_corr 0.9423 val_NRMS 0.3350 (505s)
+ep  40 loss 0.006290 val_corr 0.9515 val_NRMS 0.3284 (660s)
+ep  50 loss 0.005880 val_corr 0.9554 val_NRMS 0.2956 (815s)
+ep  60 loss 0.005460 val_corr 0.9589 val_NRMS 0.2847 (970s)
+ep  70 loss 0.004993 val_corr 0.9610 val_NRMS 0.2769 (1125s)
+ep  80 loss 0.004839 val_corr 0.9637 val_NRMS 0.2725 (1280s)
+ep  90 loss 0.004235 val_corr 0.9654 val_NRMS 0.2708 (1435s)
+ep  99 loss 0.004309 val_corr 0.9684 val_NRMS 0.2507 (1574s)
+=== FINAL [v_sgate814] ===
+[train] corr +0.9730 NRMS 0.2308
+[val] corr +0.9684 NRMS 0.2507
+[test] corr +0.9691 NRMS 0.2475
+saved lgw_v_sgate814.pt / lgw_v_sgate814_test_out.wav

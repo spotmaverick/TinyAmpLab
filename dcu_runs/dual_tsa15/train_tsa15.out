@@ -1,0 +1,12 @@
+双组门控架构：40 Block × 4×4 = 640 权重（全部有效）
+数据集 tsa15 | seed 7 | epochs 100
+✅ 训练对 data/tsa15_train_input.wav，7321259 采样（152.5s）
+训练设备：cuda（C878180）
+Epoch    0 | Train T:0.042502 F:0.364966
+Epoch   50 | Train T:0.032885 F:0.266608
+Epoch   99 | Train T:0.026812 F:0.196090
+✅ 权重保存：trained_weights_dual40_tsa15.npy（640 权重）
+✅ 输出预览：student_dual40_tsa15.wav
+   [train] dry corr +0.619 | pred corr +0.808 | NRMS 0.5898
+   [val] dry corr +0.595 | pred corr +0.777 | NRMS 0.6301
+   [test] dry corr +0.568 | pred corr +0.750 | NRMS 0.6630

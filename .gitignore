@@ -1,0 +1,19 @@
+# 数据与权重不入库（体积大）
+sync/data/
+sync/weights/
+sync/results/logs/
+dataset_zenodo/*.zip
+dataset_zenodo/*.z0*
+dataset_zenodo/check_md5.py
+dataset_zenodo/bad_files.json
+github_mirrors/
+*.wav
+*.pt
+*.nam
+*.npy
+__pycache__/
+*.pyc
+*.log
+.DS_Store
+.ipynb_checkpoints/
+dcu_runs/.synced/ .state/

@@ -1,0 +1,19 @@
+[a2lite] ch=7 layers=11 dual=False leaky=False skipgates=False params=2178 ep=100 seed=7
+lgw_dcu.py:142: UserWarning: Using a target size (torch.Size([192000])) that is different to the input size (torch.Size([1, 192000])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  loss = F.mse_loss(pred, dy[s:s + BATCH])
+ep   0 loss 0.074357 val_corr 0.5920 val_NRMS 0.9252 (37s)
+ep  10 loss 0.012697 val_corr 0.8991 val_NRMS 0.4434 (158s)
+ep  20 loss 0.008889 val_corr 0.9272 val_NRMS 0.3764 (278s)
+ep  30 loss 0.007626 val_corr 0.9394 val_NRMS 0.3433 (399s)
+ep  40 loss 0.006833 val_corr 0.9487 val_NRMS 0.3163 (520s)
+ep  50 loss 0.006069 val_corr 0.9496 val_NRMS 0.3193 (640s)
+ep  60 loss 0.006164 val_corr 0.9533 val_NRMS 0.3070 (761s)
+ep  70 loss 0.005092 val_corr 0.9566 val_NRMS 0.2919 (881s)
+ep  80 loss 0.005151 val_corr 0.9591 val_NRMS 0.2833 (1002s)
+ep  90 loss 0.004772 val_corr 0.9615 val_NRMS 0.2763 (1123s)
+ep  99 loss 0.004723 val_corr 0.9638 val_NRMS 0.2704 (1231s)
+=== FINAL [a2lite] ===
+[train] corr +0.9697 NRMS 0.2457
+[val] corr +0.9638 NRMS 0.2704
+[test] corr +0.9668 NRMS 0.2589
+saved lgw_a2lite.pt / lgw_a2lite_test_out.wav

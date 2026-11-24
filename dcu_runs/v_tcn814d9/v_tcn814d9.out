@@ -1,0 +1,19 @@
+[CFG] v_tcn814d9 ch=8 L=14 gate=none leaky=False skipgates=True dil_exp=9 head2=0 params=2503 RF=2077(43.3ms) MACs/s=2144 state=32.4KB
+lgw_dcu2.py:166: UserWarning: Using a target size (torch.Size([192000])) that is different to the input size (torch.Size([1, 192000])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  loss = F.mse_loss(pred, dy[s:s + BATCH])
+ep   0 loss 0.074052 val_corr 0.5848 val_NRMS 0.8728 (41s)
+ep  10 loss 0.010505 val_corr 0.9121 val_NRMS 0.4155 (191s)
+ep  20 loss 0.007111 val_corr 0.9459 val_NRMS 0.3245 (342s)
+ep  30 loss 0.005923 val_corr 0.9514 val_NRMS 0.3092 (493s)
+ep  40 loss 0.005871 val_corr 0.9603 val_NRMS 0.2914 (643s)
+ep  50 loss 0.004939 val_corr 0.9658 val_NRMS 0.2628 (794s)
+ep  60 loss 0.004632 val_corr 0.9684 val_NRMS 0.2510 (944s)
+ep  70 loss 0.003792 val_corr 0.9719 val_NRMS 0.2359 (1095s)
+ep  80 loss 0.003535 val_corr 0.9746 val_NRMS 0.2244 (1245s)
+ep  90 loss 0.003270 val_corr 0.9764 val_NRMS 0.2176 (1396s)
+ep  99 loss 0.003075 val_corr 0.9768 val_NRMS 0.2167 (1531s)
+=== FINAL [v_tcn814d9] ===
+[train] corr +0.9789 NRMS 0.2083
+[val] corr +0.9768 NRMS 0.2167
+[test] corr +0.9777 NRMS 0.2115
+saved lgw_v_tcn814d9.pt / lgw_v_tcn814d9_test_out.wav

@@ -1,0 +1,39 @@
+[CFG] v_tcn812h1_p3 ch=8 L=12 gate=none leaky=False skipgates=True dil_exp=7 head2=0 sched=cosine params=2149 RF=541(11.3ms) MACs/s=1840 state=8.4KB
+lgw_dcu2.py:175: UserWarning: Using a target size (torch.Size([192000])) that is different to the input size (torch.Size([1, 192000])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  loss = F.mse_loss(pred, dy[s:s + BATCH])
+ep   0 loss 0.079683 val_corr 0.5609 val_NRMS 0.9377 (38s)
+ep  10 loss 0.010487 val_corr 0.9141 val_NRMS 0.4120 (169s)
+ep  20 loss 0.006968 val_corr 0.9435 val_NRMS 0.3356 (299s)
+ep  30 loss 0.005929 val_corr 0.9491 val_NRMS 0.3154 (428s)
+ep  40 loss 0.005261 val_corr 0.9584 val_NRMS 0.3001 (558s)
+ep  50 loss 0.004754 val_corr 0.9654 val_NRMS 0.2606 (689s)
+ep  60 loss 0.004298 val_corr 0.9685 val_NRMS 0.2494 (819s)
+ep  70 loss 0.003882 val_corr 0.9701 val_NRMS 0.2433 (948s)
+ep  80 loss 0.003604 val_corr 0.9736 val_NRMS 0.2291 (1078s)
+ep  90 loss 0.003327 val_corr 0.9746 val_NRMS 0.2242 (1208s)
+ep 100 loss 0.003384 val_corr 0.9748 val_NRMS 0.2244 (1338s)
+ep 110 loss 0.003070 val_corr 0.9775 val_NRMS 0.2112 (1469s)
+ep 120 loss 0.003192 val_corr 0.9789 val_NRMS 0.2048 (1598s)
+ep 130 loss 0.002932 val_corr 0.9785 val_NRMS 0.2090 (1728s)
+ep 140 loss 0.002859 val_corr 0.9801 val_NRMS 0.2004 (1858s)
+ep 150 loss 0.002803 val_corr 0.9812 val_NRMS 0.1941 (1988s)
+ep 160 loss 0.002628 val_corr 0.9810 val_NRMS 0.1946 (2118s)
+ep 170 loss 0.002658 val_corr 0.9819 val_NRMS 0.1896 (2248s)
+ep 180 loss 0.002586 val_corr 0.9821 val_NRMS 0.1916 (2378s)
+ep 190 loss 0.002578 val_corr 0.9825 val_NRMS 0.1868 (2508s)
+ep 200 loss 0.002613 val_corr 0.9828 val_NRMS 0.1871 (2638s)
+ep 210 loss 0.002514 val_corr 0.9824 val_NRMS 0.1886 (2767s)
+ep 220 loss 0.002446 val_corr 0.9832 val_NRMS 0.1828 (2897s)
+ep 230 loss 0.002415 val_corr 0.9839 val_NRMS 0.1787 (3027s)
+ep 240 loss 0.002275 val_corr 0.9838 val_NRMS 0.1822 (3157s)
+ep 250 loss 0.002232 val_corr 0.9837 val_NRMS 0.1800 (3287s)
+ep 260 loss 0.002349 val_corr 0.9838 val_NRMS 0.1793 (3416s)
+ep 270 loss 0.002295 val_corr 0.9840 val_NRMS 0.1795 (3546s)
+ep 280 loss 0.002221 val_corr 0.9841 val_NRMS 0.1777 (3676s)
+ep 290 loss 0.002105 val_corr 0.9842 val_NRMS 0.1778 (3806s)
+ep 299 loss 0.002305 val_corr 0.9840 val_NRMS 0.1791 (3923s)
+=== FINAL [v_tcn812h1_p3] ===
+[train] corr +0.9856 NRMS 0.1695
+[val] corr +0.9840 NRMS 0.1791
+[test] corr +0.9850 NRMS 0.1736
+saved lgw_v_tcn812h1_p3.pt / lgw_v_tcn812h1_p3_test_out.wav

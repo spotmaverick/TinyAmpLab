@@ -1,0 +1,19 @@
+v_tcn812|lgw_dcu2.py|v_tcn812 100 7
+v_classic814|lgw_dcu2.py|v_classic814 100 7
+v_sgate814|lgw_dcu2.py|v_sgate814 100 7
+v_rf814d9|lgw_dcu2.py|v_rf814d9 100 7
+v_sgate614|lgw_dcu2.py|v_sgate614 100 7
+v_dual418|lgw_dcu2.py|v_dual418 100 7
+v_dual512|lgw_dcu2.py|v_dual512 100 7
+v_classic419|lgw_dcu2.py|v_classic419 100 7
+v_classic614|lgw_dcu2.py|v_classic614 100 7
+v_sgate419|lgw_dcu2.py|v_sgate419 100 7
+v_tcn814|lgw_dcu2.py|v_tcn814 100 7
+v_tcn814d9|lgw_dcu2.py|v_tcn814d9 100 7
+v_tcn814d9l|lgw_dcu2.py|v_tcn814d9l 100 7
+v_tcn812d9|lgw_dcu2.py|v_tcn812d9 100 7
+v_tcn812h1|lgw_dcu2.py|v_tcn812h1 100 7
+v_tcn713h1|lgw_dcu2.py|v_tcn713h1 100 7
+v_tcn812h1_p3|lgw_dcu2.py|v_tcn812h1_p3 300 7 cosine
+v_tcn713h1_p3|lgw_dcu2.py|v_tcn713h1_p3 300 7 cosine
+v_tcn812h1_p3_s11|lgw_dcu2.py|v_tcn812h1_p3 300 11 cosine

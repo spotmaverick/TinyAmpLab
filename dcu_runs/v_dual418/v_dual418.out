@@ -1,0 +1,19 @@
+[CFG] v_dual418 ch=4 L=18 gate=dual leaky=True skipgates=True dil_exp=7 head2=0 params=2119 RF=1027(21.4ms) MACs/s=1664 state=8.0KB
+lgw_dcu2.py:161: UserWarning: Using a target size (torch.Size([192000])) that is different to the input size (torch.Size([1, 192000])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  loss = F.mse_loss(pred, dy[s:s + BATCH])
+ep   0 loss 0.182972 val_corr 0.5822 val_NRMS 1.0186 (47s)
+ep  10 loss 0.017590 val_corr 0.8632 val_NRMS 0.5049 (238s)
+ep  20 loss 0.011106 val_corr 0.9001 val_NRMS 0.4369 (430s)
+ep  30 loss 0.009938 val_corr 0.9125 val_NRMS 0.4096 (622s)
+ep  40 loss 0.009627 val_corr 0.9199 val_NRMS 0.4027 (814s)
+ep  50 loss 0.008715 val_corr 0.9284 val_NRMS 0.3902 (1005s)
+ep  60 loss 0.008064 val_corr 0.9368 val_NRMS 0.3505 (1197s)
+ep  70 loss 0.006654 val_corr 0.9435 val_NRMS 0.3316 (1389s)
+ep  80 loss 0.006195 val_corr 0.9489 val_NRMS 0.3158 (1580s)
+ep  90 loss 0.005563 val_corr 0.9549 val_NRMS 0.2983 (1772s)
+ep  99 loss 0.005447 val_corr 0.9586 val_NRMS 0.2853 (1945s)
+=== FINAL [v_dual418] ===
+[train] corr +0.9645 NRMS 0.2644
+[val] corr +0.9586 NRMS 0.2853
+[test] corr +0.9621 NRMS 0.2727
+saved lgw_v_dual418.pt / lgw_v_dual418_test_out.wav

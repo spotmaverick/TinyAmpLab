@@ -1,0 +1,19 @@
+[lgw1] ch=8 layers=14 dual=True leaky=True skipgates=True params=5599 ep=100 seed=7
+lgw_dcu.py:142: UserWarning: Using a target size (torch.Size([192000])) that is different to the input size (torch.Size([1, 192000])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  loss = F.mse_loss(pred, dy[s:s + BATCH])
+ep   0 loss 0.074503 val_corr 0.6051 val_NRMS 0.9207 (97s)
+ep  10 loss 0.011958 val_corr 0.9072 val_NRMS 0.4265 (271s)
+ep  20 loss 0.008107 val_corr 0.9328 val_NRMS 0.3741 (448s)
+ep  30 loss 0.006540 val_corr 0.9447 val_NRMS 0.3281 (624s)
+ep  40 loss 0.006217 val_corr 0.9533 val_NRMS 0.3149 (801s)
+ep  50 loss 0.005468 val_corr 0.9587 val_NRMS 0.2846 (978s)
+ep  60 loss 0.005127 val_corr 0.9619 val_NRMS 0.2745 (1157s)
+ep  70 loss 0.004451 val_corr 0.9647 val_NRMS 0.2667 (1334s)
+ep  80 loss 0.004147 val_corr 0.9682 val_NRMS 0.2510 (1512s)
+ep  90 loss 0.003818 val_corr 0.9713 val_NRMS 0.2388 (1691s)
+ep  99 loss 0.003673 val_corr 0.9737 val_NRMS 0.2287 (1849s)
+=== FINAL [lgw1] ===
+[train] corr +0.9771 NRMS 0.2152
+[val] corr +0.9737 NRMS 0.2287
+[test] corr +0.9751 NRMS 0.2231
+saved lgw_lgw1.pt / lgw_lgw1_test_out.wav
