@@ -1,0 +1,18 @@
+{
+  "device": "cuda",
+  "seconds": 5.0,
+  "mc": 3,
+  "nrms_fp32": 0.191,
+  "nrms_quant_only": 0.2059,
+  "nrms_physical_mean": 3.3187,
+  "nrms_physical_std": 0.0154,
+  "nrms_physical_min": 3.304,
+  "nrms_physical_max": 3.34,
+  "devices": {
+    "params": 2149,
+    "floating_gate_cells_2T": 4298,
+    "gm_units": "dw 288 + expand/collapse 1536 \u2248 1824",
+    "macs_per_sample": 1840,
+    "delay_line": "256 tap \u00d7 8ch \u6570\u5b57 SRAM \u2248 2Kb"
+  }
+}
