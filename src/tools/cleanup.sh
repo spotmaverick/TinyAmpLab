@@ -34,7 +34,7 @@ for arg in "$@"; do
     --gc)           DO_GC=1 ;;
     --install-hook) INSTALL_HOOK=1 ;;
     -h|--help)
-      sed -n '3,17p' "${BASH_SOURCE[0]}" | sed 's/^# */# /'
+      sed -n '4,16p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
       exit 0 ;;
     *) echo "未知参数：$arg（用 --help 查看用法）" >&2; exit 2 ;;
   esac
