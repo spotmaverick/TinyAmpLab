@@ -108,6 +108,7 @@
 | `src/tools/convert_ua.py` / `convert_marshall.py` | UA1176 / Marshall 数据转换 |
 | `src/tools/sync_back.sh` | 智算服务器 → 本地结果回传 |
 | `src/tools/poll_dcu.sh` / `poll_arch2.sh` | DCU 作业轮询 |
+| `src/tools/cleanup.sh` | 缓存清理（默认预演；`--apply` 执行；已装 pre-commit 钩子自动跑） |
 
 ---
 
@@ -151,6 +152,11 @@ python src/analog/analog_sim.py
 
 # 6. 检查作业进度
 ./src/tools/poll_dcu.sh 180 20
+
+# 7. 清理缓存（默认只预演，不删）
+./src/tools/cleanup.sh                 # 看将清理什么
+./src/tools/cleanup.sh --apply         # 真删
+./src/tools/cleanup.sh --apply --gc    # 顺带回收 git 对象
 ```
 
 ---
