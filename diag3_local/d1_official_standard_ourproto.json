@@ -1,0 +1,18 @@
+{
+  "exp": "d1_official_standard_ourproto",
+  "desc": "\u5b98\u65b9 standard \u67b6\u6784 @ \u6211\u65b9\u534f\u8bae",
+  "params": 13801,
+  "rf": 4093,
+  "rf_ms": 85.27,
+  "epochs": 300,
+  "protocol": "our: MSE+batch192000+lr3e-3+cosine",
+  "train_seconds": 10054.7,
+  "best_val_NRMS": 0.064694,
+  "train_NRMS": 0.05774,
+  "train_corr": 0.998332,
+  "val_NRMS": 0.064694,
+  "val_corr": 0.997909,
+  "test_NRMS": 0.065296,
+  "test_corr": 0.997879,
+  "test_esr": 0.004264
+}
