@@ -48,7 +48,25 @@ S4「量化鲁棒训练 + 器件误差鲁棒训练」方向正确，且应前置
 | d2 lgw_rf10 | 冠军等参拉长 RF | 2149 | 85.4ms | 差距来自 RF 长度还是结构？（参数完全等参） |
 | d3 dual_p3 | dual 门控 + d10 | 4741 | 85.4ms | 已验证优势项（RF 对 dual 有益）× 已验证协议红利（P3）是否正交叠加？ |
 
-作业：49820221 / 49820222 / 49820223；结果写 `diag3/*.json`；脚本 `diag_three.py`。
+作业：首轮 49820221 / 49820222 / 49820223 因脚本 bug 全部作废（见下方记录）；重跑作业 49821848 / 49821849 / 49821850；结果写 `diag3/*.json`；脚本 `diag_three.py`。
+
+### 首轮作废：诊断脚本广播 bug（2026-11-24 18:20 发现并修复）
+
+首轮三个作业跑了 20+ 分钟，日志显示 loss 从 0.12 降到 0.068，但 `val_NRMS` 恒为 ≈1.0、`corr` 在 0 附近乱跳。根因在 `diag_three.py`：
+
+```python
+pred = model(dx[s:s+BATCH])       # LGNet 返回 (1, 192000)
+L = min(len(pred), len(target))   # len((1,192000)) == 1，不是长度！
+loss = F.mse_loss(pred[:L], target[:L])  # target[:1] 广播成常数
+```
+
+训练实际在拟合 target 的第一个样本，指标全是假象。P3 冠军脚本 `lgw_dcu2.py` 直接 `F.mse_loss(pred, dy[...])` 靠广播侥幸没中招，所以历史结论不受影响；只有三诊断脚本中招。
+
+修复：`metrics()` 与所有预测输出统一 `.reshape(-1)`，对齐长度改用 `pred.numel()`；d1 路径一并加固。修复后 d2 ep0 = `NRMS 0.9334 / corr 0.5752`，与冠军 ep0（`0.9377 / 0.5609`）吻合，确认修复。首轮作业已 `scancel`，重跑三轮在 DCU 上执行。
+
+另注：诊断脚本导入 `lgw_dcu2.py` 时，后者读 `sys.argv[3]` 设 seed，诊断只传 2 个参数 → seed 固定 7，而冠军复核是 seed 11。对比时需注意 seed 差异；必要时补跑 seed 11。
+
+全库同款 bug 排查：扫描全部 `*.py` 的 `min(len(...))` 与 `pred[...]` 切片，其余 5 处（`train_nam.py` / `convert_new_amps.py` / `arch_search.py` / `dcu_infer.py` / `convert_ua.py`）的 `len()` 均作用于 numpy 一维数组；模型输出切片处（`wavenet_official_dcu.py:209` 用 `[:,0]`、`lgw_official_dcu.py:130` 用 `[:,-NY:]`）都已是一维或明确时间维。`lgw_dcu2.py` 的 `metrics(pred, ref)` 虽传入 `(1,T)` 与 `(T,)`，但广播后逐元素对应正确，且 `F.mse_loss(pred, dy)` 同样语义正确——历史 22 组搜索与 P3 冠军结论不受此 bug 影响。诊断脚本是唯一中招者。
 
 ### 判读规则（结果出来后）
 
@@ -76,6 +94,6 @@ S4「量化鲁棒训练 + 器件误差鲁棒训练」方向正确，且应前置
 
 ## 五、待办
 
-- [ ] 三诊断实验完成（后台轮询任务 xBoeUi），按判读规则出结论
+- [ ] 三诊断实验完成（重跑作业 49821848/49/50，约 1 小时），按判读规则出结论；完成后读取 `diag3/*.json` 并回传本地
 - [ ] 结果回传本地并更新 MODEL_SUMMARY.md
 - [ ] 基于裁决确定两条路线的下一轮架构方向

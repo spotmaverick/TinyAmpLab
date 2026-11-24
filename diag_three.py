@@ -18,9 +18,12 @@ def load(p):
     return torch.from_numpy(x.astype(np.float32))
 
 def metrics(pred, ref):
-    p, r = pred.double() - pred.double().mean(), ref.double() - ref.double().mean()
+    # 冻结形状契约: 模型可能返回 (1,T) 或 (T,), 必须展平后再比较, 否则广播出假指标
+    pred = pred.reshape(-1).double()
+    ref = ref.reshape(-1).double()
+    p, r = pred - pred.mean(), ref - ref.mean()
     corr = float((p * r).sum() / (p.norm() * r.norm() + 1e-12))
-    nrms = float((pred.double() - ref.double()).norm() / ref.double().norm())
+    nrms = float((pred - ref).norm() / ref.norm())
     return corr, nrms
 
 # 动态导入两个模型定义
@@ -87,14 +90,14 @@ def main():
             opt.zero_grad()
             if exp == "d1_official_standard_ourproto":
                 # WaveNet 输出 (B,1,L-RF), 取尾 ny 对齐
-                pred = model(dx[s:s + BATCH + rf][None, None])[0, 0]
+                pred = model(dx[s:s + BATCH + rf][None, None])[0, 0].reshape(-1)
                 target = dy[s:s + BATCH]
-                L = min(len(pred), len(target))
+                L = min(pred.numel(), target.numel())
                 loss = F.mse_loss(pred[-L:], target[-L:])
             else:
-                pred = model(dx[s:s + BATCH])
+                pred = model(dx[s:s + BATCH]).reshape(-1)
                 target = dy[s:s + BATCH]
-                L = min(len(pred), len(target))
+                L = min(pred.numel(), target.numel())
                 loss = F.mse_loss(pred[:L], target[:L])
             loss.backward(); opt.step()
             tot += loss.item()
@@ -102,8 +105,8 @@ def main():
         model.eval()
         with torch.no_grad():
             if exp == "d1_official_standard_ourproto":
-                o = model(vx[None, None])[0, 0]
-                L = min(len(o), len(vy))
+                o = model(vx[None, None])[0, 0].reshape(-1)
+                L = min(o.numel(), vy.numel())
                 vc, vn = metrics(o[-L:], vy[-L:])
             else:
                 vc, vn = metrics(model(vx), vy)
@@ -121,8 +124,8 @@ def main():
     with torch.no_grad():
         for tag, x, y in [("train", dx, dy), ("val", vx, vy), ("test", tx, ty)]:
             if exp == "d1_official_standard_ourproto":
-                o = model(x[None, None])[0, 0]
-                L = min(len(o), len(y))
+                o = model(x[None, None])[0, 0].reshape(-1)
+                L = min(o.numel(), y.numel())
                 c, n = metrics(o[-L:], y[-L:])
             else:
                 c, n = metrics(model(x), y)
