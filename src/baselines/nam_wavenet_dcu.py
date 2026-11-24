@@ -1,4 +1,6 @@
 """NAM WaveNet 基线 - DCU 版。数据读取用标准库(struct)，零外部依赖。"""
+from pathlib import Path
+ROOT = Path(__file__).resolve().parents[2]  # 项目根，兼容归档后的相对路径
 import sys, os, wave, struct, time
 import torch
 import torch.nn as nn
@@ -74,12 +76,12 @@ def metrics(pred, ref):
 if __name__ == '__main__':
     dev = 'cuda'
     t0 = time.time()
-    dx = load_wav_float('data/tsa15_train_input.wav').to(dev)
-    dy = load_wav_float('data/tsa15_train_target.wav').to(dev)
-    vx = load_wav_float('data/tsa15_val_input.wav').to(dev)
-    vy = load_wav_float('data/tsa15_val_target.wav').to(dev)
-    tx = load_wav_float('data/tsa15_test_input.wav').to(dev)
-    ty = load_wav_float('data/tsa15_test_target.wav').to(dev)
+    dx = load_wav_float(str(ROOT / "data" / "tsa15_train_input.wav")).to(dev)
+    dy = load_wav_float(str(ROOT / "data" / "tsa15_train_target.wav")).to(dev)
+    vx = load_wav_float(str(ROOT / "data" / "tsa15_val_input.wav")).to(dev)
+    vy = load_wav_float(str(ROOT / "data" / "tsa15_val_target.wav")).to(dev)
+    tx = load_wav_float(str(ROOT / "data" / "tsa15_test_input.wav")).to(dev)
+    ty = load_wav_float(str(ROOT / "data" / "tsa15_test_target.wav")).to(dev)
     print('data loaded to DCU in %.1fs' % (time.time()-t0), flush=True)
 
     model = NamWaveNet(CHANNELS, LAYERS).to(dev)

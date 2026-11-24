@@ -17,10 +17,11 @@ from pathlib import Path
 import numpy as np
 import soundfile as sf
 
-HERE = Path(__file__).resolve().parent
-ZIP = HERE / "Marshall-JVM410H-ChOD1.zip"
-EXTRACT = HERE / "marshall_extract"
-OUT = HERE.parent / "data"
+ROOT = Path(__file__).resolve().parents[2]
+DATASET = ROOT / "dataset_zenodo"
+ZIP = DATASET / "Marshall-JVM410H-ChOD1.zip"
+EXTRACT = DATASET / "marshall_extract"
+OUT = ROOT / "data"
 RECORD_ID = "10892012"
 EXPECT_MD5 = "05ee998404f44c3a449c4ad6a8160cb6"
 EXPECT_SIZE = 2755382616
@@ -94,8 +95,8 @@ def convert(mapping):
         b = conv48(yp, OUT / f"marshall_jvm410h_{split}_target.wav")
         manifest[split] = {"input": str(xi), "target": str(yi), "input_sec": a, "target_sec": b}
         print(f"marshall_jvm410h_{split}: {a}s input / {b}s target")
-    json.dump(manifest, open(HERE / "marshall_manifest.json", "w"), indent=2)
-    print("manifest ->", HERE / "marshall_manifest.json")
+    json.dump(manifest, open(DATASET / "marshall_manifest.json", "w"), indent=2)
+    print("manifest ->", DATASET / "marshall_manifest.json")
 
 
 if __name__ == "__main__":

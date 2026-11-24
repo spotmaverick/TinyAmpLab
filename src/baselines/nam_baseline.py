@@ -9,6 +9,8 @@
 
 用法: python nam_baseline.py [epochs] [seed]
 """
+from pathlib import Path
+ROOT = Path(__file__).resolve().parents[2]  # 项目根，兼容归档后的相对路径
 import sys
 import numpy as np
 import soundfile as sf
@@ -72,10 +74,10 @@ def evaluate(model, x, y):
 
 
 if __name__ == "__main__":
-    dx = load("data/tsa15_train_input.wav").to(DEVICE)
-    dy = load("data/tsa15_train_target.wav").to(DEVICE)
-    vx, vy = load("data/tsa15_val_input.wav").to(DEVICE), load("data/tsa15_val_target.wav").to(DEVICE)
-    tx, ty = load("data/tsa15_test_input.wav").to(DEVICE), load("data/tsa15_test_target.wav").to(DEVICE)
+    dx = load(str(ROOT / "data" / "tsa15_train_input.wav")).to(DEVICE)
+    dy = load(str(ROOT / "data" / "tsa15_train_target.wav")).to(DEVICE)
+    vx, vy = load(str(ROOT / "data" / "tsa15_val_input.wav")).to(DEVICE), load(str(ROOT / "data" / "tsa15_val_target.wav")).to(DEVICE)
+    tx, ty = load(str(ROOT / "data" / "tsa15_test_input.wav")).to(DEVICE), load(str(ROOT / "data" / "tsa15_test_target.wav")).to(DEVICE)
     X, Y = make_windows(dx), dy[RF - 1:]
     n_batches = len(X) // BATCH_SAMPLES
 

@@ -1,9 +1,11 @@
 """量化复检 v2：逐张量 vs 逐通道（按输出滤波器）缩放对比。用法: python quant_check2.py <variant>"""
 import sys, importlib.util
+from pathlib import Path
 import numpy as np, soundfile as sf, torch
 
 VARIANT = sys.argv[1]
-spec = importlib.util.spec_from_file_location("lgw2", "lgw_dcu2.py")
+ROOT = Path(__file__).resolve().parents[2]
+spec = importlib.util.spec_from_file_location("lgw2", ROOT / "lgw_dcu2.py")
 m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
 ch, L, gate, leaky, skg, dexp, head2 = m.CONFIGS[VARIANT]
 model = m.LGNet(ch, L, gate, leaky, skg, dexp, head2)

@@ -4,6 +4,7 @@
 用法: python quant_check.py <variant> [bits...]   例: python quant_check.py v_tcn812 8 6 5 4
 """
 import sys
+from pathlib import Path
 import importlib.util
 import numpy as np
 import soundfile as sf
@@ -12,7 +13,8 @@ import torch
 VARIANT = sys.argv[1]
 BITS = [int(b) for b in sys.argv[2:]] or [8, 6, 5, 4]
 
-spec = importlib.util.spec_from_file_location("lgw2", "lgw_dcu2.py")
+ROOT = Path(__file__).resolve().parents[2]
+spec = importlib.util.spec_from_file_location("lgw2", ROOT / "lgw_dcu2.py")
 m = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(m)
 

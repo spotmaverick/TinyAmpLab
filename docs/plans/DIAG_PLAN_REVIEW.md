@@ -95,5 +95,5 @@ loss = F.mse_loss(pred[:L], target[:L])  # target[:1] 广播成常数
 ## 五、待办
 
 - [ ] 三诊断实验完成（重跑作业 49821848/49/50，约 1 小时），按判读规则出结论；完成后读取 `diag3/*.json` 并回传本地
-- [ ] 结果回传本地并更新 MODEL_SUMMARY.md
+- [ ] 结果回传本地并更新 docs/reports/MODEL_SUMMARY.md
 - [ ] 基于裁决确定两条路线的下一轮架构方向

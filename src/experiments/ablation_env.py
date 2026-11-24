@@ -5,13 +5,16 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import importlib.util
+from pathlib import Path
 
-spec = importlib.util.spec_from_file_location("tr", "train_nam.py")
+# 归档后相对路径变了：从脚本位置回溯到项目根目录
+ROOT = Path(__file__).resolve().parents[2]
+spec = importlib.util.spec_from_file_location("tr", ROOT / "train_nam.py")
 tr = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(tr)
 
-DRY = "data/b1m3_input.wav"
-TARGET = "data/b1m3_target.wav"
+DRY = str(ROOT / "data" / "b1m3_input.wav")
+TARGET = str(ROOT / "data" / "b1m3_target.wav")
 
 
 def run(use_env: bool, epochs: int = 800):

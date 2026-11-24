@@ -1,6 +1,10 @@
 """纯 NumPy 推理：双组门控 Gated-Block，与 train_nam.py 同一前向。"""
 import numpy as np
 import soundfile as sf
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+EARLY = ROOT / "experiments" / "early_block"
 
 NUM_BLOCKS = 40
 MAT_DIM = 4
@@ -10,9 +14,9 @@ BLOCK_CLAMP = 4.0
 OUTPUT_SAT = 1.0
 SAMPLE_RATE = 48000
 
-weight_file = "trained_weights_dual40.npy"
-input_wav = "test_dry.wav"
-output_wav = "nam_infer_out.wav"
+weight_file = str(EARLY / "trained_weights_dual40.npy")
+input_wav = str(EARLY / "test_dry.wav")
+output_wav = str(EARLY / "nam_infer_out.wav")
 
 W_flat = None
 

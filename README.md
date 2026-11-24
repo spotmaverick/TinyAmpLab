@@ -1,94 +1,159 @@
 # TinyAmpLab — 微型吉他管箱神经建模实验室
 
-轻量级吉他管箱（guitar amp）神经建模的**架构搜索 × 官方基准 × DCU 训练管线**研究项目。
+轻量级吉他管箱（guitar amp）神经建模研究项目：**架构搜索 × 官方 NAM 基准 × DCU 训练 × 物理器件级仿真**。
 
-在真实电子管箱录音数据上，系统对比官方 Neural Amp Modeler (NAM) 全部模型等级与自研轻量架构（LGW-TCN），全部训练/推理迁移至海光 DCU（曙光智算，DTK 22.04）。
+---
 
-## 核心成果
+## 从哪里开始看
 
-### 官方包基准（neural-amp-modeler 0.13.0，TSA15 数据，官方协议 100 epochs）
+| 你想知道 | 看这里 |
+|---|---|
+| 项目当前在做什么、下一步 | [`overview.md`](overview.md) |
+| 全部模型架构与参数实验结果（**主账本**） | [`docs/reports/MODEL_SUMMARY.md`](docs/reports/MODEL_SUMMARY.md) |
+| 与官方 NAM 的口径与对比 | [`docs/reports/NAM_COMPARISON.md`](docs/reports/NAM_COMPARISON.md) |
+| 当前 WaveNet 架构族并行搜索计划 | [`docs/plans/ARCH_V2_PLAN.md`](docs/plans/ARCH_V2_PLAN.md) |
+| 三诊断实验裁决与 bug 记录 | [`docs/plans/DIAG_PLAN_REVIEW.md`](docs/plans/DIAG_PLAN_REVIEW.md) |
+| 如何跑起来 | 本文件下方「复现」章节 |
 
-| 模型 | 参数 | 官方 esr (test) | NRMS (test) |
-|---|---|---|---|
-| 官方 nano | 841 | 0.0314 | 0.1771 |
-| 官方 feather | 3025 | 0.0103 | 0.1015 |
-| 官方 lite | 6553 | 0.0073 | 0.0852 |
-| 官方 standard | 13801 | 见 results | 见 results |
-| **LGW-TCN（官方协议）** | 2149 | 0.0558 | 0.2361 |
-| **LGW-TCN（300ep 余弦协议）** | 2149 | — | **0.1736** |
+> **注意**：`docs/reports/FINAL_REPORT.md` 是早期阶段报告，标题里的「超越 A2 Lite」结论已被官方包对比推翻，仅作历史记录。以 `MODEL_SUMMARY.md` 为准。
 
-**口径说明**：`NRMS = ‖pred−target‖ / ‖target‖ = sqrt(官方 esr)`。两种口径必须换算后才能横比。
+---
 
-**关键发现**：
-1. 官方 WaveNet 架构（nano/feather/lite）在同协议下参数效率显著高于 LGW-TCN——841 参数的 nano 在官方协议下优于 2149 参数的 LGW-TCN
-2. 训练协议贡献巨大：LGW-TCN 从官方协议换到 300ep 余弦协议后 NRMS 0.2361 → 0.1736（−26%）
-3. 架构搜索必须先统一协议口径，否则结论虚高——本项目此前的复现基线（NRMS 0.2589）严重低估了官方真实水平
+## 当前结论（截至 2026-11-24）
 
-### 架构还原与 DCU 移植
+统一口径：`NRMS = ‖pred−target‖ / ‖target‖ = sqrt(官方 esr)`。数据集 TSA15，test 段 38.1s。
 
-官方 WaveNet 四级架构（nano/feather/lite/standard）已 100% 还原至 torch 1.10/DCU：
+| 模型 | 参数 | RF | 协议 | test NRMS |
+|---|---:|---:|---|---:|
+| 官方 standard | 13801 | 85.3ms | 官方 100ep | 0.0723 |
+| **官方 standard** | 13801 | 85.3ms | **我方 300ep** | **0.0653** |
+| 官方 lite | 6553 | 85.3ms | 官方 100ep | 0.0852 |
+| 官方 feather | 3025 | 85.3ms | 官方 100ep | 0.1015 |
+| 官方 nano | 841 | 85.3ms | 官方 100ep | 0.1771 |
+| LGW-TCN 冠军 | 2149 | 11.3ms | 我方 300ep | 0.1736 |
 
-- 层结构：dilated conv → 条件混入（input_mixer）→ tanh → 残差（layer1x1）+ skip 激活累加 → 组间 rechannel
-- 参数量逐级验算一致（841/3025/6553/13801），RF = 4093
-- **对拍验证**：同一 model.nam 权重下，官方实现与移植实现的 ESR 差 < 5e-5（float32 精度）
+**三条已验证的结论**：
 
-## 代码结构
+1. **协议红利**：我方协议（300ep 余弦 + batch192000 + lr3e-3）对官方架构（−9.7%）和 LGW（−26%）都有效。
+2. **架构效率是主瓶颈**：同协议下官方 standard 比 LGW 冠军好 2.7 倍。继续在 LGW 族调参是低回报路径。
+3. **RF 与门控扩张均为负收益**（等参单变量验证）：LGW 拉长 RF 11.3→85.3ms，0.1736→0.1893；dual 门控 4741 参数仅 0.2259。
+
+**物理器件级仿真**（全器件非理想，MC×16）：fp32 0.1831 → 6-bit 0.1976 → 全器件 0.3273 ± 0.0198。
+
+---
+
+## 目录结构
 
 ```
-├── wavenet_official_dcu.py   # 官方 WaveNet 架构 DCU 移植（训练 + 官方权重对拍）
-├── lgw_official_dcu.py       # LGW-TCN 架构 + 官方训练协议（DCU）
-├── lgw_dcu2.py               # LGW-TCN 架构搜索全套（22 run 网格）
-├── train_nam.py              # Gated-Block 行为级仿真训练（早期版本）
-├── nam_baseline.py           # NAM standard MLP 复现基线
-├── nam_wavenet_baseline.py   # NAM WaveNet 复现基线
-├── infer_only.py             # NumPy 纯推理（门控链）
-├── dcu_infer.py              # DCU 权重加载 + 全段推理 + 写 wav
-├── quant_check2.py           # 逐张量/逐通道 INT 量化对比
-├── convert_new_amps.py       # ToneTwist AFx 数据集统一转换（48k/float32）
-├── sync_back.sh              # 智算服务器 → 本地 数据/权重/结果 回传
-├── dataset_zenodo/dl_list.txt # zenodo record 下载清单
-└── docs
-    ├── NAM_COMPARISON.md     # 官方包对比全记录（含口径修正）
-    ├── EXPANSION_PLAN.md     # E1-E5 拓展实验矩阵
-    ├── ARCH_SEARCH.md        # 架构搜索足迹
-    └── FINAL_REPORT.md       # 阶段交付报告
+.
+├── README.md                    本文件：导航 + 结论摘要
+├── overview.md                  当前状态总览（作业/下载进度）
+│
+├── docs/                        所有文档
+│   ├── reports/                 结论性报告
+│   │   ├── MODEL_SUMMARY.md     ★ 全部实验结果主账本
+│   │   ├── NAM_COMPARISON.md    官方 NAM 对比与口径
+│   │   └── FINAL_REPORT.md      早期报告（已被推翻，历史记录）
+│   └── plans/                   计划与裁决
+│       ├── ARCH_V2_PLAN.md      当前 WaveNet 架构族搜索
+│       ├── DIAG_PLAN_REVIEW.md  三诊断裁决 + bug 记录
+│       ├── ARCH_SEARCH.md       早期架构搜索足迹
+│       └── EXPANSION_PLAN.md    数据扩展与官方基线计划
+│
+├── *.py / *.sh                  活跃入口脚本（详见下方「脚本索引」）
+│
+├── src/                         辅助与历史代码
+│   ├── baselines/               NAM 基线复现（MLP/WaveNet/推理）
+│   ├── experiments/             一次性诊断、消融、早期推理
+│   ├── analog/                  物理器件仿真脚本
+│   └── tools/                   数据转换、同步、轮询工具
+│
+├── experiments/                 实验产物（结果/权重/日志）
+│   ├── lgw_search/runs/         22 组 LGW 搜索账本与权重
+│   ├── diagnostics/diag3/       d1/d2/d3 结果 JSON
+│   ├── architecture_v2/         WaveNet 架构族搜索结果（进行中）
+│   ├── analog_sim/              物理仿真结果 JSON
+│   └── early_block/             早期 Gated-Block 权重与音频
+│
+├── data/                        本地工作数据（48kHz float32 wav）
+├── dataset_zenodo/              原始 zip 与下载/转换工具
+├── sync/                        从智算回传的数据/权重/结果
+├── github_mirrors/              官方 NAM 源码镜像（仅参考）
+└── nam_baseline/                早期基线数据
+
+（大文件 wav/pt/npy 不入库，由 .gitignore 排除）
 ```
+
+---
+
+## 脚本索引
+
+**活跃入口**（项目根目录，直接可跑）：
+
+| 脚本 | 用途 |
+|---|---|
+| `arch_search_v2.py` | WaveNet 架构族搜索（当前主线），支持 `<arch>_rf<scale>` |
+| `wavenet_official_dcu.py` | 官方 WaveNet 四档 DCU 训练 + `.nam` 权重对拍 |
+| `diag_three.py` | 三诊断实验（已完成，保留复现能力） |
+| `lgw_dcu2.py` | LGW-TCN 架构搜索（22 run，历史主线） |
+| `lgw_official_dcu.py` | LGW-TCN + 官方协议训练 |
+| `train_nam.py` | 早期 23 级 Gated-Block 行为级仿真 |
+
+**辅助脚本**：
+
+| 脚本 | 用途 |
+|---|---|
+| `src/analog/analog_sim.py` | 物理器件仿真主程序（DCU） |
+| `src/tools/convert_new_amps.py` | ToneTwist AFx 数据统一转换 |
+| `src/tools/convert_ua.py` / `convert_marshall.py` | UA1176 / Marshall 数据转换 |
+| `src/tools/sync_back.sh` | 智算服务器 → 本地结果回传 |
+| `src/tools/poll_dcu.sh` / `poll_arch2.sh` | DCU 作业轮询 |
+
+---
 
 ## 数据集
 
-全部来自 [ToneTwist AFx Dataset](https://github.com/mcomunita/tonetwist-afx-dataset)（zenodo），统一转换 48kHz 单声道 float32，train/val/test 三段：
+全部来自 [ToneTwist AFx Dataset](https://github.com/mcomunita/tonetwist-afx-dataset)（Zenodo），统一转 48kHz 单声道 float32，train/val/test 三段，命名 `<tag>_{train,val,test}_{input,target}.wav`。
 
-| tag | 设备 | 类型 |
-|---|---|---|
-| tsa15 | Ibanez TSA15 Crunch | 管箱 |
-| englrt50 | Engl Retro Tube 50 Drive | 管箱 |
-| markvx | Mesa Mark V Extreme | 管箱 |
-| bsht5m | Blackstar HT5 Metal OD | 管箱 |
-| blackstar_ht1 | Blackstar HT1 OD | 管箱 |
-| mesa550_clean/crunch/burn | Mesa 550 三通道 | 管箱 |
-| markv_clean | Mesa Mark V Clean | 管箱 |
-| ts9_s1/s2 | Ibanez TS9 双 setting | 过载 |
-| bigmuff_diy | DIY Big Muff | 失真 |
+已覆盖 12+ 设备：TSA15、Engl RT50、Mesa MarkV Extreme、Blackstar HT5M/HT1、Mesa 550 三通道、MarkV Clean、TS9、Big Muff、UA1176、Marshall JVM410H（下载中）。
 
-wav 数据不入库（约 1GB），按 `dataset_zenodo/dl_list.txt` 的 record ID 从 zenodo 下载后用 `convert_new_amps.py` 统一转换。
+wav 不入库。按 `dataset_zenodo/dl_list.txt` 的 record ID 下载后，用 `src/tools/convert_*.py` 转换。
+
+---
 
 ## 环境
 
 | 侧 | 配置 |
 |---|---|
-| DCU 训练 | 曙光智算 wuzh02，海光深算一号，DTK 22.04，torch 1.10.0a0+git450cdd1.dtk22.4，Slurm (`-c8 --mem=16G --gres=dcu:1`) |
-| 官方包 | Miniconda py3.10 env + torch 2.6.0+cpu + neural-amp-modeler 0.13.0（`pip install --only-binary=:all:` 绕过编译死结） |
+| DCU 训练 | 曙光智算 wuzh02，海光深算一号，DTK 22.04，torch 1.10，Slurm `-p wzhdtest -c 8 --mem=16G --gres=dcu:1` |
+| 官方包对比 | Miniconda py3.10 + torch 2.6.0+cpu + neural-amp-modeler 0.13.0（`pip install --only-binary=:all:`） |
+| 本地 Mac | Python 3.12 / torch 2.2.2 / soundfile 0.14 |
+
+---
 
 ## 复现
 
 ```bash
-# 官方架构 DCU 训练（官方协议）
+# 1. 官方 WaveNet 架构族搜索（我方协议，300ep）
+python arch_search_v2.py lite 300 7
+
+# 2. 官方协议训练（100ep）
 python wavenet_official_dcu.py standard tsa15 100
-# 官方权重对拍（加载官方 .nam 验证移植等价性）
+
+# 3. 官方权重对拍（验证 DCU 移植等价性）
 python wavenet_official_dcu.py --eval <model.nam> tsa15
-# LGW-TCN 官方协议
+
+# 4. LGW-TCN 官方协议
 python lgw_official_dcu.py v_tcn812h1 tsa15 100
+
+# 5. 物理器件级仿真（DCU）
+python src/analog/analog_sim.py
+
+# 6. 检查作业进度
+./src/tools/poll_dcu.sh 180 20
 ```
+
+---
 
 ## License
 

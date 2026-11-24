@@ -3,6 +3,8 @@
 用法: python dcu_infer.py <dafx|b1m3|tsa15> <weight.npy> <out.wav>
 tsa15 用独立 test 段；dafx/b1m3 用各自完整配对。
 """
+from pathlib import Path
+ROOT = Path(__file__).resolve().parents[2]  # 项目根，兼容归档后的相对路径
 import sys
 import numpy as np
 import soundfile as sf
@@ -12,9 +14,9 @@ NUM_BLOCKS, MAT_DIM = 40, 4
 ALPHA, GAIN_PRE, BLOCK_CLAMP, OUTPUT_SAT = 0.15, 2.2, 4.0, 1.0
 SR = 48000
 DATASETS = {
-    "dafx":  ("data/nam_input.wav",  "data/nam_output.wav"),
-    "b1m3":  ("data/b1m3_input.wav", "data/b1m3_target.wav"),
-    "tsa15": ("data/tsa15_test_input.wav", "data/tsa15_test_target.wav"),
+    "dafx":  (str(ROOT / "data" / "nam_input.wav"),  str(ROOT / "data" / "nam_output.wav")),
+    "b1m3":  (str(ROOT / "data" / "b1m3_input.wav"), str(ROOT / "data" / "b1m3_target.wav")),
+    "tsa15": (str(ROOT / "data" / "tsa15_test_input.wav"), str(ROOT / "data" / "tsa15_test_target.wav")),
 }
 
 

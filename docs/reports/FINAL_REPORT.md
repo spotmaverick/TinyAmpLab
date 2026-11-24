@@ -1,5 +1,8 @@
 # 最终报告：自研架构超越 NAM A2 Lite（同等/更小参数）
 
+> ⚠️ **历史文档，结论已失效**。本文的「超越 A2 Lite」基于早期复现基线（官方 NRMS 0.2589），后来官方包实际安装并复测后，官方 lite 真实水平为 0.0852，远超本文对比值。「超越」结论不成立。
+> 以 [`MODEL_SUMMARY.md`](MODEL_SUMMARY.md) 为准；三诊断实验进一步证明架构效率是主瓶颈。本文仅保留作为研究过程记录。
+
 ## 结论
 
 **目标达成，双交付**。在同一份 TSA15 管箱数据、同一指标口径（独立 test 段 NRMS/corr）下：
@@ -47,9 +50,9 @@ python -u lgw_dcu2.py v_tcn812h1_p3 300 7 cosine   # 效果优先档
 python -u lgw_dcu2.py v_tcn713h1_p3 300 7 cosine   # 预算优先档
 ```
 
-- 训练脚本：`lgw_dcu2.py`（统一变体矩阵）；权重与 test 音频在 `dcu_runs/<variant>/`
+- 训练脚本：`lgw_dcu2.py`（统一变体矩阵）；权重与 test 音频在 `experiments/lgw_search/runs/<variant>/`
 - 量化分析：`quant_check2.py <variant>`（逐张量/逐通道对比）
-- 全部账本：`dcu_runs/runs.csv` / `runs.md`；过程记录 `EXPERIMENT_LOG.md`
+- 全部账本：`experiments/lgw_search/runs/runs.csv` / `runs.md`；过程记录 `EXPERIMENT_LOG.md`
 
 ## 已知边界（诚实声明）
 

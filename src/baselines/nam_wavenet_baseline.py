@@ -10,6 +10,8 @@ NAM 公开定义的 WaveNet 结构：
 数据与指标口径与 dual 完全一致：TSA15 train/val/test 48k float32, NRMS/corr。
 用法: python nam_wavenet_baseline.py [epochs] [seed] [channels] [layers]
 """
+from pathlib import Path
+ROOT = Path(__file__).resolve().parents[2]  # 项目根，兼容归档后的相对路径
 import sys
 import numpy as np
 import soundfile as sf
@@ -91,10 +93,10 @@ def evaluate(model, x, y):
 
 
 if __name__ == "__main__":
-    dx = load("data/tsa15_train_input.wav")
-    dy = load("data/tsa15_train_target.wav")
-    vx, vy = load("data/tsa15_val_input.wav"), load("data/tsa15_val_target.wav")
-    tx, ty = load("data/tsa15_test_input.wav"), load("data/tsa15_test_target.wav")
+    dx = load(str(ROOT / "data" / "tsa15_train_input.wav"))
+    dy = load(str(ROOT / "data" / "tsa15_train_target.wav"))
+    vx, vy = load(str(ROOT / "data" / "tsa15_val_input.wav")), load(str(ROOT / "data" / "tsa15_val_target.wav"))
+    tx, ty = load(str(ROOT / "data" / "tsa15_test_input.wav")), load(str(ROOT / "data" / "tsa15_test_target.wav"))
     n_batches = len(dx) // BATCH_SAMPLES
 
     model = NamWaveNet(CHANNELS, LAYERS)
