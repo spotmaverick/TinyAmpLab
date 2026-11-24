@@ -141,6 +141,43 @@ def convert_set(tag, out_dir, setting, capture):
     return rec
 
 
+def list_settings():
+    """列出全部可用设置, 供批量生成决策."""
+    base = EXTRACT / "Marshall-JVM410H-ChOD1-trimmed"
+    avail = sorted(
+        d.name
+        for d in (base / "PreampOut" / "trainval").iterdir()
+        if d.is_dir() and (d / f"{d.name}.trainval.target.wav").exists()
+    )
+    print(f"可用 trainval 设置 {len(avail)} 个:")
+    for s in avail:
+        spk = (base / "SpeakerOut" / "trainval" / s / f"{s}.trainval.target.wav").exists()
+        print(f"  {s}  SpeakerOut={spk}")
+    return avail
+
+
+def convert_all_settings():
+    """把全部 28 个旋钮组合都转成数据集 (每设置 × 两采集点).
+
+    用途: 多设置联合训练时需要全套数据; 单设置建模只需 convert_all() 的标准中间点.
+    命名 marshall_{setting}_pre_{split}_*.wav / marshall_{setting}_spk_{split}_*.wav
+    注意: 数据集数量 = 28×2×3×2 = 336 个 wav, 占用约 6GB (48kHz float32).
+    """
+    avail = list_settings()
+    manifest = {"record": RECORD_ID, "zip_md5": EXPECT_MD5,
+                "splits": "trainval 300s 时序切 70/10/20",
+                "datasets": {}}
+    for i, setting in enumerate(avail, 1):
+        for cap, suffix in (("PreampOut", "pre"), ("SpeakerOut", "spk")):
+            tag = f"marshall_{setting}_{suffix}"
+            print(f"[{i}/{len(avail)}] {tag}")
+            rec = convert_set(tag, OUT, setting, cap)
+            if rec:
+                manifest["datasets"][tag] = {"capture": cap, "setting": setting, "splits": rec}
+    json.dump(manifest, open(DATASET / "marshall_manifest_all.json", "w"), indent=2)
+    print("manifest ->", DATASET / "marshall_manifest_all.json")
+
+
 def convert_all():
     """生成 Marshall JVM410H OD1 数据集: 前级 + 全链路两个采集点, 各取标准中间设置."""
     base = EXTRACT / "Marshall-JVM410H-ChOD1-trimmed"
@@ -205,11 +242,19 @@ if __name__ == "__main__":
             probe()
         else:
             print("[ABORT] 校验失败, 不要解压/转换")
+    elif mode == "--list":
+        list_settings()
     elif mode == "--convert":
         if not sanity():
             print("[ABORT] md5/size 不符, 拒绝转换")
             sys.exit(1)
         extract()
         convert_all()
+    elif mode == "--convert-all":
+        if not sanity():
+            print("[ABORT] md5/size 不符, 拒绝转换")
+            sys.exit(1)
+        extract()
+        convert_all_settings()
     else:
         print(__doc__)
