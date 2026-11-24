@@ -1,0 +1,18 @@
+{
+  "exp": "d2_lgw_rf10",
+  "desc": "LGW \u7b49\u53c2 RF10 @ \u6211\u65b9\u534f\u8bae",
+  "params": 2149,
+  "rf": 4097,
+  "rf_ms": 85.35,
+  "epochs": 300,
+  "protocol": "our: MSE+batch192000+lr3e-3+cosine",
+  "train_seconds": 3907.3,
+  "best_val_NRMS": 0.196651,
+  "train_NRMS": 0.175327,
+  "train_corr": 0.984519,
+  "val_NRMS": 0.196651,
+  "val_corr": 0.980494,
+  "test_NRMS": 0.189268,
+  "test_corr": 0.98196,
+  "test_esr": 0.035822
+}

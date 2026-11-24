@@ -1,0 +1,18 @@
+{
+  "exp": "d3_dual_p3",
+  "desc": "dual \u95e8\u63a7 + d10 @ P3 \u534f\u8bae",
+  "params": 4741,
+  "rf": 4097,
+  "rf_ms": 85.35,
+  "epochs": 300,
+  "protocol": "our: MSE+batch192000+lr3e-3+cosine",
+  "train_seconds": 4008.2,
+  "best_val_NRMS": 0.234214,
+  "train_NRMS": 0.205961,
+  "train_corr": 0.978566,
+  "val_NRMS": 0.234214,
+  "val_corr": 0.9722,
+  "test_NRMS": 0.22589,
+  "test_corr": 0.974222,
+  "test_esr": 0.051026
+}

@@ -56,6 +56,11 @@ def build(exp):
         return m, "dual 门控 + d10 @ P3 协议"
     raise ValueError(exp)
 
+def d1_align_eval(model, x, y):
+    """官方 GridDataset 对齐: 输出长度 = len(x)-RF+1, out[j] ↔ y[RF-1+j]"""
+    o = model(x[None, None])[0, 0].reshape(-1)
+    return metrics(o, y[y.numel() - o.numel():])
+
 def main():
     exp = sys.argv[1]
     epochs = int(sys.argv[2]) if len(sys.argv) > 2 else 300
@@ -78,22 +83,23 @@ def main():
 
     opt = torch.optim.Adam(model.parameters(), lr=LR)
     sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, T_max=epochs, eta_min=1e-4)
+    is_d1 = exp == "d1_official_standard_ourproto"
+    # d1 用官方 GridDataset 窗口协议: 输入 rf+ny-1, 输出恰好 ny, 与 target 逐样本对齐
+    win = rf + BATCH - 1 if is_d1 else BATCH
     nbatch = len(dx) // BATCH
     best_val, best_state = 1e9, None
 
     for ep in range(epochs):
         model.train()
-        starts = torch.randint(0, len(dx) - BATCH, (nbatch,), device=DEV)
+        starts = torch.randint(0, len(dx) - win, (nbatch,), device=DEV)
         tot = 0.0
         for s in starts:
             s = int(s)
             opt.zero_grad()
-            if exp == "d1_official_standard_ourproto":
-                # WaveNet 输出 (B,1,L-RF), 取尾 ny 对齐
-                pred = model(dx[s:s + BATCH + rf][None, None])[0, 0].reshape(-1)
-                target = dy[s:s + BATCH]
-                L = min(pred.numel(), target.numel())
-                loss = F.mse_loss(pred[-L:], target[-L:])
+            if is_d1:
+                pred = model(dx[s:s + win][None, None])[0, 0].reshape(-1)  # 长度 = BATCH
+                target = dy[s + rf - 1:s + rf - 1 + BATCH]
+                loss = F.mse_loss(pred, target)
             else:
                 pred = model(dx[s:s + BATCH]).reshape(-1)
                 target = dy[s:s + BATCH]
@@ -104,10 +110,8 @@ def main():
         sched.step()
         model.eval()
         with torch.no_grad():
-            if exp == "d1_official_standard_ourproto":
-                o = model(vx[None, None])[0, 0].reshape(-1)
-                L = min(o.numel(), vy.numel())
-                vc, vn = metrics(o[-L:], vy[-L:])
+            if is_d1:
+                vc, vn = d1_align_eval(model, vx, vy)
             else:
                 vc, vn = metrics(model(vx), vy)
         if vn < best_val:
@@ -123,10 +127,8 @@ def main():
            "train_seconds": round(time.time() - t0, 1), "best_val_NRMS": round(best_val, 6)}
     with torch.no_grad():
         for tag, x, y in [("train", dx, dy), ("val", vx, vy), ("test", tx, ty)]:
-            if exp == "d1_official_standard_ourproto":
-                o = model(x[None, None])[0, 0].reshape(-1)
-                L = min(o.numel(), y.numel())
-                c, n = metrics(o[-L:], y[-L:])
+            if is_d1:
+                c, n = d1_align_eval(model, x, y)
             else:
                 c, n = metrics(model(x), y)
             res[f"{tag}_NRMS"] = round(n, 6)
