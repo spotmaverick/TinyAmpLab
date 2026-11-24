@@ -6,10 +6,12 @@
   本轮转向 WaveNet 架构族, 搜索参数效率前沿与短 RF 可行性.
 
 用法:
-  python arch_search_v2.py <variant> <epochs> [seed]
+  python arch_search_v2.py <variant> <epochs> [seed] [dataset]
+
+  dataset 默认 tsa15; 其他如 marshall_jvm410h_chod1 / marshall_jvm410h_chod1_spk
 
 协议 (与 d1 完全一致, 保证可比):
-  TSA15, 纯 MSE, batch=4*48000, lr=3e-3, CosineAnnealingLR(eta_min=1e-4)
+  纯 MSE, batch=4*48000, lr=3e-3, CosineAnnealingLR(eta_min=1e-4)
   官方 GridDataset 对齐: x[i:i+rf+ny-1], y[i+rf-1:i+rf-1+ny]
   评价: 全段推理 NRMS/corr, 与历史 NRMS 口径一致 (NRMS=sqrt(ESR))
 
@@ -93,6 +95,7 @@ def main():
     variant = sys.argv[1]
     epochs = int(sys.argv[2]) if len(sys.argv) > 2 else 300
     seed = int(sys.argv[3]) if len(sys.argv) > 3 else 7
+    dataset = sys.argv[4] if len(sys.argv) > 4 else "tsa15"
     t0 = time.time()
     torch.manual_seed(seed)
 
@@ -100,15 +103,15 @@ def main():
     model = model.to(DEV)
     nparam = sum(p.numel() for p in model.parameters())
     rf = model.receptive_field
-    print(f"=== {desc} | variant={variant} params={nparam} RF={rf}({rf/SR*1000:.1f}ms) "
-          f"seed={seed} dev={DEV} epochs={epochs} ===", flush=True)
+    print(f"=== {desc} | variant={variant} dataset={dataset} params={nparam} "
+          f"RF={rf}({rf/SR*1000:.1f}ms) seed={seed} dev={DEV} epochs={epochs} ===", flush=True)
 
-    dx = load(DATA / "tsa15_train_input.wav").to(DEV)
-    dy = load(DATA / "tsa15_train_target.wav").to(DEV)
-    vx = load(DATA / "tsa15_val_input.wav").to(DEV)
-    vy = load(DATA / "tsa15_val_target.wav").to(DEV)
-    tx = load(DATA / "tsa15_test_input.wav").to(DEV)
-    ty = load(DATA / "tsa15_test_target.wav").to(DEV)
+    dx = load(DATA / f"{dataset}_train_input.wav").to(DEV)
+    dy = load(DATA / f"{dataset}_train_target.wav").to(DEV)
+    vx = load(DATA / f"{dataset}_val_input.wav").to(DEV)
+    vy = load(DATA / f"{dataset}_val_target.wav").to(DEV)
+    tx = load(DATA / f"{dataset}_test_input.wav").to(DEV)
+    ty = load(DATA / f"{dataset}_test_target.wav").to(DEV)
 
     opt = torch.optim.Adam(model.parameters(), lr=LR)
     sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, T_max=epochs, eta_min=ETA_MIN)
@@ -145,7 +148,7 @@ def main():
     res = {
         "variant": variant, "desc": desc, "arch": variant.split("_rf")[0],
         "rf_scale_pct": scale, "params": nparam, "rf": rf, "rf_ms": round(rf / SR * 1000, 2),
-        "epochs": epochs, "seed": seed,
+        "epochs": epochs, "seed": seed, "dataset": dataset,
         "protocol": "our: MSE+batch192000+lr3e-3+cosine+GridDataset-align",
         "train_seconds": round(time.time() - t0, 1), "best_val_NRMS": round(best_val, 6),
     }
@@ -155,8 +158,9 @@ def main():
             res[f"{tag}_NRMS"] = round(n, 6)
             res[f"{tag}_corr"] = round(c, 6)
     res["test_esr"] = round(res["test_NRMS"] ** 2, 6)
-    json.dump(res, open(OUT / f"{variant}_s{seed}.json", "w"), indent=2)
-    torch.save(best_state, OUT / f"{variant}_s{seed}.pt")
+    stem = f"{variant}_s{seed}" if dataset == "tsa15" else f"{variant}_{dataset}_s{seed}"
+    json.dump(res, open(OUT / f"{stem}.json", "w"), indent=2)
+    torch.save(best_state, OUT / f"{stem}.pt")
     print("RESULT " + json.dumps(res), flush=True)
 
 

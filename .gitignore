@@ -7,6 +7,7 @@ dataset_zenodo/*.z0*
 # 分段下载缓存（断点续传中间产物，单文件可达百 MB 级，绝不入库）
 dataset_zenodo/*.parts/
 dataset_zenodo/ua_extract/
+dataset_zenodo/marshall_extract/
 dataset_zenodo/tmp*
 dataset_zenodo/check_md5.py
 dataset_zenodo/bad_files.json

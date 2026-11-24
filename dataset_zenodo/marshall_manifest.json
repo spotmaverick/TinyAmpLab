@@ -1,0 +1,67 @@
+{
+  "record": "10892012",
+  "zip_md5": "05ee998404f44c3a449c4ad6a8160cb6",
+  "splits": "trainval 300s \u65f6\u5e8f\u5207 70/10/20 (test \u53d6\u672b\u5c3e 60s, \u65e0\u72ec\u7acb test \u5f55\u97f3)",
+  "datasets": {
+    "marshall_jvm410h_chod1": {
+      "capture": "PreampOut",
+      "setting": "B050_M050_T050_G050",
+      "splits": {
+        "train": {
+          "input_sec": 210.0,
+          "target_sec": 210.0,
+          "src": [
+            "trainval.input.wav",
+            "B050_M050_T050_G050.trainval.target.wav"
+          ]
+        },
+        "val": {
+          "input_sec": 30.0,
+          "target_sec": 30.0,
+          "src": [
+            "trainval.input.wav",
+            "B050_M050_T050_G050.trainval.target.wav"
+          ]
+        },
+        "test": {
+          "input_sec": 60.0,
+          "target_sec": 60.0,
+          "src": [
+            "trainval.input.wav",
+            "B050_M050_T050_G050.trainval.target.wav"
+          ]
+        }
+      }
+    },
+    "marshall_jvm410h_chod1_spk": {
+      "capture": "SpeakerOut",
+      "setting": "B050_M050_T050_G050",
+      "splits": {
+        "train": {
+          "input_sec": 210.0,
+          "target_sec": 210.0,
+          "src": [
+            "trainval.input.wav",
+            "B050_M050_T050_G050.trainval.target.wav"
+          ]
+        },
+        "val": {
+          "input_sec": 30.0,
+          "target_sec": 30.0,
+          "src": [
+            "trainval.input.wav",
+            "B050_M050_T050_G050.trainval.target.wav"
+          ]
+        },
+        "test": {
+          "input_sec": 60.0,
+          "target_sec": 60.0,
+          "src": [
+            "trainval.input.wav",
+            "B050_M050_T050_G050.trainval.target.wav"
+          ]
+        }
+      }
+    }
+  }
+}

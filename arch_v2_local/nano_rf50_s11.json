@@ -1,0 +1,21 @@
+{
+  "variant": "nano_rf50",
+  "desc": "nano @ \u6211\u65b9\u534f\u8bae, RF\u7f29\u653e50%",
+  "arch": "nano",
+  "rf_scale_pct": 50,
+  "params": 841,
+  "rf": 2049,
+  "rf_ms": 42.69,
+  "epochs": 300,
+  "seed": 11,
+  "protocol": "our: MSE+batch192000+lr3e-3+cosine+GridDataset-align",
+  "train_seconds": 8270.7,
+  "best_val_NRMS": 0.185589,
+  "train_NRMS": 0.179223,
+  "train_corr": 0.983814,
+  "val_NRMS": 0.185589,
+  "val_corr": 0.982649,
+  "test_NRMS": 0.179305,
+  "test_corr": 0.983823,
+  "test_esr": 0.03215
+}

@@ -45,7 +45,12 @@ def sanity():
 
 
 def extract():
-    EXTRACT.mkdir(exist_ok=True)
+    """解压; 已解压则跳过 (幂等, 避免重复 mkdir 在沙箱下报 EEXIST)."""
+    marker = EXTRACT / "Marshall-JVM410H-ChOD1-trimmed"
+    if marker.exists():
+        print(f"[SKIP] 已解压: {EXTRACT}")
+        return
+    EXTRACT.mkdir(parents=True, exist_ok=True)
     with zipfile.ZipFile(ZIP) as z:
         names = z.namelist()
         print(f"zip 条目数: {len(names)}")
@@ -82,6 +87,99 @@ def conv48(src, dst):
     return round(n / 48000, 1)
 
 
+def conv48_slice(src, dst, t0, t1):
+    """只取 [t0, t1) 秒区间写盘, 避免整段读入后再裁的低效与内存峰值."""
+    sr = sf.info(str(src)).samplerate  # 帧偏移必须按源采样率算, 不能用目标 48k
+    x, sr = sf.read(str(src), start=int(t0 * sr), frames=int((t1 - t0) * sr))
+    if x.ndim > 1:
+        x = x[:, 0]
+    n = int(len(x) * 48000 / sr)
+    if n <= 0:
+        raise ValueError(f"切片为空: {src} [{t0},{t1})")
+    y = np.interp(np.linspace(0, len(x) - 1, n), np.arange(len(x)), x).astype(np.float32)
+    sf.write(str(dst), y, 48000, subtype="FLOAT")
+    return round(n / 48000, 1)
+
+
+def convert_set(tag, out_dir, setting, capture):
+    """转换一个 (采集点, 设置) 组合成 train/val/test 三段数据集.
+
+    切分策略 (本数据集标准设置无独立 test 录音, 见下):
+      trainval 单文件 300s 按时序切 70/10/20 —— train [0,70%), val [70%,80%), test [80%,100%)
+    test 段取末尾, 与 train 尽量远, 且三段均来自同一次连续录音 (输入信号同源, DRY 只有一份).
+    说明: test/ 目录下的 9 个录音都是其他旋钮组合, 与该设置的模型不是同一个任务, 不能用作 test.
+    """
+    base = EXTRACT / "Marshall-JVM410H-ChOD1-trimmed"
+    x_tr_v = base / capture / "trainval" / setting / f"{setting}.trainval.target.wav"
+    dry_tr_v = base / "DRY" / "trainval" / "trainval.input.wav"
+
+    for p in (x_tr_v, dry_tr_v):
+        if not p.exists():
+            print(f"[SKIP] {tag}: 缺文件 {p}")
+            return None
+
+    dur = sf.info(str(dry_tr_v)).duration
+    t_train_end = round(dur * 0.7, 3)
+    t_val_end = round(dur * 0.8, 3)
+
+    out_dir.mkdir(parents=True, exist_ok=True)
+    rec = {}
+    jobs = [
+        ("train", dry_tr_v, x_tr_v, 0.0, t_train_end),
+        ("val", dry_tr_v, x_tr_v, t_train_end, t_val_end),
+        ("test", dry_tr_v, x_tr_v, t_val_end, None),
+    ]
+    for split, xi, yi, t0, t1 in jobs:
+        if t1 is None:
+            a = conv48_slice(xi, out_dir / f"{tag}_{split}_input.wav", t0, dur)
+            b = conv48_slice(yi, out_dir / f"{tag}_{split}_target.wav", t0, dur)
+        else:
+            a = conv48_slice(xi, out_dir / f"{tag}_{split}_input.wav", t0, t1)
+            b = conv48_slice(yi, out_dir / f"{tag}_{split}_target.wav", t0, t1)
+        rec[split] = {"input_sec": a, "target_sec": b, "src": [str(xi.name), str(yi.name)]}
+        print(f"  {tag}_{split}: {a}s in / {b}s out  (src {xi.name})")
+    return rec
+
+
+def convert_all():
+    """生成 Marshall JVM410H OD1 数据集: 前级 + 全链路两个采集点, 各取标准中间设置."""
+    base = EXTRACT / "Marshall-JVM410H-ChOD1-trimmed"
+    # 文件名形如 B050_M050_T050_G050/B050_M050_T050_G050.trainval.target.wav —— 设置是子目录名
+    avail = sorted(
+        d.name
+        for d in (base / "PreampOut" / "trainval").iterdir()
+        if d.is_dir() and (d / f"{d.name}.trainval.target.wav").exists()
+    )
+    print(f"可用 trainval 设置 {len(avail)} 个")
+
+    targets = []
+    std = "B050_M050_T050_G050"
+    if std in avail:
+        targets = [
+            ("marshall_jvm410h_chod1", "PreampOut", std),
+            ("marshall_jvm410h_chod1_spk", "SpeakerOut", std),
+        ]
+    else:
+        print(f"[WARN] 标准设置 {std} 不在清单, 回退到清单首项 {avail[0]}")
+        targets = [
+            ("marshall_jvm410h_chod1", "PreampOut", avail[0]),
+            ("marshall_jvm410h_chod1_spk", "SpeakerOut", avail[0]),
+        ]
+
+    manifest = {"record": RECORD_ID, "zip_md5": EXPECT_MD5,
+                "splits": "trainval 300s 时序切 70/10/20 (test 取末尾 60s, 无独立 test 录音)",
+                "datasets": {}}
+    for tag, cap, setting in targets:
+        print(f"[{tag}] {cap} / {setting}")
+        rec = convert_set(tag, OUT, setting, cap)
+        if rec:
+            manifest["datasets"][tag] = {"capture": cap, "setting": setting, "splits": rec}
+
+    json.dump(manifest, open(DATASET / "marshall_manifest.json", "w"), indent=2)
+    print("manifest ->", DATASET / "marshall_manifest.json")
+    return manifest
+
+
 def convert(mapping):
     """mapping: {'train': (input_rel, target_rel), ...} 相对 EXTRACT."""
     OUT.mkdir(exist_ok=True)
@@ -105,16 +203,13 @@ if __name__ == "__main__":
         if sanity():
             extract()
             probe()
-            print("\n下一步: 根据上面 wav 清单, 用 --convert 并传入映射 (见脚本 convert() 用法)")
         else:
             print("[ABORT] 校验失败, 不要解压/转换")
     elif mode == "--convert":
-        # 映射在确认结构后填写; 默认按 ToneTwist 常见 DRY/trainval 结构尝试
-        mapping = {
-            "train": ("DRY/trainval/train.input.wav", "Marshall-JVM410H-ChOD1/trainval/G050/G050.train.target.wav"),
-            "val": ("DRY/trainval/val.input.wav", "Marshall-JVM410H-ChOD1/trainval/G050/G050.val.target.wav"),
-            "test": ("DRY/test/test.input.wav", "Marshall-JVM410H-ChOD1/test/G050/G050.test.target.wav"),
-        }
-        convert(mapping)
+        if not sanity():
+            print("[ABORT] md5/size 不符, 拒绝转换")
+            sys.exit(1)
+        extract()
+        convert_all()
     else:
         print(__doc__)
