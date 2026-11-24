@@ -231,6 +231,36 @@ def macs_per_sample():
     return m
 
 
+def crosscheck_official(sdq, xt):
+    """真交叉验证: 用官方 wavenet_official_dcu.OfficialWaveNet 跑同一权重,
+    与本地 digital_fwd 逐样本比对. 这一步能抓住 digital_fwd 自身的错误,
+    而 physical_fwd vs digital_fwd 只能验证器件非理想性是否已关闭."""
+    import importlib.util
+    p = BASE + "/e1/wavenet_official_dcu.py"
+    spec = importlib.util.spec_from_file_location("wn_ref", p)
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+    ref = m.OfficialWaveNet(GROUPS).to(DEVICE)
+    ref.load_state_dict({k: v for k, v in sdq.items() if k != "head_scale"})
+    ref.head_scale = float(sdq["head_scale"]) if "head_scale" in sdq else HEAD_SCALE
+    ref.eval()
+    with torch.no_grad():
+        # 官方 RF 应与本脚本一致
+        rf_ref = ref.receptive_field
+        print(f"[交叉验证] 官方类 RF = {rf_ref}  本脚本 RF = {RF}  {'一致' if rf_ref == RF else '不一致!'}")
+        o_ref = ref(xt)[0, 0]
+    o_mine = digital_fwd(sdq, xt)[0, 0]
+    n = min(o_ref.numel(), o_mine.numel())
+    a = o_ref[-n:].double()
+    b = o_mine[-n:].double()
+    diff = float((a - b).abs().max())
+    rel = float((a - b).norm() / a.norm())
+    print(f"[交叉验证] 官方类 vs 本脚本: max|diff| = {diff:.6e}  相对误差 = {rel:.6e}")
+    ok = rel < 1e-5
+    print(f"[交叉验证] {'PASS' if ok else 'FAIL'}")
+    return ok
+
+
 def main():
     sanity = "--sanity" in sys.argv
     quick = "--quick" in sys.argv
@@ -271,6 +301,9 @@ def main():
         print(f"[6-bit 仅量化]   NRMS = {q:.4f}")
 
         if sanity:
+            # 第一层: 与官方模型类对拍 (抓本脚本 digital_fwd 自身的错误)
+            ok_ref = crosscheck_official(sdq, xt)
+            # 第二层: 关闭全部非理想性后, 物理路径应等于数字路径 (抓器件实现的错误)
             g = torch.Generator(device=DEVICE).manual_seed(0)
             dev = Dev(sdq, g)  # 用已量化权重, 参考值即 sdq 数字路径, 隔离器件非理想性
             o_p = chunked(dev, physical_fwd, xt)[0, 0]
@@ -278,6 +311,7 @@ def main():
             print(f"[物理路径(无扰)] NRMS = {p:.4f}   (应与 6-bit 量化 {q:.4f} 一致)")
             d = abs(p - q)
             print(f"[对拍] 物理 vs 量化 差值 = {d:.6f}  {'PASS' if d < 1e-3 else 'FAIL'}")
+            print(f"\n=== 总判定: {'PASS' if (ok_ref and d < 1e-3) else 'FAIL'} ===")
             return
 
         mc = []
