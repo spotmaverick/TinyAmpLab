@@ -32,7 +32,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 DEV = "cuda" if torch.cuda.is_available() else "cpu"
-ROOT = Path("/work/home/spotmaverick/nam_project")
+ROOT = Path(__file__).resolve().parent
 DATA = ROOT / "data"
 OUT = ROOT / "arch_analog"
 OUT.mkdir(exist_ok=True)

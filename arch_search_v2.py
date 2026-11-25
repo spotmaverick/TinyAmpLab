@@ -27,7 +27,7 @@ import torch
 import torch.nn.functional as F
 
 DEV = "cuda" if torch.cuda.is_available() else "cpu"
-ROOT = Path("/work/home/spotmaverick/nam_project")
+ROOT = Path(__file__).resolve().parent
 DATA = ROOT / "data"
 OUT = ROOT / "arch_v2"
 OUT.mkdir(exist_ok=True)
@@ -41,7 +41,7 @@ def imp(name, path):
     return m
 
 
-_wn = imp("wn_official", ROOT / "e1" / "wavenet_official_dcu.py")
+_wn = imp("wn_official", ROOT / "wavenet_official_dcu.py")
 
 
 def scale_dilations(dils, scale_pct):
