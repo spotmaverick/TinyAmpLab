@@ -46,7 +46,10 @@ def cost(ch, depthwise, rf_pct=100):
                 macs += c * c * 3
                 max_chain = max(max_chain, c * 3)
             macs += c                            # input_mixer
-            xbar += c                            # layer1x1 是 ch×ch 交叉开关
+            # 【修正 2026-11-25】layer1x1 是 Conv1d(ch,ch,1)，物理上是 ch×ch 全交叉开关。
+            # 原代码写 `xbar += c`（只加了 1×1 的通道数），把这一项的交叉开关低估了 ch 倍，
+            # 导致 depthwise 的交叉开关优势被严重高估（dw_ch24 从 +7% 变成号称 -80%）。
+            xbar += c * c                        # layer1x1 是 ch×ch 交叉开关
             macs += c * c
             max_chain = max(max_chain, c)
         xbar += c * head_out
@@ -77,6 +80,7 @@ print("核心对比: 达到 A2 Lite 精度 (≈0.0785) 所需的器件规模")
 print("=" * 86)
 lite_xb, lite_m, lite_chain = cost(12, False, 100)
 dw24_xb, dw24_m, dw24_chain = cost(24, True, 100)
+d12_xb, d12_m, d12_chain = cost(12, True, 100)
 print(f"  {'配置':<18}{'交叉开关':>10}{'相对':>9}{'最大累加链':>12}{'相对':>9}")
 print("  " + "-" * 58)
 print(f"  {'lite (全连接)':<18}{lite_xb:>10}{'基准':>9}{lite_chain:>12}{'基准':>9}")
@@ -85,17 +89,20 @@ print(f"  {'dw_ch24':<18}{dw24_xb:>10}{(dw24_xb/lite_xb-1)*100:>8.0f}%{dw24_chai
 
 print()
 print("  解读（三条结论要分开看）:")
-print("   1) MACs: dw_ch24 比 lite 多 25% —— 1×1 层的 ch² 增长吃掉了 depthwise 在")
-print("      dilated conv 上省下的量。**depthwise 的 MACs 优势不成立。**")
-print("   2) 交叉开关: dw_ch24 只有 lite 的 20%（936 vs 4752）—— 这是**真实且巨大**")
-print("      的优势。全连接 conv 每层要 ch×ch 的交叉开关矩阵, depthwise 只要 ch 条")
-print("      独立链, 完全不需要交叉开关。模拟实现的面积、布线复杂度、寄生电容都由")
-print("      交叉开关规模决定, 这一项是 depthwise 独有的收益。")
-print("   3) 最大累加链: dw_ch24 更浅（24 vs 36）—— KCL 求和级数更短, 摆幅需求更低。")
+print(f"   1) MACs: dw_ch24 比 lite 多 {(dw24_m/lite_m-1)*100:.0f}% —— 1×1 层的 ch² 增长吃掉了")
+print("      depthwise 在 dilated conv 上省下的量。**depthwise 的 MACs 优势不成立。**")
+print(f"   2) 交叉开关: dw_ch24 是 lite 的 {dw24_xb/lite_xb*100:.0f}%（{dw24_xb} vs {lite_xb}）。")
+print("      ⚠ 这是 2026-11-25 修正后的数字。此前脚本把 layer1x1 的交叉开关写成 c（应为 c²），")
+print("      得出『dw_ch24 只有 lite 的 20%，省 80%』的结论——**那个结论是 bug 造成的，已作废**。")
+print("      修正后 depthwise 只在 dilated conv 上省交叉开关，而 1×1 层的 ch×ch 矩阵")
+print("      随通道数**平方增长**，加宽会把省下的量全吃回去甚至反超。")
+print(f"   3) 最大累加链: dw_ch24 为 {dw24_chain} vs lite {lite_chain}"
+      f"（{(dw24_chain/lite_chain-1)*100:+.0f}%）—— 这一项是真实的收益。")
 print()
-print("  => 修正后的结论: depthwise 的优势不在 MACs, 而在**交叉开关规模与累加链深度**。")
-print("     这两项恰是模拟实现的主导成本, 所以 dw_ch24 用 +25% MACs 换到 -80% 交叉开关")
-print("     与 -33% 累加链, 加上精度仅差 +2.4%, 是模拟实现上真正的划算交易。")
+print("  => 修正后的结论: depthwise 的真实优势只剩**累加链更浅**这一项。")
+print("     交叉开关的优势仅在『不加宽』时成立（dw_ch12 是 lite 的 "
+      f"{d12_xb/lite_xb*100:.0f}%），一旦加宽到 ch24 就消失。")
+print("     这正是 dv_ch24 偏离参数幂律 +6.9% 的原因：它花 74% 的参数去买 ch² 的全交叉开关。")
 
 print()
 print("=" * 86)
@@ -106,9 +113,11 @@ print(f"  dw_ch12: 交叉开关 {d12_xb} (lite 的 {d12_xb/lite_xb*100:.0f}%)  "
       f"MACs {d12_m} ({d12_m/lite_m*100:.0f}%)  累加链 {d12_chain} ({d12_chain/lite_chain*100:.0f}%)")
 print(f"  代价: 精度 0.1084 vs lite 0.0785 (差 {(0.1084/0.0785-1)*100:+.0f}%)")
 print()
-print("  => dw_ch12 是「小而省」的点: 全部三个器件维度都是 lite 的 1/3~1/2,")
+print("  => dw_ch12 是「小而省」的点: 交叉开关与累加链分别是 lite 的 "
+      f"{d12_xb/lite_xb*100:.0f}% 与 {d12_chain/lite_chain*100:.0f}%，MACs 是 {d12_m/lite_m*100:.0f}%，")
 print("     代价是精度从 0.0785 退到 0.1084。")
-print("     这才是 depthwise 路线的真实价值区间: 不是替代 lite, 而是用 1/3 器件换 38% 精度。")
+print("     **这才是 depthwise 的真实价值区间**: 不加宽时三项器件指标都显著低于 lite；")
+print("     一旦为补参数而加宽，1×1 的 ch² 会立刻吞掉这些优势（见上方 dw_ch24）。")
 
 print()
 print("=" * 86)

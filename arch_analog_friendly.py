@@ -44,13 +44,28 @@ def group_rf(dils):
 
 
 class AFLayer(nn.Module):
-    """模拟友好层: depthwise dilated conv + tanh + 1x1 残差."""
-    def __init__(self, ch, dilation, depthwise):
+    """模拟友好层: depthwise dilated conv + tanh + 1x1 残差.
+
+    mix_rank: 若给定，layer1x1 由 ch->ch 改为低秩 ch->r->ch。
+              动机见 src/tools/param_flow.py：1x1 的 ch² 是模拟实现的真瓶颈
+              （cw_ch12 里 1x1 占 62.7% 参数、ch24 加宽后交叉开关反超 lite），
+              低秩把它降到 2·ch·r。
+    """
+    def __init__(self, ch, dilation, depthwise, mix_rank=None):
         super().__init__()
         groups = ch if depthwise else 1
         self.conv = nn.Conv1d(ch, ch, 3, dilation=dilation, groups=groups, bias=True)
         self.input_mixer = nn.Conv1d(1, ch, 1, bias=False)
-        self.layer1x1 = nn.Conv1d(ch, ch, 1, bias=True)
+        if mix_rank and mix_rank < ch:
+            # 低秩分解 ch -> r -> ch（两段都不带 bias，末端补一个 bias 保持与原层等价）
+            self.layer1x1 = nn.Sequential(
+                nn.Conv1d(ch, mix_rank, 1, bias=False),
+                nn.Conv1d(mix_rank, ch, 1, bias=True),
+            )
+            self.low_rank = True
+        else:
+            self.layer1x1 = nn.Conv1d(ch, ch, 1, bias=True)
+            self.low_rank = False
 
     def forward(self, y, c):
         z = self.conv(y)
@@ -61,10 +76,12 @@ class AFLayer(nn.Module):
 
 
 class AFGroup(nn.Module):
-    def __init__(self, in_size, ch, dils, head_out, head_bias, depthwise):
+    def __init__(self, in_size, ch, dils, head_out, head_bias, depthwise,
+                 mix_rank=None):
         super().__init__()
         self.rechannel = nn.Conv1d(in_size, ch, 1, bias=False)
-        self.layers = nn.ModuleList([AFLayer(ch, d, depthwise) for d in dils])
+        self.layers = nn.ModuleList([AFLayer(ch, d, depthwise, mix_rank)
+                                     for d in dils])
         self.head_rechannel = nn.Conv1d(ch, head_out, 1, bias=head_bias)
         self.dilations = dils
         self.rf = group_rf(dils)
@@ -80,9 +97,10 @@ class AFGroup(nn.Module):
 
 
 class AFNet(nn.Module):
-    def __init__(self, groups, depthwise=True, head_scale=0.02):
+    def __init__(self, groups, depthwise=True, head_scale=0.02, mix_rank=None):
         super().__init__()
-        self.groups = nn.ModuleList([AFGroup(*g, depthwise) for g in groups])
+        self.groups = nn.ModuleList([AFGroup(*g, depthwise, mix_rank)
+                                     for g in groups])
         self.head_scale = head_scale
 
     def forward(self, x):
@@ -98,9 +116,18 @@ class AFNet(nn.Module):
 
 
 def build(variant):
-    """解析变体名 -> (model, desc, depthwise, rf_pct, channels)"""
+    """解析变体名 -> (model, desc)
+
+    变体名语法：  [dw|full|wd]_ch<N>[_rf<PCT>][_r<R>]
+      dw/full  : depthwise 或全连接 dilated conv
+      wd       : 宽 depthwise + 低秩 1x1（必须带 _r<R>）
+      ch<N>    : 通道数
+      rf<PCT>  : RF 缩放百分比
+      r<R>     : 1x1 低秩瓶颈维数
+    """
     parts = variant.split("_")
-    depthwise = parts[0] == "dw"
+    head = parts[0]
+    depthwise = head in ("dw", "wd")
     ch = 12
     for p in parts:
         if p.startswith("ch"):
@@ -109,6 +136,10 @@ def build(variant):
     for p in parts:
         if p.startswith("rf"):
             rf_pct = int(p[2:])
+    mix_rank = None
+    for p in parts:
+        if p.startswith("r") and not p.startswith("rf") and p[1:].isdigit():
+            mix_rank = int(p[1:])
     head_ch = max(1, ch // 2)
     d1 = [1, 2, 4, 8, 16, 32, 64]
     d2 = [128, 256, 512, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512]
@@ -117,8 +148,11 @@ def build(variant):
         d2 = [max(1, round(d * rf_pct / 100)) for d in d2]
     groups = [(1, ch, d1, head_ch, False),
               (ch, head_ch, d2, 1, True)]
-    model = AFNet(groups, depthwise=depthwise)
-    desc = f"{variant}: {'depthwise' if depthwise else 'full'} ch={ch} rf={rf_pct}%"
+    model = AFNet(groups, depthwise=depthwise, mix_rank=mix_rank)
+    kind = "depthwise" if depthwise else "full"
+    if mix_rank:
+        kind += f"+lowrank1x1(r={mix_rank})"
+    desc = f"{variant}: {kind} ch={ch} rf={rf_pct}%"
     return model, desc
 
 
@@ -159,17 +193,31 @@ def main():
     # 模拟成本: MACs 与延迟线
     macs = 0
     taps = 0
+    xbar = 0
     for g in model.groups:
-        ch = g.layers[0].conv.weight.shape[0]
-        grp = g.layers[0].conv.groups
         macs += g.rechannel.weight.numel()
+        xbar += g.rechannel.weight.numel()
         macs += sum(l.conv.weight.numel() for l in g.layers)
         macs += sum(l.input_mixer.weight.numel() for l in g.layers)
-        macs += sum(l.layer1x1.weight.numel() for l in g.layers)
+        for l in g.layers:
+            if getattr(l, "low_rank", False):
+                # 低秩 1x1：两段权重都要算；交叉开关按两段的实际矩阵规模
+                for m in l.layer1x1:
+                    macs += m.weight.numel()
+                    xbar += m.weight.numel()
+            else:
+                macs += l.layer1x1.weight.numel()
+                xbar += l.layer1x1.weight.numel()
+            grp = l.conv.groups
+            if grp == 1:
+                # 全连接 conv: ch×ch×3 交叉开关
+                xbar += l.conv.weight.numel() - l.conv.bias.numel()
         macs += g.head_rechannel.weight.numel()
+        xbar += g.head_rechannel.weight.numel()
         taps += sum(2 * d for d in g.dilations)
     print(f"=== {desc} | params={nparam} RF={rf}({rf/SR*1000:.1f}ms) "
-          f"MACs={macs} taps={taps} seed={seed} epochs={epochs} dataset={dataset} ===", flush=True)
+          f"MACs={macs} xbar={xbar} taps={taps} seed={seed} epochs={epochs} "
+          f"dataset={dataset} ===", flush=True)
 
     dx = load(DATA / f"{dataset}_train_input.wav").to(DEV)
     dy = load(DATA / f"{dataset}_train_target.wav").to(DEV)

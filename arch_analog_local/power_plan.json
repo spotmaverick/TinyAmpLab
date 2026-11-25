@@ -1,0 +1,64 @@
+{
+  "claims": [
+    {
+      "name": "lite RF \u51cf\u534a +11~13%",
+      "cfg": "lite",
+      "eff": 0.117,
+      "sd": 0.029,
+      "d": 4.0344827586206895,
+      "need": 3,
+      "action": ""
+    },
+    {
+      "name": "dw_ch12 RF \u51cf\u534a +7.9%",
+      "cfg": "dw_ch12",
+      "eff": 0.079,
+      "sd": 0.019,
+      "d": 4.157894736842105,
+      "need": 3,
+      "action": ""
+    },
+    {
+      "name": "nano RF \u51cf\u534a \u22125%",
+      "cfg": "nano",
+      "eff": -0.055,
+      "sd": 0.223,
+      "d": 0.24663677130044842,
+      "need": 133,
+      "action": ""
+    },
+    {
+      "name": "feather RF \u51cf\u534a \u4e0d\u53ef\u5224\u5b9a",
+      "cfg": "feather",
+      "eff": 0.05,
+      "sd": 0.048,
+      "d": 1.0416666666666667,
+      "need": 10,
+      "action": ""
+    },
+    {
+      "name": "dw_ch24 \u504f\u79bb\u5e42\u5f8b +8%",
+      "cfg": "dw_ch24",
+      "eff": 0.08,
+      "sd": null,
+      "need": null,
+      "action": "\u8865 1 \u4e2a\u79cd\u5b50\u4ee5\u4f30\u8ba1\u566a\u58f0"
+    },
+    {
+      "name": "dw_ch12 \u504f\u79bb\u5e42\u5f8b +2.7%",
+      "cfg": "dw_ch12",
+      "eff": 0.027,
+      "sd": 0.019,
+      "d": 1.4210526315789473,
+      "need": 7,
+      "action": ""
+    }
+  ],
+  "priority": [
+    "dw_ch24 s11",
+    "dw_ch12_rf50 s11",
+    "standard_rf50 s11",
+    "dw_ch24_rf50 s7",
+    "nano \u8865\u79cd\u5b50"
+  ]
+}

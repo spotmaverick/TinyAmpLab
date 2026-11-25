@@ -1,0 +1,127 @@
+{
+  "lite": {
+    "p": 6553,
+    "xbar": 6066,
+    "macs": 6228,
+    "chain": 36,
+    "conv_frac": 0.6757210437967344,
+    "mix_frac": 0.24996184953456432
+  },
+  "dw_ch12": {
+    "p": 2611,
+    "xbar": 1638,
+    "macs": 2286,
+    "chain": 12,
+    "conv_frac": 0.1861355802374569,
+    "mix_frac": 0.6273458445040214
+  },
+  "dw_ch24": {
+    "p": 8461,
+    "xbar": 6516,
+    "macs": 7812,
+    "chain": 24,
+    "conv_frac": 0.11488003782058859,
+    "mix_frac": 0.7360832052948824
+  },
+  "breakdown_ch12": {
+    "rechannel": 84,
+    "dwconv": 486,
+    "fullconv": 0,
+    "mixer": 162,
+    "layer1x1": 1476,
+    "head": 78,
+    "bias": 325,
+    "total": 2611
+  },
+  "breakdown_ch24": {
+    "rechannel": 312,
+    "dwconv": 972,
+    "fullconv": 0,
+    "mixer": 324,
+    "layer1x1": 5904,
+    "head": 300,
+    "bias": 649,
+    "total": 8461
+  },
+  "candidates": [
+    {
+      "name": "wd_ch24_r6",
+      "ch": 24,
+      "r": 6,
+      "rechannel": 312,
+      "dwconv": 972,
+      "fullconv": 0,
+      "mixer": 324,
+      "layer1x1": 3888,
+      "head": 300,
+      "bias": 649,
+      "total": 6445
+    },
+    {
+      "name": "wd_ch24_r8",
+      "ch": 24,
+      "r": 8,
+      "rechannel": 312,
+      "dwconv": 972,
+      "fullconv": 0,
+      "mixer": 324,
+      "layer1x1": 5184,
+      "head": 300,
+      "bias": 649,
+      "total": 7741
+    },
+    {
+      "name": "wd_ch32_r8",
+      "ch": 32,
+      "r": 8,
+      "rechannel": 544,
+      "dwconv": 1296,
+      "fullconv": 0,
+      "mixer": 432,
+      "layer1x1": 6912,
+      "head": 528,
+      "bias": 865,
+      "total": 10577
+    },
+    {
+      "name": "wd_ch32_r10",
+      "ch": 32,
+      "r": 10,
+      "rechannel": 544,
+      "dwconv": 1296,
+      "fullconv": 0,
+      "mixer": 432,
+      "layer1x1": 8640,
+      "head": 528,
+      "bias": 865,
+      "total": 12305
+    },
+    {
+      "name": "wd_ch48_r12",
+      "ch": 48,
+      "r": 12,
+      "rechannel": 1200,
+      "dwconv": 1944,
+      "fullconv": 0,
+      "mixer": 648,
+      "layer1x1": 15552,
+      "head": 1176,
+      "bias": 1297,
+      "total": 21817
+    },
+    {
+      "name": "wd_ch64_r16",
+      "ch": 64,
+      "r": 16,
+      "rechannel": 2112,
+      "dwconv": 2592,
+      "fullconv": 0,
+      "mixer": 864,
+      "layer1x1": 27648,
+      "head": 2080,
+      "bias": 1729,
+      "total": 37025
+    }
+  ],
+  "dev_dw24": 1.068883359088166
+}
