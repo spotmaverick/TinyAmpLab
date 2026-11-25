@@ -1,18 +1,37 @@
 # 智算服务器迁移手册
 
 > 场景：从旧服务器（`wuzh02.hpccube.com:65091`）迁移到新服务器。
-> 生成时间：2026-11-25 13:15。迁移包已在旧服务器 `/work/home/spotmaverick/migrate_out/` 打好。
+> 生成时间：2026-11-25 13:50。迁移包已在旧服务器 `/work/home/spotmaverick/migrate_out/` 打好。
 
 ## 一、已准备好的迁移产物
 
 | 产物 | 大小 | MD5 | 内容 |
 |---|---:|---|---|
-| `TinyAmpLab_migrate_20261125_1309.tar.gz` | 717 KB | `bff7711d5ecea944a08604d96bb5d49e` | 代码 + 全部结果 + 权重 + 环境规格 + 数据清单 + 一键部署脚本 |
-| `TinyAmpLab_data_20261125_1310.tar.gz` | 1.1 GB | `3dd5cb1c9706da5fa433058181ab4bfb` | 94 个已校验的 wav 数据集 |
+| `TinyAmpLab_migrate_20261125_1317.tar.gz` | 512 KB | `f5e88b7af71aaa7d9abbb9e2d7b087fc` | 代码 + 全部结果 + 权重 + 环境规格 + 数据清单 + 一键部署脚本 |
+| `TinyAmpLab_data_20261125_1310.tar.gz` | 1.1 GB | `3dd5cb1c9706da5fa433058181ab4bfb` | 94 个已校验的 wav 数据集（16 个音箱） |
 
 两个包都在旧服务器 `/work/home/spotmaverick/migrate_out/`。
 
+> **注意**：代码包必须用 **1317** 这个版本。1309 版是修复前的——旧服务器上是整理前的散落目录结构，
+> 打包时 `rsync src/` 落空，导致迁移包缺失所有 `src/` 子目录（工具与物理仿真脚本），
+> 新服务器部署后会跑不起来。1317 版改为从 GitHub clone 取最新结构，已修。
+
 **Marshall 原始 zip（2.76GB）不在包内**——如需重建，用 `dataset/MANIFEST.md` 里的分段续传命令（已验证可靠，本项目就是这么下的）。
+
+### 迁移链路已实测验证（2026-11-25 13:40）
+
+在旧服务器上模拟了一次完整迁移并全部通过：
+
+| 验证项 | 结果 |
+|---|---|
+| 全新目录解压 + `deploy.sh` | ✅ 通过 |
+| 11 项关键文件自检 | ✅ 全过（`arch_analog_friendly.py`、`src/analog/analog_sim_dw.py` 等） |
+| 数据包解压 | ✅ 94 个 wav 就位 |
+| 环境激活 | ✅ torch 1.10.0a0+git450cdd1-dtk22.04 |
+| `analog_sim_dw.py --sanity` | ✅ PASS（物理 vs 6-bit 差值 0.000000） |
+| `analog_sim_wavenet.py --sanity` | ✅ PASS（官方类交叉验证误差 0.000000e+00） |
+
+验证完已清理测试目录，不留垃圾。
 
 ## 二、迁移步骤
 
