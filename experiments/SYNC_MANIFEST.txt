@@ -1,0 +1,37 @@
+
+=== 2026-11-25 21:47:16 bw/z100 ===
+  bw/arch_v2          -> arch_v2_local                  44 files
+  bw/arch_analog      -> arch_analog_local              47 files
+  bw/runs_bw          -> runs_bw                        22 files
+  bw/analog_sim       -> experiments/analog_sim_bw      16 files
+  z100/arch_v2          -> experiments/z100_arch_v2       60 files
+  z100/arch_analog      -> experiments/z100_arch_analog   21 files
+  z100/analog_sim       -> experiments/z100_analog_sim    11 files
+
+=== 2026-11-25 22:00:05 bw ===
+  bw/arch_v2          -> arch_v2_local                  48 files
+  bw/arch_analog      -> arch_analog_local              47 files
+  bw/runs_bw          -> runs_bw                        30 files
+  bw/analog_sim       -> experiments/analog_sim_bw      16 files
+
+=== 2026-11-25 22:00:59 z100 ===
+  z100/arch_v2          -> experiments/z100_arch_v2       60 files
+  z100/arch_analog      -> experiments/z100_arch_analog   25 files
+  z100/analog_sim       -> experiments/z100_analog_sim    15 files
+
+=== 2026-11-25 22:05:35 z100 ===
+  z100/arch_v2          -> experiments/z100_arch_v2       60 files
+  z100/arch_analog      -> experiments/z100_arch_analog   25 files
+  z100/analog_sim       -> experiments/z100_analog_sim    20 files
+
+=== 2026-11-25 22:06:37 bw ===
+  bw/arch_v2          -> arch_v2_local                  48 files
+  bw/arch_analog      -> arch_analog_local              51 files
+  bw/runs_bw          -> runs_bw                        32 files
+  bw/analog_sim       -> experiments/analog_sim_bw      17 files
+
+=== 2026-11-25 22:10:46 bw ===
+  bw/arch_v2          -> arch_v2_local                  48 files
+  bw/arch_analog      -> arch_analog_local              51 files
+  bw/runs_bw          -> runs_bw                        32 files
+  bw/analog_sim       -> experiments/analog_sim_bw      21 files

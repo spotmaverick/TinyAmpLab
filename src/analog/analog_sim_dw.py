@@ -43,6 +43,10 @@ VARIANTS = {
     "dw_ch24": dict(ch=24, rf_pct=100, depthwise=True),
     "dw_ch12_rf50": dict(ch=12, rf_pct=50, depthwise=True),
     "dw_ch24_rf50": dict(ch=24, rf_pct=50, depthwise=True),
+    # 低秩变体：1x1 为两段式，forward/physical 按 is_lowrank 自动处理
+    "wd_ch32_r8": dict(ch=32, rf_pct=100, depthwise=True),
+    "wd_ch32_r6": dict(ch=32, rf_pct=100, depthwise=True),
+    "wd_ch24_r6": dict(ch=24, rf_pct=100, depthwise=True),
 }
 HEAD_SCALE = 0.02
 
@@ -157,6 +161,22 @@ class Dev:
         return torch.tanh(z)
 
 
+def is_lowrank(sd_keys, pre):
+    """判断该层的 1x1 是否为低秩两段式 (layer1x1.0/.1)。"""
+    return f"{pre}.layer1x1.0.weight" in sd_keys
+
+
+def apply_1x1_physical(dev, z, pre):
+    """1x1 混合层：全秩单段或低秩两段，器件非理想性逐段施加。"""
+    if is_lowrank(dev.w, pre):
+        # ch -> r -> ch，第一段无 bias，第二段有 bias
+        h = dev.mac(z, dev.w[f"{pre}.layer1x1.0.weight"])
+        return dev.mac(h, dev.w[f"{pre}.layer1x1.1.weight"],
+                       dev.w.get(f"{pre}.layer1x1.1.bias"))
+    return dev.mac(z, dev.w[f"{pre}.layer1x1.weight"],
+                   dev.w.get(f"{pre}.layer1x1.bias"))
+
+
 def forward_group(dev, gi, y, c, head_input, GROUPS):
     (in_size, ch, dils, head_out, head_bias) = GROUPS[gi]
     rf_g = group_rf(dils)
@@ -171,7 +191,7 @@ def forward_group(dev, gi, y, c, head_input, GROUPS):
         mix = dev.mac(c, dev.w[f"{pre}.input_mixer.weight"])[:, :, -Lz:]
         z = dev.tanh_act(z + mix)
         z = z + dev.node_noise(z.shape)
-        resid = y[:, :, -Lz:] + dev.mac(z, dev.w[f"{pre}.layer1x1.weight"], dev.w.get(f"{pre}.layer1x1.bias"))
+        resid = y[:, :, -Lz:] + apply_1x1_physical(dev, z, pre)
         resid = resid + dev.node_noise(resid.shape)
         y = resid
         term = z[:, :, -out_len:]
@@ -207,7 +227,14 @@ def digital_fwd(sd, x, GROUPS):
             Lz = z.shape[-1]
             mix = F.conv1d(c, sd[f"{pre}.input_mixer.weight"], None, 1)[:, :, -Lz:]
             z = torch.tanh(z + mix)
-            resid = y[:, :, -Lz:] + F.conv1d(z, sd[f"{pre}.layer1x1.weight"], sd[f"{pre}.layer1x1.bias"], 1)
+            if is_lowrank(sd, pre):
+                h = F.conv1d(z, sd[f"{pre}.layer1x1.0.weight"], None, 1)
+                mix1 = F.conv1d(h, sd[f"{pre}.layer1x1.1.weight"],
+                                sd[f"{pre}.layer1x1.1.bias"], 1)
+            else:
+                mix1 = F.conv1d(z, sd[f"{pre}.layer1x1.weight"],
+                                sd[f"{pre}.layer1x1.bias"], 1)
+            resid = y[:, :, -Lz:] + mix1
             y = resid
             term = z[:, :, -out_len:]
             head_input = term if head_input is None else head_input[:, :, -out_len:] + term
@@ -291,7 +318,11 @@ def main():
     if quick:
         P["MC"] = 3
 
+    # 支持 --weight 指定权重文件（默认 variant_s7.pt），便于跑双种子物理仿真
     wpath = f"{ARCH_DIR}/{variant}_s7.pt"
+    if "--weight" in sys.argv:
+        wname = sys.argv[sys.argv.index("--weight") + 1]
+        wpath = wname if "/" in wname else f"{ARCH_DIR}/{wname}"
     if not os.path.exists(wpath):
         print(f"[ABORT] 权重不存在: {wpath}")
         sys.exit(1)
@@ -373,7 +404,13 @@ def main():
     print(f"每采样模拟 MACs: {res['macs_per_sample']}")
     print(f"延迟线: RF {RF} 抽头 × {GROUPS[1][1]}ch 数字 SRAM ≈ {RF*GROUPS[1][1]/1024:.1f} Kb")
     os.makedirs(OUT, exist_ok=True)
-    tag = f"{variant}_quick" if quick else f"{variant}_full"
+    stem = f"{variant}_full" if not quick else f"{variant}_quick"
+    if "--weight" in sys.argv:
+        # 带权重种子后缀，避免 s7/s11 结果互相覆盖
+        wname = sys.argv[sys.argv.index("--weight") + 1]
+        seed_tag = wname.replace(".pt", "").split("_")[-1]
+        stem = f"{stem}_{seed_tag}"
+    tag = stem
     json.dump(res, open(f"{OUT}/result_{tag}.json", "w"), indent=2)
     print(f"\n结果已写 {OUT}/result_{tag}.json")
 

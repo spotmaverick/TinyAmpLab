@@ -1,0 +1,27 @@
+{
+  "device": "cpu",
+  "arch": "lite",
+  "params": 6553,
+  "rf": 4093,
+  "rf_ms": 85.27,
+  "seconds": 38.13158333333333,
+  "mc": 16,
+  "nrms_fp32": 0.0785,
+  "nrms_quant_only": 0.085,
+  "nrms_physical_mean": 0.1063,
+  "nrms_physical_std": 0.0114,
+  "nrms_physical_min": 0.0894,
+  "nrms_physical_max": 0.1242,
+  "macs_per_sample": 6228,
+  "params_dev": {
+    "BITS": 6,
+    "SIGMA_MISMATCH": 0.01,
+    "DRIFT": 0.03,
+    "BETA_H3": 0.002,
+    "V_SAT": 16.0,
+    "SIGMA_OFFSET": 0.005,
+    "SNR_DB": 70,
+    "MC": 16,
+    "CHUNK": 480000
+  }
+}

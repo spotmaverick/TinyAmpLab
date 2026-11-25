@@ -1,0 +1,22 @@
+{
+  "variant": "standard",
+  "desc": "standard @ \u6211\u65b9\u534f\u8bae",
+  "arch": "standard",
+  "rf_scale_pct": 100,
+  "params": 13801,
+  "rf": 4093,
+  "rf_ms": 85.27,
+  "epochs": 300,
+  "seed": 7,
+  "dataset": "marshall_jvm410h_chod1_spk",
+  "protocol": "our: MSE+batch192000+lr3e-3+cosine+GridDataset-align",
+  "train_seconds": 13749.5,
+  "best_val_NRMS": 0.0739,
+  "train_NRMS": 0.071892,
+  "train_corr": 0.997413,
+  "val_NRMS": 0.0739,
+  "val_corr": 0.997308,
+  "test_NRMS": 0.08701,
+  "test_corr": 0.996215,
+  "test_esr": 0.007571
+}

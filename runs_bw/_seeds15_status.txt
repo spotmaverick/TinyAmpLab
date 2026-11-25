@@ -1,0 +1,6 @@
+START 2026-11-25 21:48:14 max_parallel=2
+lite_rf50_s15 rc=0 396.5s
+lite_s15 rc=0 398.2s
+dw_ch12_rf50_s15 rc=0 670.3s
+dw_ch12_s15 rc=0 686.7s
+ALL_DONE 2026-11-25 22:06:18
