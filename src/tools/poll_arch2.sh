@@ -19,13 +19,19 @@ while [ "$MAX" -eq 0 ] || [ "$i" -lt "$MAX" ]; do
       f=/work/home/spotmaverick/nam_project/arch_v2/$v.log
       [ -f "$f" ] && echo "$v: $(tail -1 "$f")"
     done
+    echo "--- 模拟友好拓扑判定性实验 (新) ---"
+    for v in full_ch12_s7 full_ch12_s11 dw_ch12_s7 dw_ch12_s11 \
+             dw_ch24_s7 dw_ch12_rf50_s7 dw_ch24_rf50_s7; do
+      f=/work/home/spotmaverick/nam_project/arch_analog/$v.log
+      [ -f "$f" ] && echo "$v: $(tail -1 "$f" | cut -c1-100)"
+    done
     echo "--- 物理仿真 ---"
     for f in analog_sim/lite_sanity.log analog_sim/lite_quick.log analog_sim/lite_full.log; do
       p=/work/home/spotmaverick/nam_project/$f
       [ -f "$p" ] && echo "$(basename $f): $(tail -2 "$p" | tr "\n" " | ")"
     done
-    echo "--- json 结果数 ---"
-    ls /work/home/spotmaverick/nam_project/arch_v2/*.json 2>/dev/null | wc -l
+    echo "--- 结果数 (arch_v2 / arch_analog) ---"
+    echo "$(ls /work/home/spotmaverick/nam_project/arch_v2/*.json 2>/dev/null | wc -l) / $(ls /work/home/spotmaverick/nam_project/arch_analog/*.json 2>/dev/null | wc -l)"
   '
   if [ "$MAX" -eq 0 ] || [ "$i" -lt "$MAX" ]; then sleep "$GAP"; fi
 done
