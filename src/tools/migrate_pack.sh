@@ -36,19 +36,38 @@ echo
 # -----------------------------------------------------------------------------
 echo "[1/6] 收集代码与脚本..."
 mkdir -p "$STAGE/code"
-for f in arch_analog_friendly.py arch_search_v2.py analog_sim_wavenet.py \
-         wavenet_official_dcu.py diag_three.py diag_job.sh sbatch_arch2.sh \
-         sbatch_analog.sh analog_sim_wavenet_job.sh; do
-  [ -f "$SRC_ROOT/$f" ] && cp "$SRC_ROOT/$f" "$STAGE/code/" || true
-done
-if [ -d "$SRC_ROOT/src" ]; then
-  rsync -a --exclude '__pycache__' --exclude '*.pyc' \
-        "$SRC_ROOT/src/" "$STAGE/code/src/"
+
+# 优先用 GitHub 上的最新结构（本地已把代码整理进 src/，旧服务器上还是散落结构）。
+# 若 clone 失败则回退到源目录，保证包一定非空。
+GIT_URL="https://github.com/spotmaverick/TinyAmpLab.git"
+CLONE_DIR="$WORK/_clone"
+if git clone --depth 1 "$GIT_URL" "$CLONE_DIR" >/dev/null 2>&1; then
+  echo "      代码来源: GitHub clone (最新整理后结构)"
+  for f in arch_analog_friendly.py arch_search_v2.py analog_sim_wavenet.py \
+           wavenet_official_dcu.py diag_three.py diag_job.sh sbatch_arch2.sh \
+           sbatch_analog.sh analog_sim_wavenet_job.sh; do
+    [ -f "$CLONE_DIR/$f" ] && cp "$CLONE_DIR/$f" "$STAGE/code/" || true
+  done
+  rsync -a --exclude '__pycache__' --exclude '*.pyc' "$CLONE_DIR/src/" "$STAGE/code/src/"
+  rsync -a "$CLONE_DIR/docs/" "$STAGE/code/docs/"
+  cp "$CLONE_DIR/README.md" "$CLONE_DIR/overview.md" "$STAGE/code/" 2>/dev/null || true
+else
+  echo "      代码来源: 源目录 (GitHub clone 失败，回退)"
+  for f in arch_analog_friendly.py arch_search_v2.py analog_sim_wavenet.py \
+           wavenet_official_dcu.py diag_three.py diag_job.sh sbatch_arch2.sh \
+           sbatch_analog.sh analog_sim_wavenet_job.sh; do
+    [ -f "$SRC_ROOT/$f" ] && cp "$SRC_ROOT/$f" "$STAGE/code/" || true
+  done
+  if [ -d "$SRC_ROOT/src" ]; then
+    rsync -a --exclude '__pycache__' --exclude '*.pyc' \
+          "$SRC_ROOT/src/" "$STAGE/code/src/"
+  fi
+  [ -d "$SRC_ROOT/docs" ] && rsync -a "$SRC_ROOT/docs/" "$STAGE/code/docs/"
+  [ -f "$SRC_ROOT/README.md" ] && cp "$SRC_ROOT/README.md" "$STAGE/code/"
+  [ -f "$SRC_ROOT/overview.md" ] && cp "$SRC_ROOT/overview.md" "$STAGE/code/"
 fi
-[ -d "$SRC_ROOT/docs" ] && rsync -a "$SRC_ROOT/docs/" "$STAGE/code/docs/"
-[ -f "$SRC_ROOT/README.md" ] && cp "$SRC_ROOT/README.md" "$STAGE/code/"
-[ -f "$SRC_ROOT/overview.md" ] && cp "$SRC_ROOT/overview.md" "$STAGE/code/"
 echo "      代码文件数: $(find "$STAGE/code" -type f | wc -l | tr -d ' ')"
+echo "      src 子目录: $(cd "$STAGE/code/src" 2>/dev/null && ls -d */ 2>/dev/null | tr '\n' ' ' || echo '(无)')"
 
 # -----------------------------------------------------------------------------
 # 2. 实验结果（json / log / 权重）
@@ -276,6 +295,30 @@ echo "下一步:"
 echo "  1. source $PROJ/env/run_env.sh"
 echo "  2. cd $PROJ && python -c 'import torch; print(torch.__version__, torch.cuda.is_available())'"
 echo "  3. sbatch -p wzhdtest -c 8 --mem=16G --gres=dcu:1 <job>.sh"
+
+# ---- 部署自检: 关键文件必须到位, 否则新服务器上跑不起来 ----
+echo
+echo "=== 部署自检 ==="
+MISSING=0
+for f in arch_analog_friendly.py arch_search_v2.py \
+         src/analog/analog_sim_wavenet.py src/analog/analog_sim_dw.py \
+         src/tools/poll_arch2.sh src/tools/cleanup.sh src/tools/migrate_pack.sh \
+         src/tools/migrate_data.sh src/tools/convert_marshall.py \
+         sbatch_analog.sh sbatch_arch2.sh; do
+  if [ -f "$PROJ/$f" ]; then
+    echo "  ✓ $f"
+  else
+    echo "  ✗ 缺失: $f"
+    MISSING=$((MISSING+1))
+  fi
+done
+if [ "$MISSING" -gt 0 ]; then
+  echo
+  echo "❌ $MISSING 个关键文件缺失，部署不完整。请检查迁移包是否用最新版 migrate_pack.sh 打的。"
+  exit 1
+fi
+echo
+echo "✅ 部署自检通过，关键文件齐全"
 EOF
 chmod +x "$STAGE/deploy.sh"
 
