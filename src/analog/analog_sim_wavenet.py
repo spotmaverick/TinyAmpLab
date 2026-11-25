@@ -46,7 +46,10 @@ P = dict(
     SIGMA_MISMATCH=0.01,
     DRIFT=0.03,
     BETA_H3=0.002,
-    V_SAT=1.5,
+    # lite 的残差流从 0.04 累积到 2.2，preact 峰值 14.6（比 LGW 大 ~20×）。
+    # Vsat=1.5（LGW 定标）下 Gilbert 三次项爆炸，NRMS 0.64；实测扫描 Vsat=16
+    # 时 Gilbert 失真仅 +11%，因此按 lite 动态范围定标。代价是模拟摆幅需求高 ~10×。
+    V_SAT=16.0,
     SIGMA_OFFSET=0.005,
     SNR_DB=70,
     MC=16,
@@ -89,7 +92,7 @@ class Dev:
             if P["DRIFT"] > 0:
                 drift = torch.empty(1, device=DEVICE).uniform_(-P["DRIFT"], P["DRIFT"], generator=gen)
             else:
-                drift = 1.0
+                drift = 0.0  # 关闭漂移=0 扰动, 权重应保持 wq*1*1; 写 1.0 会翻倍
             self.w[k] = (wq * (1 + mm) * (1 + drift)).float()
         self.head_scale = float(sd["head_scale"]) if "head_scale" in sd else HEAD_SCALE
         self._sn = None
@@ -167,7 +170,10 @@ def forward_group(dev, gi, y, c, head_input, sd_keys, cond=1):
 
     hb = dev.w.get(f"layer_arrays.{gi}.head_rechannel.bias") if head_bias else None
     head_out = dev.mac(head_input, dev.w[f"layer_arrays.{gi}.head_rechannel.weight"], hb)
-    return head_out, y[:, :, -out_len:]
+    # 残差流保留全长（不裁到 out_len），与 digital_fwd / 官方实现一致。
+    # 官方 _Layer 每组内部用 y[:, :, -Lz:] 自行对齐，组间不额外裁剪。
+    # 若在这里裁到 out_len，物理路径会比数字路径多裁 (rf_g-1) 个样本。
+    return head_out, y
 
 
 def physical_fwd(dev, x):
@@ -202,15 +208,26 @@ def digital_fwd(sd, x):
 
 
 def chunked(dev, fn, xt):
-    """分段推理, 段间保留 RF-1 历史, 拼接后与整段推理等价 (因果+平移不变)."""
+    """分段推理, 段间保留 RF-1 历史, 拼接后与整段推理逐样本等价.
+
+    digital_fwd / physical_fwd 的输出长度 = 段长 - trim, 其中 trim = 最后一组 rf-1
+    （组间残差不裁，head 累积只被最后一组的 out_len 裁）。
+    段覆盖输入 [a, pos+CHUNK)，输出对应输入 [a+trim, pos+CHUNK)。
+    要取输入 [pos, pos+CHUNK)，需丢弃输出前 (pos - (a+trim)) = overlap-trim 个样本。
+    overlap = RF-1，trim = 最后一组 rf-1，故 drop = (RF-1)-trim（lite 为 4092-3838=254）。
+    这样每段净保留 CHUNK 个样本（首段也是），总长恰为 T-(RF-1)。
+    """
     T = xt.shape[-1]
+    overlap = RF - 1
+    trim = group_rf(GROUPS[-1][2]) - 1
+    drop = overlap - trim
     outs, pos = [], 0
     while pos < T:
-        a = max(0, pos - RF + 1)
+        a = max(0, pos - overlap)
         seg = xt[:, :, a:min(pos + P["CHUNK"], T)]
         o = fn(dev, seg)
-        drop = pos - a
-        outs.append(o[:, :, drop:] if drop > 0 else o)
+        d = min(drop, o.shape[-1])
+        outs.append(o[:, :, d:])
         pos += P["CHUNK"]
     return torch.cat(outs, dim=-1)
 
@@ -287,16 +304,23 @@ def main():
     nparam = sum(v.numel() for v in sd.values() if torch.is_tensor(v))
     print(f"device={DEVICE}  参数 {nparam}  评估 {len(x)/48000:.1f}s  MC×{P['MC']}")
 
+    # 统一裁到官方有效长度 T-RF+1。digital_fwd 用 F.pad 保持长度，组间不裁，
+    # 会比官方多出 (rf_g1-1)=254 个零填充头部；physical_fwd 同理。
+    # 交叉验证已证明两者尾部逐样本一致，故统一取尾部有效段再比较。
+    valid = xt.shape[-1] - RF + 1
+    ref = yt[-valid:]
+
+    def tail(o):
+        return o[-valid:]
+
     with torch.no_grad():
-        o_dig = chunked(None, digital_fwd, xt)[0, 0]
-        n = o_dig.shape[0]
-        ref = yt[-n:]
+        o_dig = tail(chunked(sd, digital_fwd, xt)[0, 0])
         base = nrms(o_dig, ref)
-        print(f"[fp32 数字基线]  NRMS = {base:.4f}")
+        print(f"[fp32 数字基线]  NRMS = {base:.4f}  (eval 长度 {valid})")
 
         # 量化器版本走同一套数字路径, 只为隔离量化影响
         sdq = {k: (quant6(v) if torch.is_tensor(v) else v) for k, v in sd.items()}
-        o_q = chunked(None, digital_fwd, sdq)[0, 0]
+        o_q = tail(chunked(sdq, digital_fwd, xt)[0, 0])
         q = nrms(o_q, ref)
         print(f"[6-bit 仅量化]   NRMS = {q:.4f}")
 
@@ -306,7 +330,7 @@ def main():
             # 第二层: 关闭全部非理想性后, 物理路径应等于数字路径 (抓器件实现的错误)
             g = torch.Generator(device=DEVICE).manual_seed(0)
             dev = Dev(sdq, g)  # 用已量化权重, 参考值即 sdq 数字路径, 隔离器件非理想性
-            o_p = chunked(dev, physical_fwd, xt)[0, 0]
+            o_p = tail(chunked(dev, physical_fwd, xt)[0, 0])
             p = nrms(o_p, ref)
             print(f"[物理路径(无扰)] NRMS = {p:.4f}   (应与 6-bit 量化 {q:.4f} 一致)")
             d = abs(p - q)
@@ -318,7 +342,7 @@ def main():
         for k in range(P["MC"]):
             g = torch.Generator(device=DEVICE).manual_seed(1000 + k)
             dev = Dev(sd, g)
-            o = chunked(dev, physical_fwd, xt)[0, 0]
+            o = tail(chunked(dev, physical_fwd, xt)[0, 0])
             r = nrms(o, ref)
             mc.append(r)
             print(f"  MC#{k+1}: NRMS = {r:.4f}")
