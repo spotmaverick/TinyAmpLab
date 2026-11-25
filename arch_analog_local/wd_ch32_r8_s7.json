@@ -1,0 +1,22 @@
+{
+  "variant": "wd_ch32_r8",
+  "desc": "wd_ch32_r8: depthwise+lowrank1x1(r=8) ch=32 rf=100%",
+  "params": 10577,
+  "rf": 4093,
+  "rf_ms": 85.27,
+  "macs": 9712,
+  "delay_taps": 4092,
+  "epochs": 300,
+  "seed": 7,
+  "dataset": "tsa15",
+  "depthwise": true,
+  "protocol": "our: MSE+batch192000+lr3e-3+cosine",
+  "train_seconds": 1612.4,
+  "best_val_NRMS": 0.079728,
+  "train_NRMS": 0.072243,
+  "train_corr": 0.997392,
+  "val_NRMS": 0.079728,
+  "val_corr": 0.996818,
+  "test_NRMS": 0.078005,
+  "test_corr": 0.996992
+}

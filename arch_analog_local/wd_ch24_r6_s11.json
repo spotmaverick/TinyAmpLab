@@ -1,0 +1,22 @@
+{
+  "variant": "wd_ch24_r6",
+  "desc": "wd_ch24_r6: depthwise+lowrank1x1(r=6) ch=24 rf=100%",
+  "params": 6445,
+  "rf": 4093,
+  "rf_ms": 85.27,
+  "macs": 5796,
+  "delay_taps": 4092,
+  "epochs": 300,
+  "seed": 11,
+  "dataset": "tsa15",
+  "depthwise": true,
+  "protocol": "our: MSE+batch192000+lr3e-3+cosine",
+  "train_seconds": 1657.2,
+  "best_val_NRMS": 0.184133,
+  "train_NRMS": 0.172419,
+  "train_corr": 0.98504,
+  "val_NRMS": 0.184133,
+  "val_corr": 0.982937,
+  "test_NRMS": 0.179764,
+  "test_corr": 0.983729
+}

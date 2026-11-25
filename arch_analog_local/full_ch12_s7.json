@@ -11,12 +11,12 @@
   "dataset": "tsa15",
   "depthwise": false,
   "protocol": "our: MSE+batch192000+lr3e-3+cosine",
-  "train_seconds": 9186.0,
-  "best_val_NRMS": 0.081225,
-  "train_NRMS": 0.072519,
-  "train_corr": 0.997368,
-  "val_NRMS": 0.081225,
+  "train_seconds": 316.7,
+  "best_val_NRMS": 0.081218,
+  "train_NRMS": 0.072511,
+  "train_corr": 0.997369,
+  "val_NRMS": 0.081218,
   "val_corr": 0.996697,
-  "test_NRMS": 0.078476,
-  "test_corr": 0.996948
+  "test_NRMS": 0.078471,
+  "test_corr": 0.996949
 }

@@ -1,0 +1,22 @@
+{
+  "variant": "dw_ch24",
+  "desc": "dw_ch24: depthwise ch=24 rf=100%",
+  "params": 8461,
+  "rf": 4093,
+  "rf_ms": 85.27,
+  "macs": 7812,
+  "delay_taps": 4092,
+  "epochs": 300,
+  "seed": 11,
+  "dataset": "tsa15",
+  "depthwise": true,
+  "protocol": "our: MSE+batch192000+lr3e-3+cosine",
+  "train_seconds": 1496.2,
+  "best_val_NRMS": 0.083894,
+  "train_NRMS": 0.076268,
+  "train_corr": 0.997088,
+  "val_NRMS": 0.083894,
+  "val_corr": 0.996477,
+  "test_NRMS": 0.081234,
+  "test_corr": 0.996726
+}
