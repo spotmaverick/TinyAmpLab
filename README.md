@@ -48,7 +48,24 @@
 
 > **已撤回的结论**：曾据 seed 7 单点写出「短 RF 代价随容量反转（nano −4.9% 反而更好）」。补测发现 nano 种子方差达 27%（s7 0.1412 vs s11 0.1793），该结论被噪声淹没；且 `_rf50` 的 dilation 缩放产生重复序列（13 层仅 9 个唯一值），混淆了 RF 与结构两个变量。详见 `docs/reports/MODEL_SUMMARY.md` G 节。
 
-**物理器件级仿真**（全器件非理想，MC×16）：fp32 0.1831 → 6-bit 0.1976 → 全器件 0.3273 ± 0.0198。
+**物理器件级仿真**（全器件非理想，MC×16）：
+
+| 模型 | fp32 | 6-bit 量化 | 全器件非理想 |
+|---|---:|---:|---:|
+| LGW-TCN 冠军（2149 参数，RF 11.3ms） | 0.1831 | 0.1976 | 0.3273 ± 0.0198 |
+| WaveNet lite（6553 参数，RF 85.3ms） | 运行中（`49855803`） | — | — |
+
+lite 的仿真脚本是 `src/analog/analog_sim_wavenet.py`。它与 LGW 版的差别不只是权重，**算子也按官方 WaveNet 重写**：全连接 3-tap conv + tanh + 1×1 残差，而非 depthwise + ReLU。这点对物理实现有实际意义——差分对饱和天然产生 tanh，官方 WaveNet 的激活正好用它，不需要额外整流电路。脚本带两级自检：`--sanity` 先与官方 `OfficialWaveNet` 逐样本对拍（抓自家前向实现的错误），再关掉全部非理想性验证物理路径等于数字路径。
+
+## 数据集
+
+| 数据集 | 来源 | 时长（train/val/test） | 用途 |
+|---|---|---|---|
+| `tsa15` | 已有 | 152.5 / 20.6 / 38.1 s | 主实验集，全部结论基于它 |
+| `marshall_jvm410h_chod1` | Zenodo 10892012，前级输出 | 210 / 30 / 60 s | 新音箱泛化验证 |
+| `marshall_jvm410h_chod1_spk` | 同上，喇叭输出（含功放） | 210 / 30 / 60 s | 全链路泛化验证 |
+
+Marshall 数据集 2.76 GB，MD5 与官方值一致、全条目 CRC 通过。**该数据集没有独立 test 录音**（test 目录的 9 个录音都是其他旋钮组合，与建模任务不同），因此 trainval 300s 按时序切 70/10/20，test 取末尾 60s。标准设置 `B050_M050_T050_G050` 是各旋钮中间值，符合 NAM 一权重一设置的惯例。另有 28 组旋钮扫描 × 双采集点可用（`convert_marshall.py --list` / `--convert-all`），供多设置联合建模。
 
 ---
 
@@ -113,9 +130,11 @@
 
 | 脚本 | 用途 |
 |---|---|
-| `src/analog/analog_sim.py` | 物理器件仿真主程序（DCU） |
+| `src/analog/analog_sim.py` | LGW-TCN 冠军物理器件仿真（DCU） |
+| `src/analog/analog_sim_wavenet.py` | WaveNet lite 物理器件仿真（`--sanity` 含两级对拍） |
+| `arch_search_v2.py` / `sbatch_arch2.sh` | WaveNet 架构族搜索（支持第 4 参数指定数据集） |
 | `src/tools/convert_new_amps.py` | ToneTwist AFx 数据统一转换 |
-| `src/tools/convert_ua.py` / `convert_marshall.py` | UA1176 / Marshall 数据转换 |
+| `src/tools/convert_ua.py` / `convert_marshall.py` | UA1176 / Marshall 数据转换（后者支持 `--list`/`--convert-all`） |
 | `src/tools/sync_back.sh` | 智算服务器 → 本地结果回传 |
 | `src/tools/poll_dcu.sh` / `poll_arch2.sh` | DCU 作业轮询 |
 | `src/tools/cleanup.sh` | 缓存清理（默认预演；`--apply` 执行；已装 pre-commit 钩子自动跑） |
@@ -158,10 +177,13 @@ python wavenet_official_dcu.py --eval <model.nam> tsa15
 python lgw_official_dcu.py v_tcn812h1 tsa15 100
 
 # 5. 物理器件级仿真（DCU）
-python src/analog/analog_sim.py
+python src/analog/analog_sim.py              # LGW-TCN 冠军
+python src/analog/analog_sim_wavenet.py --sanity   # WaveNet lite，先做两级对拍
+python src/analog/analog_sim_wavenet.py            # 全量 MC×16
 
 # 6. 检查作业进度
 ./src/tools/poll_dcu.sh 180 20
+./src/tools/poll_arch2.sh 900 12            # 架构族 + Marshall 泛化作业
 
 # 7. 清理缓存（默认只预演，不删）
 ./src/tools/cleanup.sh                 # 看将清理什么
