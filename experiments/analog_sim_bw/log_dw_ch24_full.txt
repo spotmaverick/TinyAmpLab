@@ -1,0 +1,27 @@
+device=cuda  variant=dw_ch24  参数 8461  RF 4093 (85.3ms)  MACs 7812  评估 38.1s  MC×16
+  MC#1: NRMS = 0.1015
+  MC#2: NRMS = 0.1119
+  MC#3: NRMS = 0.0970
+  MC#4: NRMS = 0.0971
+  MC#5: NRMS = 0.1083
+  MC#6: NRMS = 0.1005
+  MC#7: NRMS = 0.0985
+  MC#8: NRMS = 0.0930
+  MC#9: NRMS = 0.0960
+  MC#10: NRMS = 0.1206
+  MC#11: NRMS = 0.1137
+  MC#12: NRMS = 0.1081
+  MC#13: NRMS = 0.0961
+  MC#14: NRMS = 0.1032
+  MC#15: NRMS = 0.1109
+  MC#16: NRMS = 0.1071
+[fp32 数字基线]  NRMS = 0.0804
+[6-bit 仅量化]   NRMS = 0.0905
+[全物理层 MC]    NRMS = 0.1040 ± 0.0076
+
+=== 元器件规模核算 ===
+权重存储: 8461 浮栅 2T cell ≈ 16922 管
+每采样模拟 MACs: 7812
+延迟线: RF 4093 抽头 × 12ch 数字 SRAM ≈ 48.0 Kb
+
+结果已写 /workspace/TinyAmpLab/analog_sim/result_dw_ch24_full.json

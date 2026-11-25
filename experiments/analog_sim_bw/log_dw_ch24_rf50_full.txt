@@ -1,0 +1,27 @@
+device=cuda  variant=dw_ch24_rf50  参数 8461  RF 2049 (42.7ms)  MACs 7812  评估 38.1s  MC×16
+  MC#1: NRMS = 0.1128
+  MC#2: NRMS = 0.1142
+  MC#3: NRMS = 0.1056
+  MC#4: NRMS = 0.1135
+  MC#5: NRMS = 0.1127
+  MC#6: NRMS = 0.1263
+  MC#7: NRMS = 0.1204
+  MC#8: NRMS = 0.1079
+  MC#9: NRMS = 0.1234
+  MC#10: NRMS = 0.1372
+  MC#11: NRMS = 0.1150
+  MC#12: NRMS = 0.1147
+  MC#13: NRMS = 0.1089
+  MC#14: NRMS = 0.1162
+  MC#15: NRMS = 0.1154
+  MC#16: NRMS = 0.1239
+[fp32 数字基线]  NRMS = 0.0870
+[6-bit 仅量化]   NRMS = 0.0954
+[全物理层 MC]    NRMS = 0.1168 ± 0.0077
+
+=== 元器件规模核算 ===
+权重存储: 8461 浮栅 2T cell ≈ 16922 管
+每采样模拟 MACs: 7812
+延迟线: RF 2049 抽头 × 12ch 数字 SRAM ≈ 24.0 Kb
+
+结果已写 /workspace/TinyAmpLab/analog_sim/result_dw_ch24_rf50_full.json

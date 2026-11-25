@@ -30,7 +30,9 @@ import soundfile as sf
 torch.manual_seed(0)
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
-BASE = "/work/home/spotmaverick/nam_project"
+# 可移植：默认从脚本所在项目根推导，可用 ANALOG_BASE 覆盖（旧服务器布局）
+import os as _os
+BASE = _os.environ.get("ANALOG_BASE", str(__import__("pathlib").Path(__file__).resolve().parents[2]))
 DATA = BASE + "/data"
 OUT = BASE + "/analog_sim"
 ARCH_DIR = BASE + "/arch_analog"
@@ -293,7 +295,10 @@ def main():
     if not os.path.exists(wpath):
         print(f"[ABORT] 权重不存在: {wpath}")
         sys.exit(1)
-    sd = torch.load(wpath, map_location="cpu")
+    try:
+        sd = torch.load(wpath, map_location="cpu", weights_only=False)
+    except TypeError:  # torch 1.10 无 weights_only 参数
+        sd = torch.load(wpath, map_location="cpu")
     sd = {k: (v.float() if torch.is_tensor(v) else v) for k, v in sd.items()}
 
     x, sr = sf.read(f"{DATA}/tsa15_test_input.wav")

@@ -1,0 +1,27 @@
+device=cuda  variant=dw_ch12  参数 2611  RF 4093 (85.3ms)  MACs 2286  评估 38.1s  MC×16
+  MC#1: NRMS = 0.1608
+  MC#2: NRMS = 0.1616
+  MC#3: NRMS = 0.1386
+  MC#4: NRMS = 0.1445
+  MC#5: NRMS = 0.1471
+  MC#6: NRMS = 0.1323
+  MC#7: NRMS = 0.1705
+  MC#8: NRMS = 0.1352
+  MC#9: NRMS = 0.1417
+  MC#10: NRMS = 0.1602
+  MC#11: NRMS = 0.1336
+  MC#12: NRMS = 0.1746
+  MC#13: NRMS = 0.1472
+  MC#14: NRMS = 0.1561
+  MC#15: NRMS = 0.1456
+  MC#16: NRMS = 0.1518
+[fp32 数字基线]  NRMS = 0.1096
+[6-bit 仅量化]   NRMS = 0.1279
+[全物理层 MC]    NRMS = 0.1501 ± 0.0125
+
+=== 元器件规模核算 ===
+权重存储: 2611 浮栅 2T cell ≈ 5222 管
+每采样模拟 MACs: 2286
+延迟线: RF 4093 抽头 × 6ch 数字 SRAM ≈ 24.0 Kb
+
+结果已写 /workspace/TinyAmpLab/analog_sim/result_dw_ch12_full.json

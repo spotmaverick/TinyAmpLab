@@ -1,0 +1,28 @@
+[cfg] lite RF = 4093 samples = 85.3 ms
+device=cuda  参数 6553  评估 38.1s  MC×16
+[fp32 数字基线]  NRMS = 0.0785  (eval 长度 1826224)
+[6-bit 仅量化]   NRMS = 0.0850
+  MC#1: NRMS = 0.1080
+  MC#2: NRMS = 0.1203
+  MC#3: NRMS = 0.0917
+  MC#4: NRMS = 0.0937
+  MC#5: NRMS = 0.1111
+  MC#6: NRMS = 0.0976
+  MC#7: NRMS = 0.0983
+  MC#8: NRMS = 0.0893
+  MC#9: NRMS = 0.1029
+  MC#10: NRMS = 0.1185
+  MC#11: NRMS = 0.1078
+  MC#12: NRMS = 0.0941
+  MC#13: NRMS = 0.0883
+  MC#14: NRMS = 0.1105
+  MC#15: NRMS = 0.1126
+  MC#16: NRMS = 0.1127
+[全物理层 MC]    NRMS = 0.1036 ± 0.0101
+
+=== 元器件规模核算 (lite) ===
+权重存储: 6553 浮栅 2T cell ≈ 13106 管
+每采样模拟 MACs: 6228
+延迟线: RF 4093 抽头 × 6ch 数字 SRAM ≈ 24.0 Kb
+
+结果已写 /workspace/TinyAmpLab/analog_sim/result_lite_full.json

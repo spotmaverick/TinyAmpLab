@@ -1,0 +1,9 @@
+START 2026-11-25 20:45:02 max_parallel=2
+dw_ch12_full rc=0 34.9s
+lite_full rc=0 43.0s
+dw_ch24_full rc=0 51.1s
+dw_ch12_rf50_full rc=0 44.0s
+dw_ch24_rf50_full rc=0 61.1s
+dw_ch12_vsat rc=0 84.8s
+dw_ch24_vsat rc=0 109.2s
+ALL_DONE 2026-11-25 20:49:18

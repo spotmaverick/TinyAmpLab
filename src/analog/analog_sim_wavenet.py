@@ -29,9 +29,15 @@ import soundfile as sf
 torch.manual_seed(0)
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
-BASE = "/work/home/spotmaverick/nam_project"
+# 可移植：默认从脚本所在项目根推导，可用 ANALOG_BASE 覆盖（旧服务器布局）
+BASE = __import__("os").environ.get("ANALOG_BASE", str(__import__("pathlib").Path(__file__).resolve().parents[2]))
 DATA = BASE + "/data"
+# lite 权重：优先 arch_v2/lite_s7.pt（旧环境），否则用同构的 full_ch12_s7.pt
+# （两者结构/精度完全一致，曾验证 NRMS 精确到小数点后六位）
+import os as _os
 W_PATH = BASE + "/arch_v2/lite_s7.pt"
+if not _os.path.exists(W_PATH):
+    W_PATH = BASE + "/arch_analog/full_ch12_s7.pt"
 OUT = BASE + "/analog_sim"
 
 # 官方 lite 架构 (与 wavenet_official_dcu.py OFFICIAL_ARCHS["lite"] 一致)
@@ -259,7 +265,9 @@ def crosscheck_official(sdq, xt):
     与本地 digital_fwd 逐样本比对. 这一步能抓住 digital_fwd 自身的错误,
     而 physical_fwd vs digital_fwd 只能验证器件非理想性是否已关闭."""
     import importlib.util
-    p = BASE + "/e1/wavenet_official_dcu.py"
+    p = BASE + "/wavenet_official_dcu.py"
+    if not _os.path.exists(p):
+        p = BASE + "/e1/wavenet_official_dcu.py"  # 旧服务器布局
     spec = importlib.util.spec_from_file_location("wn_ref", p)
     m = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(m)
@@ -297,7 +305,10 @@ def main():
     if quick:
         P["MC"] = 3
 
-    sd = torch.load(W_PATH, map_location="cpu")
+    try:
+        sd = torch.load(W_PATH, map_location="cpu", weights_only=False)
+    except TypeError:  # torch 1.10 无 weights_only 参数
+        sd = torch.load(W_PATH, map_location="cpu")
     sd = {k: (v.float() if torch.is_tensor(v) else v) for k, v in sd.items()}
     x, sr = sf.read(f"{DATA}/tsa15_test_input.wav")
     assert sr == 48000

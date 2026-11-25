@@ -1,0 +1,61 @@
+{
+  "variant": "dw_ch24",
+  "vsat_scan": [
+    {
+      "vsat": 1.5,
+      "quant": 0.09048516772645147,
+      "physical_mean": 0.6166,
+      "physical_std": 0.005,
+      "degrade_vs_quant_pct": 581.4
+    },
+    {
+      "vsat": 4.0,
+      "quant": 0.09048516772645147,
+      "physical_mean": 0.2986,
+      "physical_std": 0.0107,
+      "degrade_vs_quant_pct": 230.0
+    },
+    {
+      "vsat": 8.0,
+      "quant": 0.09048516772645147,
+      "physical_mean": 0.1491,
+      "physical_std": 0.0119,
+      "degrade_vs_quant_pct": 64.7
+    },
+    {
+      "vsat": 12.0,
+      "quant": 0.09048516772645147,
+      "physical_mean": 0.1135,
+      "physical_std": 0.0089,
+      "degrade_vs_quant_pct": 25.5
+    },
+    {
+      "vsat": 16.0,
+      "quant": 0.09048516772645147,
+      "physical_mean": 0.1035,
+      "physical_std": 0.0063,
+      "degrade_vs_quant_pct": 14.4
+    },
+    {
+      "vsat": 24.0,
+      "quant": 0.09048516772645147,
+      "physical_mean": 0.099,
+      "physical_std": 0.0036,
+      "degrade_vs_quant_pct": 9.4
+    },
+    {
+      "vsat": 32.0,
+      "quant": 0.09048516772645147,
+      "physical_mean": 0.0982,
+      "physical_std": 0.0027,
+      "degrade_vs_quant_pct": 8.5
+    },
+    {
+      "vsat": 48.0,
+      "quant": 0.09048516772645147,
+      "physical_mean": 0.0979,
+      "physical_std": 0.0022,
+      "degrade_vs_quant_pct": 8.2
+    }
+  ]
+}
