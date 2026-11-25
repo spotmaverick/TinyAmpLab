@@ -35,3 +35,14 @@
   bw/arch_analog      -> arch_analog_local              51 files
   bw/runs_bw          -> runs_bw                        32 files
   bw/analog_sim       -> experiments/analog_sim_bw      21 files
+
+=== 2026-11-25 22:34:30 bw ===
+  bw/arch_v2          -> arch_v2_local                  48 files
+  bw/arch_analog      -> arch_analog_local              51 files
+  bw/runs_bw          -> runs_bw                        32 files
+  bw/analog_sim       -> experiments/analog_sim_bw      21 files
+
+=== 2026-11-25 22:34:32 z100 ===
+  z100/arch_v2          -> experiments/z100_arch_v2       60 files
+  z100/arch_analog      -> experiments/z100_arch_analog   25 files
+  z100/analog_sim       -> experiments/z100_analog_sim    20 files
