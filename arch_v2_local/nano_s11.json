@@ -1,0 +1,22 @@
+{
+  "variant": "nano",
+  "desc": "nano @ \u6211\u65b9\u534f\u8bae",
+  "arch": "nano",
+  "rf_scale_pct": 100,
+  "params": 841,
+  "rf": 4093,
+  "rf_ms": 85.27,
+  "epochs": 300,
+  "seed": 11,
+  "dataset": "tsa15",
+  "protocol": "our: MSE+batch192000+lr3e-3+cosine+GridDataset-align",
+  "train_seconds": 8445.7,
+  "best_val_NRMS": 0.198231,
+  "train_NRMS": 0.190617,
+  "train_corr": 0.981678,
+  "val_NRMS": 0.198231,
+  "val_corr": 0.980156,
+  "test_NRMS": 0.191154,
+  "test_corr": 0.981579,
+  "test_esr": 0.03654
+}

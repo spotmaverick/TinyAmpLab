@@ -185,7 +185,13 @@ def physical_fwd(dev, x):
 
 
 def digital_fwd(sd, x):
-    """无扰数字基线, 顺序与官方 forward 逐行对应."""
+    """无扰数字基线, 顺序与官方 forward 逐行对应.
+
+    权重按需转到输入设备: 权重从 torch.load(map_location='cpu') 载入,
+    但输入 x 可能在 DCU 上, 否则 conv1d 会报 device 不匹配。
+    """
+    dev = x.device
+    sd = {k: (v.to(dev) if torch.is_tensor(v) else v) for k, v in sd.items()}
     c = x
     head_input, y = None, x
     for gi, (in_size, ch, dils, head_out, head_bias) in enumerate(GROUPS):
