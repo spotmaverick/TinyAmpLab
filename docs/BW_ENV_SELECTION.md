@@ -10,13 +10,19 @@
 
 | 代次 | 型号 | 说明 |
 |---|---|---|
-| 深算二号 | K100_AI | 旧服务器所在代次（`wuzh02`） |
-| 深算三号 | **BW100 / BW150 / BW1000** | 本次迁入目标 |
+| 深算一号 | **DCU Z100**（C878180，17.2GB HBM） | **旧服务器 `wuzh02` 的实际卡型**，见 `README.md` / `NAM_COMPARISON.md` |
+| 深算三号 | **BW**（本次实测 `Card Series: BW`，64GB HBM） | 本次迁入目标 |
+
+> **勘误（2026-11-25）**：本表此前把旧卡写成"深算二号 K100_AI"，是错的。
+> 项目原始记录（README.md、NAM_COMPARISON.md）一致指向深算一号 Z100。
+> 用户口语中的"Z100"即指这张旧卡。实测性能对比见
+> `docs/reports/Z100_VS_BW_BENCHMARK.md`。
 
 关键点：**BW 系列仍然走 HIP + DTK + `torch.cuda` API 映射**。所以代码里的
 `DEVICE = "cuda" if torch.cuda.is_available() else "cpu"` **一行都不用改**。
-BW 带来的实际变化是更宽的显存带宽（BW100 约 1.8 TB/s vs K100_AI 896 GB/s）、
-PCIe 5.0、以及更高 FP16 算力——对本项目这种小模型是纯增益。
+BW 带来的实际变化是更宽的显存带宽、PCIe 5.0、以及更高 FP16 算力。
+**注意**：实测 29× 的加速并非全部来自硬件代差（带宽差仅约 2×），
+软件栈从 torch 1.10/DTK22 升级到 torch 2.9/DTK26 贡献了大部分，详见性能报告。
 
 ## 二、推荐档位：按优先级选
 
