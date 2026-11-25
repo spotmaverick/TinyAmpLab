@@ -61,13 +61,35 @@ bash TinyAmpLab_migrate_*/deploy.sh ~/nam_project
 ### 步骤 4：验证环境
 
 ```bash
-source ~/nam_project/env/run_env.sh
-cd ~/nam_project
-python -c "import torch; print(torch.__version__, torch.cuda.is_available())"
+bash src/tools/env_check_bw.sh --full   # 一次性打出 DTK/torch/Python/DCU/算子全部事实
 ```
 
-**期望**：打印 DTK torch 版本 + `True`。
-**若 `torch.cuda.is_available()` 是 False** → 说明当前在登录节点，DCU 只在计算节点可用，这是正常的。
+这个脚本会明确告诉你三件事：
+1. torch 版本是否带 `+das.opt1.dtkNNNN` 后缀（**不带就说明被公版覆盖，DCU 会失效**）
+2. `dtkNNNN` 与本机 `/opt/dtk` 版本是否一致
+3. 本项目用到的算子（`conv1d` 带 dilation / `tanh` / `sigmoid` / 反向传播 / 设备端 Generator / float64）能否正常工作
+
+**期望**：DTK 版本与 torch 后缀一致、`cuda.is_available()` 在计算节点为 `True`。
+**若 `torch.cuda.is_available()` 是 False** → 若在登录节点属正常，DCU 只在计算节点可用。
+**若 torch 版本不带 dtk 后缀** → 停手，环境已被污染，不要在此基础上跑实验。
+
+> BW 系列（海光深算三号）仍是 DTK + ROCm 栈，`torch.cuda` API 映射不变，
+> 代码里的 `DEVICE = "cuda" if ...` **一行都不用改**。
+> 版本选型详见 **`docs/BW_ENV_SELECTION.md`**。
+
+### 步骤 4.5：升级 torch 版本后必做的锚点复现
+
+换 torch 版本会改变数值结果，**历史结论不能无条件继承**。重跑框架自验锚点：
+
+```bash
+sbatch sbatch_analog.sh full_ch12 300 7 tsa15
+```
+
+| 结果 | 判定 |
+|---|---|
+| 0.075 ~ 0.082 | ✅ 数值行为一致（旧环境 0.078476），历史结论可继承 |
+| 偏差 5~15% | ⚠️ 数值有差异但不影响排序，文档需注明 |
+| 偏差 >15% 或不收敛 | ❌ 环境有问题，先排查 DTK/torch 匹配与算子后端 |
 
 ### 步骤 5：跑一次 sanity 确认一切正常
 
@@ -77,6 +99,9 @@ python src/analog/analog_sim_wavenet.py --sanity    # 期望: 官方类交叉验
 python src/analog/analog_sim_dw.py --variant dw_ch12 --sanity   # 期望: PASS
 ```
 
+> 若新环境设备端 `torch.Generator(device=...)` 不可用，`env_check_bw.sh` 会告警，
+> 兜底改法见 `BW_ENV_SELECTION.md` 第五节风险 2。
+
 ### 步骤 6：提交训练作业
 
 ```bash
@@ -84,6 +109,8 @@ sbatch sbatch_analog.sh dw_ch24 300 7 tsa15
 ```
 
 ## 三、环境规格要点
+
+### 旧服务器实测（对照基准）
 
 | 项 | 值 |
 |---|---|
@@ -93,11 +120,20 @@ sbatch sbatch_analog.sh dw_ch24 300 7 tsa15
 | LD_LIBRARY_PATH | 需包含 `/public/software/apps/DeepLearning/PyTorch_Lib` 与 `/public/software/apps/deeplearning-depend` 下所有 `.so` 所在目录 |
 | Slurm | `sbatch -p wzhdtest -c 8 --mem=16G --gres=dcu:1` |
 | DCU device | torch 层面用 `cuda`（**不是 `dpu`**） |
-| neural-amp-modeler | `pip install --only-binary=:all: neural-amp-modeler`（源码编译会失败） |
+| neural-amp-modeler | **不需要**（项目为手写复刻，不 import nam 包） |
+
+### BW 系列新机器推荐（详见 `docs/BW_ENV_SELECTION.md`）
+
+| 项 | 推荐 |
+|---|---|
+| DTK | 26.04 或 25.04 |
+| torch | `2.9.0+das.opt1.dtk2604`（配 DTK26.04）或 `2.5.1+das.opt1.dtk25042`（配 DTK25.04） |
+| Python | 3.11（可接受 3.9~3.12） |
+| 硬约束 | torch 版本必须带 `+das.opt1.dtkNNNN` 且与 `/opt/dtk` 版本一致；**禁止 `pip install torch` 覆盖** |
 
 **若新服务器的 module 名或分区名不同** → 改 `~/nam_project/env/run_env.sh` 与 `sbatch_*.sh` 里的 `#SBATCH` 头即可，其余脚本无需动。
 
-完整规格见迁移包内 `env/ENV_SPEC.md`（含所有踩坑记录）。
+完整规格见迁移包内 `env/ENV_SPEC.md`（含旧环境实测值与 BW 选型两节）。
 
 ## 四、DCU 使用踩坑清单（务必阅读）
 

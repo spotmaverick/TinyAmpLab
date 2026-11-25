@@ -154,21 +154,49 @@ echo "      清单行数: $(wc -l < "$STAGE/dataset/data_files.txt" 2>/dev/null 
 echo "[4/6] 记录环境规格..."
 mkdir -p "$STAGE/env"
 cat > "$STAGE/env/ENV_SPEC.md" <<'EOF'
-# 环境规格（旧服务器实测，用于在新服务器复现）
+# 环境规格
 
-## 关键版本
+> **新机器（BW 系列）选型请看 `docs/BW_ENV_SELECTION.md`**，本文的旧环境值仅作对照。
+> 核心原则：torch 版本由镜像的 DTK 代次决定，**不要自己 pip install torch**。
+
+## A. 旧服务器实测值（供对照，非迁移目标）
+
 | 组件 | 版本 | 说明 |
 |---|---|---|
 | python | 3.8.10 | 集群自带 `python/3.8.10` module |
 | torch | 1.10.0a0+git450cdd1-dtk22.04 | 集群 DTK 自带，**勿用 pip 覆盖** |
 | numpy | 1.24.4 | |
 | soundfile | 0.12.1 | |
-| scipy | 待确认 | |
-| neural-amp-modeler | 需 `pip install --only-binary=:all:` | 从源码编译会失败 |
+| scipy | 未安装（项目不依赖） | |
+| neural-amp-modeler | **不需要** | 项目为手写复刻，不 import nam 包 |
 
-## 关键 module（DTK 环境）
+## B. BW 系列新机器推荐值
+
+| 组件 | 推荐 | 可接受范围 |
+|---|---|---|
+| DTK | 26.04 或 25.04 | 24.04 亦可 |
+| torch | 2.9.0+das.opt1.dtk2604（配 DTK26.04）<br>或 2.5.1+das.opt1.dtk25042（配 DTK25.04） | torch 2.1 ~ 2.9 |
+| Python | 3.11 | 3.9 ~ 3.12 |
+| numpy | 1.x 或 2.x | 均可（已查无 numpy2 破坏点） |
+| soundfile | 0.12+ | 任意 |
+| nam / lightning / pydantic | **不需要** | — |
+
+### 硬约束
+1. torch 版本号必须含 `+das.opt1.dtkNNNN` 后缀，且 `dtkNNNN` 与本机 DTK 版本一致
+2. **禁止** `pip install torch` 覆盖镜像预装的适配版，否则 DCU 直接不可用
+3. `torch.load` 有 12 处未指定 `weights_only`；其中 `wavenet_official_dcu.py` /
+   `lgw_official_dcu.py` 保存的是混合 dict，在 torch≥2.6 下需加 `weights_only=False`
+
+## C. DTK 环境激活
+
+新机器若用 module：
 ```
 module purge
+module load compiler/dtk/<版本>  python/<版本>
+# 或直接 source /opt/dtk/env.sh（裸机 DTK 安装方式）
+```
+旧服务器用的是：
+```
 module load compiler/devtoolset/7.3.1 compiler/dtk/22.04.1 mpi/hpcx/gcc-7.3.1 python/3.8.10
 ```
 
@@ -200,9 +228,17 @@ DTK 的 `.so` 分散在：
 
 ## 已知环境坑
 - **Miniconda glibc 不兼容**：必须用 `py310_23.5.2` 旧版，新版与集群 glibc 冲突。
-- **pip 源码编译失败**：`pip install neural-amp-modeler` 会尝试编译 numpy 扩展而失败，必须 `--only-binary=:all:`。
-- **NAM CLI 会进 GUI 报错**：不要用 CLI，直接用 Python API。
+- **torch 被社区公版覆盖会失去 DCU**：版本号不带 `dtk` 后缀即为异常。
+- **NAM 包本项目不需要**：若确实要装，`pip install --only-binary=:all:`（源码编译会失败）。
 - **官方 config schema**：`sample_rate` 必填，`ny: null`。
+- **登录节点无 DCU**：`torch.cuda.is_available()` 为 False 属正常，须 sbatch 到计算节点。
+
+## 迁移后必做验收
+```bash
+bash src/tools/env_check_bw.sh --full          # 1. 环境指纹 + 算子冒烟
+sbatch sbatch_analog.sh full_ch12 300 7 tsa15  # 2. 锚点复现，应 ≈0.0785
+python src/analog/analog_sim_wavenet.py --sanity  # 3. 物理仿真对拍，须 PASS
+```
 EOF
 
 cat > "$STAGE/env/run_env.sh" <<'EOF'
