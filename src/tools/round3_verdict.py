@@ -92,6 +92,16 @@ def main():
     u = load("wd_ch32_r8", 7)
     print(f"     {fmt(u)}" + ("  → 能否压到 0.075 以下" if u else ""))
 
+    # 低秩诊断：秩 vs 宽度
+    print("\n[低秩诊断] 秩 vs 网络宽度（250 epochs）")
+    print("     wd_ch24_r6 (r=6,ch=24,6445P): ", end="")
+    print(f"{fmt(load('wd_ch24_r6',7))} / {fmt(load('wd_ch24_r6',11))}")
+    print("     wd_ch24_r8 (r=8,ch=24,7741P): ", end="")
+    print(f"{fmt(load('wd_ch24_r8',7))} / {fmt(load('wd_ch24_r8',11))}")
+    print("     wd_ch32_r6 (r=6,ch=32,8849P): ", end="")
+    print(f"{fmt(load('wd_ch32_r6',7))}")
+    print("     → 加秩无效、加宽有效 ⇒ 瓶颈是网络宽度而非秩")
+
     print("\n" + "=" * 74)
 
 

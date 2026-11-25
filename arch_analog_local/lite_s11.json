@@ -1,0 +1,22 @@
+{
+  "variant": "lite",
+  "desc": "lite: full ch=12 rf=100%",
+  "params": 6553,
+  "rf": 4093,
+  "rf_ms": 85.27,
+  "macs": 6228,
+  "delay_taps": 4092,
+  "epochs": 300,
+  "seed": 11,
+  "dataset": "tsa15",
+  "depthwise": false,
+  "protocol": "our: MSE+batch192000+lr3e-3+cosine",
+  "train_seconds": 752.7,
+  "best_val_NRMS": 0.079161,
+  "train_NRMS": 0.07154,
+  "train_corr": 0.997438,
+  "val_NRMS": 0.079161,
+  "val_corr": 0.996864,
+  "test_NRMS": 0.075966,
+  "test_corr": 0.997122
+}
