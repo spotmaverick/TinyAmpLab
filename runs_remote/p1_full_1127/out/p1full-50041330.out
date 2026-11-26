@@ -1,0 +1,119 @@
+===== JOB INFO =====
+job_id   : 50041330
+job_name : p1full
+node     : b01r2n10
+partition: wzhdtest
+start    : 2026-11-27 02:59:55
+cwd      : /work/home/spotmaverick/nam_project
+gres     : 1
+===== DCU 可见性 =====
+torch 2.1.0  device=Z100SM  mem=16.0GB  count=1
+===== RUN =====
+[device] cuda  torch=2.1.0  hip=5.7.24164  count=1
+[device] Z100SM
+[P-1] dev=cuda mc=3 sec=5.0 torch=2.1.0
+
+[s7] ideal=0.0591 base(serial)=0.1040 prev=0.0894 drift=1.164x head_in_rms=19.62 max=88.9
+    V_add=   8  ser Δ=8.175  tree Δ=8.053
+    V_add=  16  ser Δ=6.194  tree Δ=6.057
+    V_add=  24  ser Δ=4.682  tree Δ=4.560
+    V_add=  32  ser Δ=3.643  tree Δ=3.544
+    V_add=  48  ser Δ=2.439  tree Δ=2.386
+    V_add=  64  ser Δ=1.843  tree Δ=1.820
+    V_add=  96  ser Δ=1.351  tree Δ=1.351
+    V_add= 128  ser Δ=1.180  tree Δ=1.184
+    V_add= 192  ser Δ=1.070  tree Δ=1.073
+    V_add= 256  ser Δ=1.035  tree Δ=1.038
+    V_add= 384  ser Δ=1.013  tree Δ=1.014
+    V_add= 512  ser Δ=1.005  tree Δ=1.006
+    → 门槛 V_add=256 (16×V_SAT)
+
+[s11] ideal=0.0589 base(serial)=0.2096 prev=0.2155 drift=0.973x head_in_rms=17.50 max=99.3
+    V_add=   8  ser Δ=4.084  tree Δ=4.146
+    V_add=  16  ser Δ=3.216  tree Δ=3.401
+    V_add=  24  ser Δ=2.539  tree Δ=2.778
+    V_add=  32  ser Δ=2.083  tree Δ=2.321
+    V_add=  48  ser Δ=1.584  tree Δ=1.768
+    V_add=  64  ser Δ=1.352  tree Δ=1.483
+    V_add=  96  ser Δ=1.163  tree Δ=1.233
+    V_add= 128  ser Δ=1.092  tree Δ=1.134
+    V_add= 192  ser Δ=1.041  tree Δ=1.060
+    V_add= 256  ser Δ=1.023  tree Δ=1.034
+    V_add= 384  ser Δ=1.010  tree Δ=1.015
+    V_add= 512  ser Δ=1.005  tree Δ=1.008
+    → 门槛 V_add=192 (12×V_SAT)
+
+[s23] ideal=0.0612 base(serial)=0.1211 prev=0.1259 drift=0.962x head_in_rms=22.43 max=148.6
+    V_add=   8  ser Δ=7.394  tree Δ=7.225
+    V_add=  16  ser Δ=5.824  tree Δ=5.696
+    V_add=  24  ser Δ=4.476  tree Δ=4.450
+    V_add=  32  ser Δ=3.504  tree Δ=3.556
+    V_add=  48  ser Δ=2.361  tree Δ=2.480
+    V_add=  64  ser Δ=1.798  tree Δ=1.919
+    V_add=  96  ser Δ=1.340  tree Δ=1.421
+    V_add= 128  ser Δ=1.181  tree Δ=1.230
+    V_add= 192  ser Δ=1.077  tree Δ=1.098
+    V_add= 256  ser Δ=1.044  tree Δ=1.056
+    V_add= 384  ser Δ=1.022  tree Δ=1.027
+    V_add= 512  ser Δ=1.014  tree Δ=1.017
+    → 门槛 V_add=256 (16×V_SAT)
+
+[s31] ideal=0.0611 base(serial)=0.2357 prev=0.2376 drift=0.992x head_in_rms=22.92 max=102.6
+    V_add=   8  ser Δ=3.686  tree Δ=3.695
+    V_add=  16  ser Δ=2.997  tree Δ=3.083
+    V_add=  24  ser Δ=2.469  tree Δ=2.606
+    V_add=  32  ser Δ=2.094  tree Δ=2.253
+    V_add=  48  ser Δ=1.640  tree Δ=1.791
+    V_add=  64  ser Δ=1.403  tree Δ=1.524
+    V_add=  96  ser Δ=1.193  tree Δ=1.265
+    V_add= 128  ser Δ=1.110  tree Δ=1.155
+    V_add= 192  ser Δ=1.050  tree Δ=1.071
+    V_add= 256  ser Δ=1.028  tree Δ=1.040
+    V_add= 384  ser Δ=1.012  tree Δ=1.018
+    V_add= 512  ser Δ=1.007  tree Δ=1.010
+    → 门槛 V_add=192 (12×V_SAT)
+
+[s37] ideal=0.0594 base(serial)=0.1562 prev=0.1393 drift=1.121x head_in_rms=22.25 max=233.7
+    V_add=   8  ser Δ=5.402  tree Δ=5.385
+    V_add=  16  ser Δ=4.212  tree Δ=4.178
+    V_add=  24  ser Δ=3.286  tree Δ=3.241
+    V_add=  32  ser Δ=2.631  tree Δ=2.585
+    V_add=  48  ser Δ=1.859  tree Δ=1.828
+    V_add=  64  ser Δ=1.481  tree Δ=1.465
+    V_add=  96  ser Δ=1.186  tree Δ=1.184
+    V_add= 128  ser Δ=1.091  tree Δ=1.092
+    V_add= 192  ser Δ=1.034  tree Δ=1.035
+    V_add= 256  ser Δ=1.017  tree Δ=1.018
+    V_add= 384  ser Δ=1.006  tree Δ=1.006
+    V_add= 512  ser Δ=1.003  tree Δ=1.003
+    → 门槛 V_add=192 (12×V_SAT)
+
+==========================================================================
+A. head 累加幅度谱（理想算子）
+seed     a_末      h_末   |max|     p99     相干   h_末/16
+  s7    7.50    19.62    88.9   59.85   1.53     1.23
+ s11    9.77    17.50    99.3   55.09   1.45     1.09
+ s23   12.12    22.43   148.6   72.47   1.42     1.40
+ s31   12.91    22.92   102.6   79.18   1.44     1.43
+ s37   10.28    22.25   233.7   66.39   1.50     1.39
+
+B. 加法器摆幅门槛（Δ_serial<1.05）
+    s7  基线=0.1040  门槛V_add=256  =16×V_SAT
+   s11  基线=0.2096  门槛V_add=192  =12×V_SAT
+   s23  基线=0.1211  门槛V_add=256  =16×V_SAT
+   s31  基线=0.2357  门槛V_add=192  =12×V_SAT
+   s37  基线=0.1562  门槛V_add=192  =12×V_SAT
+
+C. 树形 vs 串行（各摆幅下的 Δ 差）
+    s7  tree/serial Δ 比 = 0.973~1.003  中位 0.994  (树形无收益)
+   s11  tree/serial Δ 比 = 1.003~1.116  中位 1.048  (树形无收益)
+   s23  tree/serial Δ 比 = 0.977~1.067  中位 1.013  (树形无收益)
+   s31  tree/serial Δ 比 = 1.002~1.092  中位 1.035  (树形无收益)
+   s37  tree/serial Δ 比 = 0.983~1.001  中位 0.997  (树形无收益)
+
+D. 仿真器漂移校验（本次/上轮，应≈1.00）
+  中位 0.992x   范围 0.962~1.164
+
+写出 /work/home/spotmaverick/nam_project/p1/out/p1full.json
+===== DONE =====
+rc=0  elapsed=279s  end=2026-11-27 03:05:24

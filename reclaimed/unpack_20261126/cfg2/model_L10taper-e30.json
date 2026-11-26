@@ -1,0 +1,57 @@
+{
+    "_notes": [
+        "L10（10 层，RF 5411）+ Layer Gain Taper 叠加",
+        "依据：L10 器件退化最低（器件 NRMS 0.2785，ratio 3.50），",
+        "taper 单独能把 V_SAT 需求从 64 降到约 40。",
+        "两者机理不同（减层 = 减少累加项；taper = 压后期层增益），预期可叠加。",
+        "物理成本：L10 少 5 层延迟线抽头；taper 是电阻比，零成本。",
+        "L10 + taper 1.0->0.3（主力）"
+    ],
+    "net": {
+        "name": "ScaledWaveNet",
+        "config": {
+            "layers_configs": [
+                {
+                    "condition_size": 1,
+                    "input_size": 1,
+                    "channels": 12,
+                    "head": {
+                        "out_channels": 1,
+                        "kernel_size": 1,
+                        "bias": true
+                    },
+                    "kernel_size": 6,
+                    "dilations": [
+                        1,
+                        7,
+                        47,
+                        157,
+                        329,
+                        1,
+                        7,
+                        47,
+                        157,
+                        329
+                    ],
+                    "activation": "LeakyReLU",
+                    "groups_input": 4
+                }
+            ],
+            "head_scale": 0.01,
+            "layer_gains": {
+                "mode": "exp",
+                "start": 1.0,
+                "end": 0.3
+            }
+        }
+    },
+    "optimizer": {
+        "lr": 0.004
+    },
+    "lr_scheduler": {
+        "class": "ExponentialLR",
+        "kwargs": {
+            "gamma": 0.993
+        }
+    }
+}

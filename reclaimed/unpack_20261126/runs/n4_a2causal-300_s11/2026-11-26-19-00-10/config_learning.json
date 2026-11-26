@@ -1,0 +1,20 @@
+{
+    "_notes": [
+        "\u5b98\u65b9\u534f\u8bae 300ep\uff1a\u4e0e 100ep \u5b8c\u5168\u76f8\u540c\uff0c\u4ec5 max_epochs \u6539\u4e3a 300",
+        "lr/scheduler \u5728 model config \u7684 optimizer \u5b57\u6bb5"
+    ],
+    "train_dataloader": {
+        "batch_size": 16,
+        "shuffle": true,
+        "pin_memory": true,
+        "drop_last": true,
+        "num_workers": 4
+    },
+    "val_dataloader": {},
+    "trainer": {
+        "accelerator": "gpu",
+        "devices": 1,
+        "max_epochs": 300
+    },
+    "trainer_fit_kwargs": {}
+}

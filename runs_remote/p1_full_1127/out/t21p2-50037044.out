@@ -1,0 +1,16 @@
+===== JOB INFO =====
+job_id   : 50037044
+job_name : t21p2
+node     : b01r2n00
+partition: wzhdtest
+start    : 2026-11-27 01:56:37
+cwd      : /work/home/spotmaverick/nam_project
+gres     : 1
+===== DCU 可见性 =====
+===== RUN =====
+torch 2.1.0 hip 5.7.24164
+avail True count 1
+dev Z100SM 16.0 GB
+matmul OK torch.Size([2048, 2048]) 36.1305
+===== DONE =====
+rc=0  elapsed=60s  end=2026-11-27 01:57:37

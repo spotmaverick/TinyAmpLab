@@ -1,0 +1,6 @@
+{
+  "_notes": ["族B2: 递归块 ch16 x4层 分组4, 延迟线=0"],
+  "net": {"name": "RecurrentNet", "config": {"channels": 16, "n_blocks": 4, "groups": 4}},
+  "optimizer": {"lr": 0.004},
+  "lr_scheduler": {"class": "ExponentialLR", "kwargs": {"gamma": 0.993}}
+}

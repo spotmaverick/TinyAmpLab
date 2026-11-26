@@ -1,0 +1,21 @@
+{
+    "_notes": [
+        "150ep 筛选协议：与 300ep 完全相同，仅 max_epochs=150",
+        "用途：多配置快速筛选（4090 上单 run 约 18~25 min，3090 约 30~40 min）",
+        "注意：150ep 的绝对精度不可与 300ep 直接比较，只用来看配置之间的相对排序"
+    ],
+    "train_dataloader": {
+        "batch_size": 16,
+        "shuffle": true,
+        "pin_memory": true,
+        "drop_last": true,
+        "num_workers": 4
+    },
+    "val_dataloader": {},
+    "trainer": {
+        "accelerator": "gpu",
+        "devices": 1,
+        "max_epochs": 150
+    },
+    "trainer_fit_kwargs": {}
+}

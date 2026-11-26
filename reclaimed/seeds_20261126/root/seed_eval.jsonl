@@ -1,0 +1,2 @@
+{"run": "sd_L10-ch32-bigRF_s31", "nrms_dig": 0.05912988277608495, "nrms_dev": 0.2376329913912627, "ratio": 4.01883075417449, "rms_out": 0.26782557368278503, "params": 18945, "ch": 32, "L": 10, "g_in": 8, "alpha": null, "gains": null}
+{"run": "sd_L10-ch32-bigRF_s37", "nrms_dig": 0.057888002725559724, "nrms_dev": 0.13926908345776806, "ratio": 2.405836734738052, "rms_out": 0.2693523168563843, "params": 18945, "ch": 32, "L": 10, "g_in": 8, "alpha": null, "gains": null}

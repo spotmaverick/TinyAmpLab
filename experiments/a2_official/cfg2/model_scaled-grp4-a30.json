@@ -1,0 +1,54 @@
+{
+    "_notes": [
+        "模拟原生残差缩放：每层 layer1x1 输出乘 alpha=0.5",
+        "alpha=0.3（更强压制）"
+    ],
+    "net": {
+        "name": "ScaledWaveNet",
+        "config": {
+            "layers_configs": [
+                {
+                    "condition_size": 1,
+                    "input_size": 1,
+                    "channels": 12,
+                    "head": {
+                        "out_channels": 1,
+                        "kernel_size": 1,
+                        "bias": true
+                    },
+                    "kernel_size": 6,
+                    "dilations": [
+                        1,
+                        5,
+                        29,
+                        97,
+                        227,
+                        1,
+                        5,
+                        29,
+                        97,
+                        227,
+                        1,
+                        5,
+                        29,
+                        97,
+                        227
+                    ],
+                    "activation": "LeakyReLU",
+                    "groups_input": 4
+                }
+            ],
+            "head_scale": 0.01,
+            "residual_scale": 0.3
+        }
+    },
+    "optimizer": {
+        "lr": 0.004
+    },
+    "lr_scheduler": {
+        "class": "ExponentialLR",
+        "kwargs": {
+            "gamma": 0.993
+        }
+    }
+}

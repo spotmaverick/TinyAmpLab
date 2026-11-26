@@ -1,0 +1,53 @@
+{
+    "_notes": [
+        "L10-bigRF \u662f\u5f53\u524d\u5668\u4ef6\u51a0\u519b\uff08\u5668\u4ef6 NRMS 0.2785, ratio 3.50\uff09\uff0c\u4f46\u6570\u5b57\u7cbe\u5ea6 0.0796",
+        "\u4e0d\u53ca\u65cf A \u7684 15 \u5c42\u914d\u7f6e\uff080.0574\uff09\u3002\u672c\u6279\u76ee\u6807\uff1a\u5728\u4fdd\u6301 L10 \u7684\u524d\u63d0\u4e0b\u63d0\u5347\u6570\u5b57\u5bb9\u91cf\u3002",
+        "\u624b\u6bb5\uff1a\u52a0\u5bbd\u901a\u9053 ch18->ch24/32\uff0c\u6216\u52a0\u5c42\u5230 12\u3002\u7269\u7406\u6210\u672c\uff1a\u4ea4\u53c9\u5f00\u5173 ch^2/g \u4e0a\u5347\uff0c",
+        "\u4f46\u5ef6\u8fdf\u7ebf\u62bd\u5934\u6570\u4ecd\u5c11\u4e8e 15 \u5c42\u3002",
+        "12 \u5c42 ch18 g6\uff1a\u5c42\u6570\u4e0e\u5bb9\u91cf\u6298\u4e2d"
+    ],
+    "net": {
+        "name": "WaveNet",
+        "config": {
+            "layers_configs": [
+                {
+                    "condition_size": 1,
+                    "input_size": 1,
+                    "channels": 18,
+                    "head": {
+                        "out_channels": 1,
+                        "kernel_size": 1,
+                        "bias": true
+                    },
+                    "kernel_size": 6,
+                    "dilations": [
+                        1,
+                        7,
+                        47,
+                        157,
+                        329,
+                        613,
+                        1,
+                        7,
+                        47,
+                        157,
+                        329,
+                        613
+                    ],
+                    "activation": "LeakyReLU",
+                    "groups_input": 6
+                }
+            ],
+            "head_scale": 0.01
+        }
+    },
+    "optimizer": {
+        "lr": 0.004
+    },
+    "lr_scheduler": {
+        "class": "ExponentialLR",
+        "kwargs": {
+            "gamma": 0.993
+        }
+    }
+}

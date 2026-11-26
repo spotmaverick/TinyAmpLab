@@ -1,0 +1,22 @@
+{
+  "variant": "lite",
+  "desc": "lite @ \u6211\u65b9\u534f\u8bae",
+  "arch": "lite",
+  "rf_scale_pct": 100,
+  "params": 6553,
+  "rf": 4093,
+  "rf_ms": 85.27,
+  "epochs": 300,
+  "seed": 7,
+  "dataset": "bigmuff_diy",
+  "protocol": "our: MSE+batch192000+lr3e-3+cosine+GridDataset-align",
+  "train_seconds": 10148.2,
+  "best_val_NRMS": 0.05,
+  "train_NRMS": 0.056742,
+  "train_corr": 0.99839,
+  "val_NRMS": 0.05,
+  "val_corr": 0.998749,
+  "test_NRMS": 0.042704,
+  "test_corr": 0.999088,
+  "test_esr": 0.001824
+}

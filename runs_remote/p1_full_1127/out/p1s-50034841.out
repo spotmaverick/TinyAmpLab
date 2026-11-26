@@ -1,0 +1,30 @@
+===== JOB INFO =====
+job_id   : 50034841
+job_name : p1s
+node     : b03r4n18
+partition: wzhdtest
+start    : 2026-11-27 01:23:43
+cwd      : /work/home/spotmaverick/nam_project
+gres     : 1
+===== DCU 可见性 =====
+===== RUN =====
+[P-1] dev=cpu mc=1 sec=0.5 torch=2.6.0+cpu
+
+[s7] ideal=0.0596 base(serial)=0.0965 prev=0.0894 drift=1.080x head_in_rms=20.16 max=84.6
+
+==========================================================================
+A. head 累加幅度谱（理想算子）
+seed     a_末      h_末   |max|     p99     相干   h_末/16
+  s7    7.73    20.16    84.6   62.65   1.52     1.26
+
+B. 加法器摆幅门槛（Δ_serial<1.05）
+    s7  基线=0.0965  门槛V_add=None  (>512)
+
+C. 树形 vs 串行（各摆幅下的 Δ 差）
+
+D. 仿真器漂移校验（本次/上轮，应≈1.00）
+  中位 1.080x   范围 1.080~1.080
+
+写出 /work/home/spotmaverick/nam_project/p1/out/p1smoke.json
+===== DONE =====
+rc=0  elapsed=156s  end=2026-11-27 01:26:19

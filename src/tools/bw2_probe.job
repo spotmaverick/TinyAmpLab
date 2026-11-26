@@ -1,0 +1,52 @@
+#!/bin/bash
+#SBATCH -p hx1hdnormal
+#SBATCH -J bw2_torch_probe
+#SBATCH -c 8
+#SBATCH --mem=24G
+#SBATCH --gres=dcu:1
+#SBATCH -t 00:20:00
+# bw2 gfx936 torch 环境验证（迁移 bw 的 torch 2.9.0 + dtk2604 wheel）
+#
+# 背景：bw2 原有 torch 2.1.0(dtk2404) 的 get_arch_list() 只有 gfx906/926/928，
+#       而 bw2 的卡是 gfx936 → invalid device function。
+#       bw 的 torch 2.9.0+das.opt1.dtk2604 含 gfx936，已搬到 bw2。
+# 依赖：/public/home/spotmaverick/py311/lib/python3.11/site-packages  (torch 2.9.0)
+#       系统 anaconda3/2023.09/bin/python3.11 (3.11.5, ABI 匹配 cp311)
+#       dtk-25.04.2 的 librocblas（dtk-26.04 的 rocblas 缺 libmsgpackc.so.2）
+
+D26=/public/software/compiler/dtk-26.04
+D25=/public/software/compiler/dtk-25.04.2
+export LD_LIBRARY_PATH=$D25/lib:$D26/lib:$D26/lib64:$D26/hip/lib:$D26/miopen/lib:$D26/.hyhal/rocm_smi/lib
+export PYTHONPATH=/public/home/spotmaverick/py311/lib/python3.11/site-packages
+export AMDGPU_TARGETS="gfx906;gfx926;gfx928;gfx936;gfx938"
+export MIOPEN_FIND_MODE=3
+
+PY=/public/software/apps/anaconda3/2023.09/bin/python3.11
+
+echo "=== 节点信息 ==="
+hostname; date
+echo "=== 设备 ==="
+ls /dev/kfd /dev/dri 2>/dev/null
+
+echo "=== torch 基础 ==="
+$PY -c "
+import torch, sys
+print('py', sys.version.split()[0])
+print('torch', torch.__version__)
+print('arch', torch.cuda.get_arch_list())
+print('avail', torch.cuda.is_available())
+if torch.cuda.is_available():
+    print('count', torch.cuda.device_count())
+    print('dev', torch.cuda.get_device_name(0))
+    a = torch.randn(1000, 1000, device='cuda')
+    print('matmul', float((a @ a).sum()))
+    import torch.nn as nn
+    c = nn.Conv1d(16, 16, 3, dilation=256).cuda()
+    y = c(torch.randn(1, 16, 5000, device='cuda'))
+    print('conv1d ok', tuple(y.shape))
+" 2>&1 | tail -20
+
+echo "=== arch_search_v2 试跑 2 ep ==="
+cd /public/home/spotmaverick/nam_project 2>/dev/null || exit 1
+timeout 1800 $PY arch_search_v2.py nano 2 7 tsa15 2>&1 | tail -10
+echo "=== 探测结束 ==="

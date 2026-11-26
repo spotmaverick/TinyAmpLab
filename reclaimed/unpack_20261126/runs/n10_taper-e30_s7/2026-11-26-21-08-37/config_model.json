@@ -1,0 +1,62 @@
+{
+    "_notes": [
+        "\u9010\u5c42\u589e\u76ca\u6e10\u53d8\uff1a\u5728\u6bcf\u5c42 activation \u8f93\u51fa\u540e\u4e58 gamma_i\uff08\u4e0d\u52a8 layer1x1\uff09",
+        "\u4f9d\u636e\uff1a\u5b98\u65b9 _Layer.forward \u7684 head_output \u4e0d\u8fc7 layer1x1\uff0c",
+        "\u6240\u4ee5\u628a alpha \u4e58\u5728 layer1x1 \u4e0a\u53ea\u538b\u6b8b\u5dee\u94fe\uff0chead \u8def\u5f84\u4e0d\u53d8 -> V_SAT \u9700\u6c42\u4e0d\u964d\u3002",
+        "\u7269\u7406\u610f\u4e49\uff1a\u6bcf\u5c42\u6fc0\u6d3b\u540e\u4e32\u4e00\u4e2a\u56fa\u5b9a\u7535\u963b\u5206\u538b\u6bd4\uff0c\u6a21\u62df\u7535\u8def\u96f6\u6210\u672c\u3002",
+        "\u6b63\u786e\u4f5c\u7528\u70b9 = activation \u4e4b\u540e\uff0c\u4e00\u4e2a\u70b9\u540c\u65f6\u8986\u76d6 residual \u4e0e head \u4e24\u6761\u8def\u5f84\u3002",
+        "\u4e2d\u7b49\u6e10\u53d8 1.0->0.3"
+    ],
+    "net": {
+        "name": "ScaledWaveNet",
+        "config": {
+            "layers_configs": [
+                {
+                    "condition_size": 1,
+                    "input_size": 1,
+                    "channels": 12,
+                    "head": {
+                        "out_channels": 1,
+                        "kernel_size": 1,
+                        "bias": true
+                    },
+                    "kernel_size": 6,
+                    "dilations": [
+                        1,
+                        5,
+                        29,
+                        97,
+                        227,
+                        1,
+                        5,
+                        29,
+                        97,
+                        227,
+                        1,
+                        5,
+                        29,
+                        97,
+                        227
+                    ],
+                    "activation": "LeakyReLU",
+                    "groups_input": 4
+                }
+            ],
+            "head_scale": 0.01,
+            "layer_gains": {
+                "mode": "exp",
+                "start": 1.0,
+                "end": 0.3
+            }
+        }
+    },
+    "optimizer": {
+        "lr": 0.004
+    },
+    "lr_scheduler": {
+        "class": "ExponentialLR",
+        "kwargs": {
+            "gamma": 0.993
+        }
+    }
+}

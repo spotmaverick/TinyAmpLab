@@ -1,0 +1,20 @@
+{
+    "_notes": [
+        "官方协议 100ep（nam_full_configs/learning/default.json 同参）",
+        "lr 与 scheduler 在 model config 的 optimizer 字段里，不在此文件"
+    ],
+    "train_dataloader": {
+        "batch_size": 16,
+        "shuffle": true,
+        "pin_memory": true,
+        "drop_last": true,
+        "num_workers": 4
+    },
+    "val_dataloader": {},
+    "trainer": {
+        "accelerator": "gpu",
+        "devices": 1,
+        "max_epochs": 100
+    },
+    "trainer_fit_kwargs": {}
+}

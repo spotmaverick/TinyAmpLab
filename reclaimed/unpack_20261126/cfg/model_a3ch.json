@@ -1,0 +1,52 @@
+{
+    "_notes": [
+        "族 A 的 3 通道版本，用于与 A2 Lite(3ch) 做同容量公平对比",
+        "ch=3 无法分组，故 groups_input=1（等价全连接 3x3）"
+    ],
+    "net": {
+        "name": "WaveNet",
+        "config": {
+            "layers_configs": [
+                {
+                    "condition_size": 1,
+                    "input_size": 1,
+                    "channels": 3,
+                    "head": {
+                        "out_channels": 1,
+                        "kernel_size": 1,
+                        "bias": true
+                    },
+                    "kernel_size": 6,
+                    "dilations": [
+                        1,
+                        5,
+                        29,
+                        97,
+                        227,
+                        1,
+                        5,
+                        29,
+                        97,
+                        227,
+                        1,
+                        5,
+                        29,
+                        97,
+                        227
+                    ],
+                    "activation": "LeakyReLU"
+                }
+            ],
+            "head_scale": 0.01
+        }
+    },
+    "optimizer": {
+        "lr": 0.004
+    },
+    "lr_scheduler": {
+        "class": "ExponentialLR",
+        "kwargs": {
+            "gamma": 0.993
+        }
+    }
+}

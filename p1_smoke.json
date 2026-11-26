@@ -1,0 +1,38 @@
+{
+ "summary": {
+  "n_seed": 1,
+  "serial_delta_median": 6.642359950197627,
+  "tree_delta_median": 6.48938132019407,
+  "tree_vs_serial_gain_median": 0.9769692351588075,
+  "verdict": "tree_valuable",
+  "drift_median": 1.1027225664725036,
+  "params": {
+   "HEAD_VSAT": 16.0,
+   "HEAD_BETA": 0.002,
+   "HEAD_SIGMA_OFF": 0.005,
+   "mc": 1,
+   "seconds": 0.3
+  }
+ },
+ "rows": [
+  {
+   "seed": "s7",
+   "RF": 5411,
+   "ch": 32,
+   "L": 10,
+   "g_in": 8,
+   "cfg": "/Users/wangguan/WorkBuddy/2026-11-23-15-15-52/analog-nam-gated-block-sim/reclaimed/unpack_20261126/runs/n12_L10-ch32-bigRF_s7/2026-11-26-21-43-25",
+   "nrms_ideal": 0.05915227350396447,
+   "serial_no_add": 0.0985833974426418,
+   "serial_with_add": 0.6548264109274191,
+   "serial_delta": 6.642359950197627,
+   "serial_mc_std": 0.0,
+   "tree_no_add": 0.09858339782367267,
+   "tree_with_add": 0.6397452603182022,
+   "tree_delta": 6.48938132019407,
+   "tree_mc_std": 0.0,
+   "ref_prev": 0.0894,
+   "drift_vs_prev": 1.1027225664725036
+  }
+ ]
+}

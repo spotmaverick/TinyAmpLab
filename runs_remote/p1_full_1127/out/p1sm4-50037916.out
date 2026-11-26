@@ -1,0 +1,15 @@
+===== JOB INFO =====
+job_id   : 50037916
+job_name : p1sm4
+node     : b03r4n18
+partition: wzhdtest
+start    : 2026-11-27 02:11:33
+cwd      : /work/home/spotmaverick/nam_project
+gres     : 1
+===== DCU 可见性 =====
+torch 2.1.0  device=Z100SM  mem=16.0GB  count=1
+===== RUN =====
+[device] cuda  torch=2.1.0  hip=5.7.24164  count=1
+[device] Z100SM
+===== DONE =====
+rc=1  elapsed=12s  end=2026-11-27 02:12:32

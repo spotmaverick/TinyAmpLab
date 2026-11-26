@@ -1,0 +1,22 @@
+{
+  "variant": "feather",
+  "desc": "feather @ \u6211\u65b9\u534f\u8bae",
+  "arch": "feather",
+  "rf_scale_pct": 100,
+  "params": 3025,
+  "rf": 4093,
+  "rf_ms": 85.27,
+  "epochs": 300,
+  "seed": 7,
+  "dataset": "marshall_jvm410h_chod1_spk",
+  "protocol": "our: MSE+batch192000+lr3e-3+cosine+GridDataset-align",
+  "train_seconds": 12040.3,
+  "best_val_NRMS": 0.098104,
+  "train_NRMS": 0.101624,
+  "train_corr": 0.994825,
+  "val_NRMS": 0.098104,
+  "val_corr": 0.995196,
+  "test_NRMS": 0.110628,
+  "test_corr": 0.993879,
+  "test_esr": 0.012239
+}

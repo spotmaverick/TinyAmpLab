@@ -1,0 +1,23 @@
+{
+    "_notes": [
+        "TSA15: 官方 GridDataset 对齐，train/val 分离文件",
+        "ny=8192 与官方 single_pair.json 一致；batch 16 => 131072 采样/批"
+    ],
+    "train": {
+        "x_path": "/root/autodl-tmp/data/tsa15_train_input.wav",
+        "y_path": "/root/autodl-tmp/data/tsa15_train_target.wav",
+        "ny": 8192,
+        "start_seconds": null,
+        "stop_seconds": null
+    },
+    "validation": {
+        "x_path": "/root/autodl-tmp/data/tsa15_val_input.wav",
+        "y_path": "/root/autodl-tmp/data/tsa15_val_target.wav",
+        "ny": 8192,
+        "start_seconds": null,
+        "stop_seconds": null
+    },
+    "common": {
+        "delay": 0
+    }
+}

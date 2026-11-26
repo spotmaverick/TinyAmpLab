@@ -1,0 +1,12 @@
+===== JOB INFO =====
+job_id   : 50036888
+job_name : t21probe
+node     : b01r2n00
+partition: wzhdtest
+start    : 2026-11-27 01:53:36
+cwd      : /work/home/spotmaverick/nam_project
+gres     : 1
+===== DCU 可见性 =====
+===== RUN =====
+===== DONE =====
+rc=1  elapsed=2s  end=2026-11-27 01:53:39

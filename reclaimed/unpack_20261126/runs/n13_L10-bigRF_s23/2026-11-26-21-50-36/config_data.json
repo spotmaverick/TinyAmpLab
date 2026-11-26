@@ -1,0 +1,23 @@
+{
+    "_notes": [
+        "TSA15: \u5b98\u65b9 GridDataset \u5bf9\u9f50\uff0ctrain/val \u5206\u79bb\u6587\u4ef6",
+        "ny=8192 \u4e0e\u5b98\u65b9 single_pair.json \u4e00\u81f4\uff1bbatch 16 => 131072 \u91c7\u6837/\u6279"
+    ],
+    "train": {
+        "x_path": "/root/autodl-tmp/data/tsa15_train_input.wav",
+        "y_path": "/root/autodl-tmp/data/tsa15_train_target.wav",
+        "ny": 8192,
+        "start_seconds": null,
+        "stop_seconds": null
+    },
+    "validation": {
+        "x_path": "/root/autodl-tmp/data/tsa15_val_input.wav",
+        "y_path": "/root/autodl-tmp/data/tsa15_val_target.wav",
+        "ny": 8192,
+        "start_seconds": null,
+        "stop_seconds": null
+    },
+    "common": {
+        "delay": 0
+    }
+}

@@ -1,0 +1,22 @@
+{
+  "variant": "standard_rf200",
+  "desc": "standard @ \u6211\u65b9\u534f\u8bae, RF\u7f29\u653e200%",
+  "arch": "standard",
+  "rf_scale_pct": 200,
+  "params": 13801,
+  "rf": 8185,
+  "rf_ms": 170.52,
+  "epochs": 300,
+  "seed": 7,
+  "dataset": "mesa550_burn",
+  "protocol": "our: MSE+batch192000+lr3e-3+cosine+GridDataset-align",
+  "train_seconds": 379.7,
+  "best_val_NRMS": 0.095694,
+  "train_NRMS": 0.080159,
+  "train_corr": 0.996789,
+  "val_NRMS": 0.095694,
+  "val_corr": 0.995414,
+  "test_NRMS": 0.096739,
+  "test_corr": 0.995326,
+  "test_esr": 0.009358
+}

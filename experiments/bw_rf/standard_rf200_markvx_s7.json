@@ -1,0 +1,22 @@
+{
+  "variant": "standard_rf200",
+  "desc": "standard @ \u6211\u65b9\u534f\u8bae, RF\u7f29\u653e200%",
+  "arch": "standard",
+  "rf_scale_pct": 200,
+  "params": 13801,
+  "rf": 8185,
+  "rf_ms": 170.52,
+  "epochs": 300,
+  "seed": 7,
+  "dataset": "markvx",
+  "protocol": "our: MSE+batch192000+lr3e-3+cosine+GridDataset-align",
+  "train_seconds": 382.4,
+  "best_val_NRMS": 0.066041,
+  "train_NRMS": 0.056772,
+  "train_corr": 0.998388,
+  "val_NRMS": 0.066041,
+  "val_corr": 0.997817,
+  "test_NRMS": 0.071858,
+  "test_corr": 0.997429,
+  "test_esr": 0.005164
+}

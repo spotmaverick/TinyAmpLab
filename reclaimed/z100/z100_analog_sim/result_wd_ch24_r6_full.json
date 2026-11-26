@@ -1,0 +1,27 @@
+{
+  "device": "cuda",
+  "variant": "wd_ch24_r6",
+  "params": 6445,
+  "rf": 4093,
+  "rf_ms": 85.27,
+  "seconds": 38.13158333333333,
+  "mc": 16,
+  "nrms_fp32": 0.1692,
+  "nrms_quant_only": 0.2149,
+  "nrms_physical_mean": 1.9376,
+  "nrms_physical_std": 0.0444,
+  "nrms_physical_min": 1.8471,
+  "nrms_physical_max": 2.0015,
+  "macs_per_sample": 7812,
+  "params_dev": {
+    "BITS": 6,
+    "SIGMA_MISMATCH": 0.01,
+    "DRIFT": 0.03,
+    "BETA_H3": 0.002,
+    "V_SAT": 16.0,
+    "SIGMA_OFFSET": 0.005,
+    "SNR_DB": 70,
+    "MC": 16,
+    "CHUNK": 480000
+  }
+}

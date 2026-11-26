@@ -1,0 +1,1 @@
+{"esr": 0.03190543130040169, "nrms": 0.17862091506988112, "corr": 0.983923531951145, "n_samples": 1824931, "rf": 5386, "ckpt": "runs/cand_a2/2026-11-26-17-53-25/lightning_logs/version_0/checkpoints/checkpoint_epoch_epoch=0099.ckpt", "model_cfg": "/root/autodl-tmp/runs/cand_a2/2026-11-26-17-53-25/config_model.json"}

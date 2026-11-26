@@ -1,0 +1,56 @@
+{
+  "_notes": [
+    "派生自 a-grp4: a-grp4-l1g4"
+  ],
+  "net": {
+    "name": "WaveNet",
+    "config": {
+      "layers_configs": [
+        {
+          "condition_size": 1,
+          "input_size": 1,
+          "channels": 12,
+          "head": {
+            "out_channels": 1,
+            "kernel_size": 1,
+            "bias": true
+          },
+          "kernel_size": 6,
+          "dilations": [
+            1,
+            5,
+            29,
+            97,
+            227,
+            1,
+            5,
+            29,
+            97,
+            227,
+            1,
+            5,
+            29,
+            97,
+            227
+          ],
+          "activation": "LeakyReLU",
+          "groups_input": 4,
+          "layer_1x1_config": {
+            "active": true,
+            "groups": 4
+          }
+        }
+      ],
+      "head_scale": 0.01
+    }
+  },
+  "optimizer": {
+    "lr": 0.004
+  },
+  "lr_scheduler": {
+    "class": "ExponentialLR",
+    "kwargs": {
+      "gamma": 0.993
+    }
+  }
+}

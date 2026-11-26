@@ -1,0 +1,6 @@
+{
+  "_notes": ["族B2: 递归块 ch32 x6层 分组6"],
+  "net": {"name": "RecurrentNet", "config": {"channels": 32, "n_blocks": 6, "groups": 6}},
+  "optimizer": {"lr": 0.004},
+  "lr_scheduler": {"class": "ExponentialLR", "kwargs": {"gamma": 0.993}}
+}

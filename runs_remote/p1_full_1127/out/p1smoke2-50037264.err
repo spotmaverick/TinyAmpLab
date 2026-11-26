@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/work/home/spotmaverick/nam_project/p1_run.py", line 27, in <module>
+    import soundfile as sf
+  File "/work/home/spotmaverick/torch21_env/lib/python3.10/site-packages/soundfile.py", line 24, in <module>
+    from _soundfile import ffi as _ffi
+  File "/work/home/spotmaverick/torch21_env/lib/python3.10/site-packages/_soundfile.py", line 2, in <module>
+    import _cffi_backend
+ModuleNotFoundError: No module named '_cffi_backend'

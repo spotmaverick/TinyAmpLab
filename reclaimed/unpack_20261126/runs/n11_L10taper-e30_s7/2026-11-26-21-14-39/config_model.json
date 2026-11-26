@@ -1,0 +1,57 @@
+{
+    "_notes": [
+        "L10\uff0810 \u5c42\uff0cRF 5411\uff09+ Layer Gain Taper \u53e0\u52a0",
+        "\u4f9d\u636e\uff1aL10 \u5668\u4ef6\u9000\u5316\u6700\u4f4e\uff08\u5668\u4ef6 NRMS 0.2785\uff0cratio 3.50\uff09\uff0c",
+        "taper \u5355\u72ec\u80fd\u628a V_SAT \u9700\u6c42\u4ece 64 \u964d\u5230\u7ea6 40\u3002",
+        "\u4e24\u8005\u673a\u7406\u4e0d\u540c\uff08\u51cf\u5c42 = \u51cf\u5c11\u7d2f\u52a0\u9879\uff1btaper = \u538b\u540e\u671f\u5c42\u589e\u76ca\uff09\uff0c\u9884\u671f\u53ef\u53e0\u52a0\u3002",
+        "\u7269\u7406\u6210\u672c\uff1aL10 \u5c11 5 \u5c42\u5ef6\u8fdf\u7ebf\u62bd\u5934\uff1btaper \u662f\u7535\u963b\u6bd4\uff0c\u96f6\u6210\u672c\u3002",
+        "L10 + taper 1.0->0.3\uff08\u4e3b\u529b\uff09"
+    ],
+    "net": {
+        "name": "ScaledWaveNet",
+        "config": {
+            "layers_configs": [
+                {
+                    "condition_size": 1,
+                    "input_size": 1,
+                    "channels": 12,
+                    "head": {
+                        "out_channels": 1,
+                        "kernel_size": 1,
+                        "bias": true
+                    },
+                    "kernel_size": 6,
+                    "dilations": [
+                        1,
+                        7,
+                        47,
+                        157,
+                        329,
+                        1,
+                        7,
+                        47,
+                        157,
+                        329
+                    ],
+                    "activation": "LeakyReLU",
+                    "groups_input": 4
+                }
+            ],
+            "head_scale": 0.01,
+            "layer_gains": {
+                "mode": "exp",
+                "start": 1.0,
+                "end": 0.3
+            }
+        }
+    },
+    "optimizer": {
+        "lr": 0.004
+    },
+    "lr_scheduler": {
+        "class": "ExponentialLR",
+        "kwargs": {
+            "gamma": 0.993
+        }
+    }
+}

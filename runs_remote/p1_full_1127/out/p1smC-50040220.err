@@ -1,0 +1,26 @@
+Traceback (most recent call last):
+  File "/work/home/spotmaverick/nam_project/p1_run.py", line 339, in <module>
+    main()
+  File "/work/home/spotmaverick/nam_project/p1_run.py", line 244, in main
+    cfg, sd = load_nam(nam_path(s))
+  File "/work/home/spotmaverick/nam_project/p1_run.py", line 96, in load_nam
+    net = init_from_nam(raw)
+  File "/work/home/spotmaverick/nam_project/local_mirrors/neural-amp-modeler/nam/models/_from_nam.py", line 178, in init_from_nam
+    model = {
+  File "/work/home/spotmaverick/nam_project/local_mirrors/neural-amp-modeler/nam/models/_from_nam.py", line 144, in _init_wavenet
+    return _WaveNet.init_from_config(full_config)
+  File "/work/home/spotmaverick/nam_project/local_mirrors/neural-amp-modeler/nam/_core.py", line 11, in init_from_config
+    return cls(**cls.parse_config(config))
+  File "/work/home/spotmaverick/nam_project/local_mirrors/neural-amp-modeler/nam/models/wavenet/_wavenet_wrapper.py", line 32, in parse_config
+    wavenet = _WaveNet.init_from_config(config)
+  File "/work/home/spotmaverick/nam_project/local_mirrors/neural-amp-modeler/nam/_core.py", line 11, in init_from_config
+    return cls(**cls.parse_config(config))
+  File "/work/home/spotmaverick/nam_project/local_mirrors/neural-amp-modeler/nam/models/wavenet/_wavenet.py", line 160, in parse_config
+    [_LayerArray.init_from_config(lc) for lc in layers_configs]
+  File "/work/home/spotmaverick/nam_project/local_mirrors/neural-amp-modeler/nam/models/wavenet/_wavenet.py", line 160, in <listcomp>
+    [_LayerArray.init_from_config(lc) for lc in layers_configs]
+  File "/work/home/spotmaverick/nam_project/local_mirrors/neural-amp-modeler/nam/_core.py", line 11, in init_from_config
+    return cls(**cls.parse_config(config))
+  File "/work/home/spotmaverick/nam_project/local_mirrors/neural-amp-modeler/nam/models/wavenet/_layer_array.py", line 841, in parse_config
+    head_cfg = _LayerArrayHeadConfig.model_validate(config.pop("head"))
+AttributeError: type object '_LayerArrayHeadConfig' has no attribute 'model_validate'

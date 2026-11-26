@@ -1,0 +1,49 @@
+{
+    "_notes": [
+        "a-grp6-ch18 减层到 10 层但保持大 RF（5411）：验证'减层有效、减 RF 有害'假设",
+        "dilations 放大为 [1,7,47,157,329]x2，sum=1082 -> RF=5411（原 5386）",
+        "目的：同时拿到'层数少'（低退化）与'大 dilation 稀疏采样'（低饱和）"
+    ],
+    "net": {
+        "name": "WaveNet",
+        "config": {
+            "layers_configs": [
+                {
+                    "condition_size": 1,
+                    "input_size": 1,
+                    "channels": 18,
+                    "head": {
+                        "out_channels": 1,
+                        "kernel_size": 1,
+                        "bias": true
+                    },
+                    "kernel_size": 6,
+                    "dilations": [
+                        1,
+                        7,
+                        47,
+                        157,
+                        329,
+                        1,
+                        7,
+                        47,
+                        157,
+                        329
+                    ],
+                    "activation": "LeakyReLU",
+                    "groups_input": 6
+                }
+            ],
+            "head_scale": 0.01
+        }
+    },
+    "optimizer": {
+        "lr": 0.004
+    },
+    "lr_scheduler": {
+        "class": "ExponentialLR",
+        "kwargs": {
+            "gamma": 0.993
+        }
+    }
+}

@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "p1_run.py", line 332, in <module>
+    main()
+  File "p1_run.py", line 237, in main
+    cfg, sd = load_nam(nam_path(s))
+  File "p1_run.py", line 87, in load_nam
+    from nam.models._from_nam import init_from_nam
+  File "/work/home/spotmaverick/nam_project/local_mirrors/neural-amp-modeler/nam/__init__.py", line 21, in <module>
+    from . import data  # noqa F401
+  File "/work/home/spotmaverick/nam_project/local_mirrors/neural-amp-modeler/nam/data.py", line 29, in <module>
+    import wavio as _wavio
+ModuleNotFoundError: No module named 'wavio'

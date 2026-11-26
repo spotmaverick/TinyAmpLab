@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "p1_run.py", line 330, in <module>
+    main()
+  File "p1_run.py", line 235, in main
+    cfg, sd = load_nam(nam_path(s))
+  File "p1_run.py", line 85, in load_nam
+    from nam.models._from_nam import init_from_nam
+  File "/work/home/spotmaverick/nam_project/local_mirrors/neural-amp-modeler/nam/__init__.py", line 21, in <module>
+    from . import data  # noqa F401
+  File "/work/home/spotmaverick/nam_project/local_mirrors/neural-amp-modeler/nam/data.py", line 26, in <module>
+    import librosa as _librosa
+ModuleNotFoundError: No module named 'librosa'

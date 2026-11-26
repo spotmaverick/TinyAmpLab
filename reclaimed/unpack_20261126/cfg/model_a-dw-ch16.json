@@ -1,0 +1,54 @@
+{
+  "_notes": [
+    "模拟电路友好候选（官方配置表达，无新模型代码）",
+    "conv groups=16 bottleneck=16 layer1x1 groups=1 kernel=6",
+    "slimmable 保留，与 A2 同协议同数据对比"
+  ],
+  "net": {
+    "name": "WaveNet",
+    "config": {
+      "layers_configs": [
+        {
+          "condition_size": 1,
+          "input_size": 1,
+          "channels": 16,
+          "head": {
+            "out_channels": 1,
+            "kernel_size": 1,
+            "bias": true
+          },
+          "kernel_size": 6,
+          "dilations": [
+            1,
+            5,
+            29,
+            97,
+            227,
+            1,
+            5,
+            29,
+            97,
+            227,
+            1,
+            5,
+            29,
+            97,
+            227
+          ],
+          "activation": "LeakyReLU",
+          "groups_input": 16
+        }
+      ],
+      "head_scale": 0.01
+    }
+  },
+  "optimizer": {
+    "lr": 0.004
+  },
+  "lr_scheduler": {
+    "class": "ExponentialLR",
+    "kwargs": {
+      "gamma": 0.993
+    }
+  }
+}

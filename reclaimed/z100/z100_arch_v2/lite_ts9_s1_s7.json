@@ -1,0 +1,22 @@
+{
+  "variant": "lite",
+  "desc": "lite @ \u6211\u65b9\u534f\u8bae",
+  "arch": "lite",
+  "rf_scale_pct": 100,
+  "params": 6553,
+  "rf": 4093,
+  "rf_ms": 85.27,
+  "epochs": 300,
+  "seed": 7,
+  "dataset": "ts9_s1",
+  "protocol": "our: MSE+batch192000+lr3e-3+cosine+GridDataset-align",
+  "train_seconds": 10150.9,
+  "best_val_NRMS": 0.015931,
+  "train_NRMS": 0.023031,
+  "train_corr": 0.999739,
+  "val_NRMS": 0.015931,
+  "val_corr": 0.999874,
+  "test_NRMS": 0.014881,
+  "test_corr": 0.999892,
+  "test_esr": 0.000221
+}

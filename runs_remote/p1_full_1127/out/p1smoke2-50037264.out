@@ -1,0 +1,13 @@
+===== JOB INFO =====
+job_id   : 50037264
+job_name : p1smoke2
+node     : b01r2n00
+partition: wzhdtest
+start    : 2026-11-27 02:02:35
+cwd      : /work/home/spotmaverick/nam_project
+gres     : 1
+===== DCU 可见性 =====
+torch 2.1.0  device=Z100SM  mem=16.0GB  count=1
+===== RUN =====
+===== DONE =====
+rc=1  elapsed=1s  end=2026-11-27 02:02:47

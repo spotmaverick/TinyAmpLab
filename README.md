@@ -11,6 +11,9 @@
 | 项目当前在做什么、下一步 | [`overview.md`](overview.md) |
 | 全部模型架构与参数实验结果（**主账本**） | [`docs/reports/MODEL_SUMMARY.md`](docs/reports/MODEL_SUMMARY.md) |
 | 与官方 NAM 的口径与对比 | [`docs/reports/NAM_COMPARISON.md`](docs/reports/NAM_COMPARISON.md) |
+| 目标拓扑定稿与物理规格（含 head 累加器摆幅） | [`docs/reports/TARGET_TOPOLOGY_STATUS.md`](docs/reports/TARGET_TOPOLOGY_STATUS.md) |
+| 训练批次台账（含 P-1 纯仿真实验） | [`docs/reports/EXPERIMENT_LEDGER.md`](docs/reports/EXPERIMENT_LEDGER.md) |
+| head 累加链加法器失真实测 | [`docs/reports/P1_HEAD_ACCUM_20261127.md`](docs/reports/P1_HEAD_ACCUM_20261127.md) |
 | 当前 WaveNet 架构族并行搜索计划 | [`docs/plans/ARCH_V2_PLAN.md`](docs/plans/ARCH_V2_PLAN.md) |
 | 三诊断实验裁决与 bug 记录 | [`docs/plans/DIAG_PLAN_REVIEW.md`](docs/plans/DIAG_PLAN_REVIEW.md) |
 | 如何跑起来 | 本文件下方「复现」章节 |

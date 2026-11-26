@@ -1,0 +1,16 @@
+===== JOB INFO =====
+job_id   : 50038184
+job_name : p1dbg
+node     : b03r4n18
+partition: wzhdtest
+start    : 2026-11-27 02:17:38
+cwd      : /work/home/spotmaverick/nam_project
+gres     : 1
+===== DCU 可见性 =====
+===== RUN =====
+numpy from /work/home/spotmaverick/nam_project/pylibs_p310/numpy/__init__.py 1.26.4
+torch 2.1.0
+has numpy support: n/a
+from_numpy OK tensor([0., 0., 0.])
+===== DONE =====
+rc=0  elapsed=15s  end=2026-11-27 02:17:53

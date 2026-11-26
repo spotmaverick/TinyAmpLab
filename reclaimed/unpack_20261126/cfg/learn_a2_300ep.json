@@ -1,0 +1,20 @@
+{
+    "_notes": [
+        "官方协议 300ep：与 100ep 完全相同，仅 max_epochs 改为 300",
+        "lr/scheduler 在 model config 的 optimizer 字段"
+    ],
+    "train_dataloader": {
+        "batch_size": 16,
+        "shuffle": true,
+        "pin_memory": true,
+        "drop_last": true,
+        "num_workers": 4
+    },
+    "val_dataloader": {},
+    "trainer": {
+        "accelerator": "gpu",
+        "devices": 1,
+        "max_epochs": 300
+    },
+    "trainer_fit_kwargs": {}
+}

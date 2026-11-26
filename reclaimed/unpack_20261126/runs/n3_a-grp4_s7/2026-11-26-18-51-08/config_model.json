@@ -1,0 +1,54 @@
+{
+    "_notes": [
+        "\u6a21\u62df\u7535\u8def\u53cb\u597d\u5019\u9009\uff08\u5b98\u65b9\u914d\u7f6e\u8868\u8fbe\uff0c\u65e0\u65b0\u6a21\u578b\u4ee3\u7801\uff09",
+        "conv groups=4 bottleneck=12 layer1x1 groups=1 kernel=6",
+        "slimmable \u4fdd\u7559\uff0c\u4e0e A2 \u540c\u534f\u8bae\u540c\u6570\u636e\u5bf9\u6bd4"
+    ],
+    "net": {
+        "name": "WaveNet",
+        "config": {
+            "layers_configs": [
+                {
+                    "condition_size": 1,
+                    "input_size": 1,
+                    "channels": 12,
+                    "head": {
+                        "out_channels": 1,
+                        "kernel_size": 1,
+                        "bias": true
+                    },
+                    "kernel_size": 6,
+                    "dilations": [
+                        1,
+                        5,
+                        29,
+                        97,
+                        227,
+                        1,
+                        5,
+                        29,
+                        97,
+                        227,
+                        1,
+                        5,
+                        29,
+                        97,
+                        227
+                    ],
+                    "activation": "LeakyReLU",
+                    "groups_input": 4
+                }
+            ],
+            "head_scale": 0.01
+        }
+    },
+    "optimizer": {
+        "lr": 0.004
+    },
+    "lr_scheduler": {
+        "class": "ExponentialLR",
+        "kwargs": {
+            "gamma": 0.993
+        }
+    }
+}

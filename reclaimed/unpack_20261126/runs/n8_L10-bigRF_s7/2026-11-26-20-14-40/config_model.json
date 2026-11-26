@@ -1,0 +1,49 @@
+{
+    "_notes": [
+        "a-grp6-ch18 \u51cf\u5c42\u5230 10 \u5c42\u4f46\u4fdd\u6301\u5927 RF\uff085411\uff09\uff1a\u9a8c\u8bc1'\u51cf\u5c42\u6709\u6548\u3001\u51cf RF \u6709\u5bb3'\u5047\u8bbe",
+        "dilations \u653e\u5927\u4e3a [1,7,47,157,329]x2\uff0csum=1082 -> RF=5411\uff08\u539f 5386\uff09",
+        "\u76ee\u7684\uff1a\u540c\u65f6\u62ff\u5230'\u5c42\u6570\u5c11'\uff08\u4f4e\u9000\u5316\uff09\u4e0e'\u5927 dilation \u7a00\u758f\u91c7\u6837'\uff08\u4f4e\u9971\u548c\uff09"
+    ],
+    "net": {
+        "name": "WaveNet",
+        "config": {
+            "layers_configs": [
+                {
+                    "condition_size": 1,
+                    "input_size": 1,
+                    "channels": 18,
+                    "head": {
+                        "out_channels": 1,
+                        "kernel_size": 1,
+                        "bias": true
+                    },
+                    "kernel_size": 6,
+                    "dilations": [
+                        1,
+                        7,
+                        47,
+                        157,
+                        329,
+                        1,
+                        7,
+                        47,
+                        157,
+                        329
+                    ],
+                    "activation": "LeakyReLU",
+                    "groups_input": 6
+                }
+            ],
+            "head_scale": 0.01
+        }
+    },
+    "optimizer": {
+        "lr": 0.004
+    },
+    "lr_scheduler": {
+        "class": "ExponentialLR",
+        "kwargs": {
+            "gamma": 0.993
+        }
+    }
+}

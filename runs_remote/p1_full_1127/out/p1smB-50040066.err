@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "/work/home/spotmaverick/nam_project/p1_run.py", line 339, in <module>
+    main()
+  File "/work/home/spotmaverick/nam_project/p1_run.py", line 244, in main
+    cfg, sd = load_nam(nam_path(s))
+  File "/work/home/spotmaverick/nam_project/p1_run.py", line 94, in load_nam
+    from nam.models._from_nam import init_from_nam
+  File "/work/home/spotmaverick/nam_project/local_mirrors/neural-amp-modeler/nam/__init__.py", line 23, in <module>
+    from . import train  # noqa F401
+  File "/work/home/spotmaverick/nam_project/local_mirrors/neural-amp-modeler/nam/train/__init__.py", line 10, in <module>
+    from . import colab  # noqa F401
+  File "/work/home/spotmaverick/nam_project/local_mirrors/neural-amp-modeler/nam/train/colab.py", line 19, in <module>
+    from .core import TrainOutput as _TrainOutput
+  File "/work/home/spotmaverick/nam_project/local_mirrors/neural-amp-modeler/nam/train/core.py", line 28, in <module>
+    import pytorch_lightning as _pl
+ModuleNotFoundError: No module named 'pytorch_lightning'

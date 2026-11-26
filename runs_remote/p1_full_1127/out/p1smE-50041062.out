@@ -1,0 +1,33 @@
+===== JOB INFO =====
+job_id   : 50041062
+job_name : p1smE
+node     : b01r2n00
+partition: wzhdtest
+start    : 2026-11-27 02:57:03
+cwd      : /work/home/spotmaverick/nam_project
+gres     : 1
+===== DCU 可见性 =====
+torch 2.1.0  device=Z100SM  mem=16.0GB  count=1
+===== RUN =====
+[device] cuda  torch=2.1.0  hip=5.7.24164  count=1
+[device] Z100SM
+[P-1] dev=cuda mc=1 sec=0.5 torch=2.1.0
+
+[s7] ideal=0.0596 base(serial)=0.1048 prev=0.0894 drift=1.172x head_in_rms=20.16 max=84.6
+
+==========================================================================
+A. head 累加幅度谱（理想算子）
+seed     a_末      h_末   |max|     p99     相干   h_末/16
+  s7    7.73    20.16    84.6   62.65   1.52     1.26
+
+B. 加法器摆幅门槛（Δ_serial<1.05）
+    s7  基线=0.1048  门槛V_add=None  (>512)
+
+C. 树形 vs 串行（各摆幅下的 Δ 差）
+
+D. 仿真器漂移校验（本次/上轮，应≈1.00）
+  中位 1.172x   范围 1.172~1.172
+
+写出 /work/home/spotmaverick/nam_project/p1/out/p1smE.json
+===== DONE =====
+rc=0  elapsed=15s  end=2026-11-27 02:57:29

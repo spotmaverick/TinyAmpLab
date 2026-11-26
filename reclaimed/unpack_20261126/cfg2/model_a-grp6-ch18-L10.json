@@ -1,0 +1,48 @@
+{
+    "_notes": [
+        "a-grp6-ch18 减到 10 层：残差流幅度增长从 90x 降到约 14x",
+        "代价：RF 从 5386 降到 3591，表达力下降"
+    ],
+    "net": {
+        "name": "WaveNet",
+        "config": {
+            "layers_configs": [
+                {
+                    "condition_size": 1,
+                    "input_size": 1,
+                    "channels": 18,
+                    "head": {
+                        "out_channels": 1,
+                        "kernel_size": 1,
+                        "bias": true
+                    },
+                    "kernel_size": 6,
+                    "dilations": [
+                        1,
+                        5,
+                        29,
+                        97,
+                        227,
+                        1,
+                        5,
+                        29,
+                        97,
+                        227
+                    ],
+                    "activation": "LeakyReLU",
+                    "groups_input": 6
+                }
+            ],
+            "head_scale": 0.01
+        }
+    },
+    "optimizer": {
+        "lr": 0.004
+    },
+    "lr_scheduler": {
+        "class": "ExponentialLR",
+        "kwargs": {
+            "gamma": 0.993
+        }
+    }
+}

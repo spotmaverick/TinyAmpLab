@@ -1,0 +1,16 @@
+===== JOB INFO =====
+job_id   : 50038644
+job_name : p1v
+node     : b01r2n00
+partition: wzhdtest
+start    : 2026-11-27 02:23:31
+cwd      : /work/home/spotmaverick/nam_project
+gres     : 1
+===== DCU 可见性 =====
+===== RUN =====
+np 1.26.4 /work/home/spotmaverick/nam_project/pylibs_p310/numpy/__init__.py
+torch 2.1.0 dcu True
+sf 0.14.0
+from_numpy->dcu OK torch.Size([2, 3]) cuda:0
+===== DONE =====
+rc=0  elapsed=16s  end=2026-11-27 02:23:47

@@ -1,0 +1,22 @@
+{
+  "variant": "full_ch12",
+  "desc": "full_ch12: full ch=12 rf=100%",
+  "params": 6553,
+  "rf": 4093,
+  "rf_ms": 85.27,
+  "macs": 6228,
+  "delay_taps": 4092,
+  "epochs": 300,
+  "seed": 7,
+  "dataset": "tsa15",
+  "depthwise": false,
+  "protocol": "our: MSE+batch192000+lr3e-3+cosine",
+  "train_seconds": 9186.0,
+  "best_val_NRMS": 0.081225,
+  "train_NRMS": 0.072519,
+  "train_corr": 0.997368,
+  "val_NRMS": 0.081225,
+  "val_corr": 0.996697,
+  "test_NRMS": 0.078476,
+  "test_corr": 0.996948
+}

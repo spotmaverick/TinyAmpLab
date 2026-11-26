@@ -1,0 +1,23 @@
+===== JOB INFO =====
+job_id   : 50035662
+job_name : p1dcu
+node     : b03r4n18
+partition: wzhdtest
+start    : 2026-11-27 01:35:38
+cwd      : /work/home/spotmaverick/nam_project
+gres     : 1
+===== DCU 可见性 =====
+DCU[0] 		: vram Total Memory (B): 17163091968
+DCU[0] 		: vram Total Used Memory (B): 2129920
+DCU[1] 		: vram Total Memory (B): 17163091968
+DCU[1] 		: vram Total Used Memory (B): 2129920
+DCU[2] 		: vram Total Memory (B): 17163091968
+DCU[2] 		: vram Total Used Memory (B): 14174814208
+hip_devices rc=0 n=1
+torch 1.10.0a0+git450cdd1-dtk22.04  device=Z100SM  mem=16.0GB  count=1
+===== RUN =====
+[device] cuda  torch=1.10.0a0+git450cdd1-dtk22.04  hip=4.3.22224-5368911  count=1
+[device] Z100SM
+[P-1] dev=cuda mc=3 sec=5.0 torch=1.10.0a0+git450cdd1-dtk22.04
+===== DONE =====
+rc=1  elapsed=4s  end=2026-11-27 01:36:08

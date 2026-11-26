@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "p1_run.py", line 337, in <module>
+    main()
+  File "p1_run.py", line 242, in main
+    cfg, sd = load_nam(nam_path(s))
+  File "p1_run.py", line 92, in load_nam
+    from nam.models._from_nam import init_from_nam
+  File "/work/home/spotmaverick/nam_project/local_mirrors/neural-amp-modeler/nam/__init__.py", line 22, in <module>
+    from . import models  # noqa F401
+  File "/work/home/spotmaverick/nam_project/local_mirrors/neural-amp-modeler/nam/models/__init__.py", line 9, in <module>
+    from . import base  # noqa F401
+  File "/work/home/spotmaverick/nam_project/local_mirrors/neural-amp-modeler/nam/models/base.py", line 27, in <module>
+    from .exportable import Exportable as _Exportable
+  File "/work/home/spotmaverick/nam_project/local_mirrors/neural-amp-modeler/nam/models/exportable.py", line 45, in <module>
+    dict[str, "_JsonDumpable"] | list["_JsonDumpable"] | str | int | float | bool | None
+TypeError: 'type' object is not subscriptable

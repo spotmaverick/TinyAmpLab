@@ -1,0 +1,17 @@
+# dataset_zenodo 清理记录
+时间: 2026-11-25 23:55 CST
+操作: 删除已合并完成的分片缓存目录（zip 本体保留）
+
+## 删除项 | 依据
+Marshall-JVM410H-ChOD1.zip.parts/  2,755,382,616 B
+  - 10 个分片字节和 == zip 字节数 2,755,382,616
+  - zip MD5 = 05ee998404f44c3a449c4ad6a8160cb6 == manifest 期望值
+  - unzip -t: No errors detected
+  - 已解压至 marshall_extract/ (3.1 GB, 76 wav) 并转出 data/marshall_*.wav 12 个
+
+UA-6176VintageChannelStrip-1176LN-Limiter.zip.parts/  273,529,279 B
+  - 6 个分片字节和 == zip 字节数 273,529,279
+  - unzip -t: No errors detected
+  - 已解压至 ua_extract/ (18 wav)
+
+合计释放: 2,860,681,958 B ≈ 2.66 GiB

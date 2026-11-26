@@ -1,0 +1,6 @@
+{
+  "_notes": ["族B: 对角状态空间, 16 电容, 延迟线=0"],
+  "net": {"name": "DiagSSM", "config": {"channels": 16, "mix": true}},
+  "optimizer": {"lr": 0.004},
+  "lr_scheduler": {"class": "ExponentialLR", "kwargs": {"gamma": 0.993}}
+}

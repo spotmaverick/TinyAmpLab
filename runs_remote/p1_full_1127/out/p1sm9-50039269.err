@@ -1,0 +1,18 @@
+Traceback (most recent call last):
+  File "/work/home/spotmaverick/nam_project/p1_run.py", line 339, in <module>
+    main()
+  File "/work/home/spotmaverick/nam_project/p1_run.py", line 244, in main
+    cfg, sd = load_nam(nam_path(s))
+  File "/work/home/spotmaverick/nam_project/p1_run.py", line 94, in load_nam
+    from nam.models._from_nam import init_from_nam
+  File "/work/home/spotmaverick/nam_project/local_mirrors/neural-amp-modeler/nam/__init__.py", line 22, in <module>
+    from . import models  # noqa F401
+  File "/work/home/spotmaverick/nam_project/local_mirrors/neural-amp-modeler/nam/models/__init__.py", line 9, in <module>
+    from . import base  # noqa F401
+  File "/work/home/spotmaverick/nam_project/local_mirrors/neural-amp-modeler/nam/models/base.py", line 27, in <module>
+    from .exportable import Exportable as _Exportable
+  File "/work/home/spotmaverick/nam_project/local_mirrors/neural-amp-modeler/nam/models/exportable.py", line 24, in <module>
+    from .metadata import Date as _Date
+  File "/work/home/spotmaverick/nam_project/local_mirrors/neural-amp-modeler/nam/models/metadata.py", line 12, in <module>
+    from pydantic import BaseModel as _BaseModel
+ModuleNotFoundError: No module named 'pydantic'

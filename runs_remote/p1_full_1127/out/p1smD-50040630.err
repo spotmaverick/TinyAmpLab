@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/work/home/spotmaverick/nam_project/p1_run.py", line 339, in <module>
+    main()
+  File "/work/home/spotmaverick/nam_project/p1_run.py", line 250, in main
+    p_id, info = run_forward(dev0, sd, cfg, xt, "ideal", None, collect=True)
+  File "/work/home/spotmaverick/nam_project/p1_run.py", line 158, in run_forward
+    y = dev.mac1x1(y, sd[pre0 + "_rechannel.weight"], None, groups=1)
+  File "/work/home/spotmaverick/nam_project/analog_sim_generic.py", line 129, in mac1x1
+    return self.conv(x, w, bias, dilation=1, groups=groups)
+  File "/work/home/spotmaverick/nam_project/analog_sim_generic.py", line 120, in conv
+    prod = tg.unsqueeze(2) * wk.view(1, G, CoutG, CinG, 1)    # (B,G,CoutG,CinG,T)
+RuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!

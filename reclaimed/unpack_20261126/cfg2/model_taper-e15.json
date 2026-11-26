@@ -1,0 +1,62 @@
+{
+    "_notes": [
+        "逐层增益渐变：在每层 activation 输出后乘 gamma_i（不动 layer1x1）",
+        "依据：官方 _Layer.forward 的 head_output 不过 layer1x1，",
+        "所以把 alpha 乘在 layer1x1 上只压残差链，head 路径不变 -> V_SAT 需求不降。",
+        "物理意义：每层激活后串一个固定电阻分压比，模拟电路零成本。",
+        "正确作用点 = activation 之后，一个点同时覆盖 residual 与 head 两条路径。",
+        "强渐变 1.0->0.15"
+    ],
+    "net": {
+        "name": "ScaledWaveNet",
+        "config": {
+            "layers_configs": [
+                {
+                    "condition_size": 1,
+                    "input_size": 1,
+                    "channels": 12,
+                    "head": {
+                        "out_channels": 1,
+                        "kernel_size": 1,
+                        "bias": true
+                    },
+                    "kernel_size": 6,
+                    "dilations": [
+                        1,
+                        5,
+                        29,
+                        97,
+                        227,
+                        1,
+                        5,
+                        29,
+                        97,
+                        227,
+                        1,
+                        5,
+                        29,
+                        97,
+                        227
+                    ],
+                    "activation": "LeakyReLU",
+                    "groups_input": 4
+                }
+            ],
+            "head_scale": 0.01,
+            "layer_gains": {
+                "mode": "exp",
+                "start": 1.0,
+                "end": 0.15
+            }
+        }
+    },
+    "optimizer": {
+        "lr": 0.004
+    },
+    "lr_scheduler": {
+        "class": "ExponentialLR",
+        "kwargs": {
+            "gamma": 0.993
+        }
+    }
+}
