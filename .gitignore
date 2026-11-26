@@ -16,9 +16,20 @@ github_mirrors/
 *.pt
 *.nam
 *.npy
+# 私有 Python 运行环境（1.3G，按机器重建，绝不入库）
+.venv_nam/
+# 集群回传的打包件：内容与解包目录重复，只保留解包后的文本产物
+reclaimed/**/*.tgz
+*.tgz
+# 训练检查点与 TensorBoard 事件流（二进制，体积大，可由 runs/ 配置重训复现）
+*.ckpt
+reclaimed/**/checkpoints/
+**/events.out.tfevents.*
 __pycache__/
 *.pyc
 *.log
 .DS_Store
 .ipynb_checkpoints/
+# Agent 工具的本地记忆/状态，非项目资产（有价值的内容已蒸馏进 docs/reports/）
+.workbuddy/
 dcu_runs/.synced/ .state/
