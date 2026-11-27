@@ -1,0 +1,85 @@
+===== JOB 50067655 on b01r2n10 2026-11-27 09:26:14 =====
+  device: torch.device = torch.device(torch._C._get_default_device()),  # torch.device('cpu'),
+torch 2.1.0 dev Z100SM
+===== RUN =====
+  [code] s31  ALL_OFF   NRMS=0.0611  (0.0611~0.0611)
+  [doc ] s31  BASE      NRMS=0.1649  (0.1531~0.1936)
+  [doc ] s31  QUANT     NRMS=0.1637  (0.1516~0.1930)
+  [doc ] s31  MISMATCH  NRMS=0.1718  (0.1539~0.1880)
+  [doc ] s31  DRIFT     NRMS=0.1776  (0.1646~0.1921)
+  [doc ] s31  NONLIN    NRMS=0.0855  (0.0630~0.0973)
+  [doc ] s31  OFFSET    NRMS=0.1648  (0.1519~0.1938)
+  [doc ] s31  NOISE     NRMS=0.1649  (0.1530~0.1936)
+  [doc ] s31  ALL_OFF   NRMS=0.0611  (0.0611~0.0611)
+  [swp] s31  code_all          NRMS=0.2500
+  [swp] s31  doc_all           NRMS=0.1809
+  [swp] s31  only_BITS         NRMS=0.2459
+  [swp] s31  only_SIGMA_MISMATCH NRMS=0.2523
+  [swp] s31  only_DRIFT        NRMS=0.2500
+  [swp] s31  only_BETA_H3      NRMS=0.1846
+  [swp] s31  only_SIGMA_OFFSET NRMS=0.2476
+  [swp] s31  only_SNR_DB       NRMS=0.2500
+  [var code] s31  NRMS=0.2378  最深饱和层=#9 (rms/V_SAT=0.32, sat_frac=0.0173)  head累加和 RMS=21.62 (1.35xV_SAT)
+  [var doc ] s31  NRMS=0.1732  最深饱和层=#9 (rms/V_SAT=0.33, sat_frac=0.0205)  head累加和 RMS=22.29 (1.39xV_SAT)
+
+=== s37  (/work/home/spotmaverick/nam_project/p1/seeds/s37.nam)
+  [code] s37  BASE      NRMS=0.1477  (0.1344~0.1569)
+  [code] s37  QUANT     NRMS=0.1385  (0.1279~0.1492)
+  [code] s37  MISMATCH  NRMS=0.1534  (0.1477~0.1611)
+  [code] s37  DRIFT     NRMS=0.1525  (0.1464~0.1596)
+  [code] s37  NONLIN    NRMS=0.0876  (0.0822~0.0913)
+  [code] s37  OFFSET    NRMS=0.1460  (0.1390~0.1551)
+  [code] s37  NOISE     NRMS=0.1477  (0.1344~0.1569)
+  [code] s37  ALL_OFF   NRMS=0.0594  (0.0594~0.0594)
+  [doc ] s37  BASE      NRMS=0.1446  (0.1324~0.1626)
+  [doc ] s37  QUANT     NRMS=0.1426  (0.1317~0.1598)
+  [doc ] s37  MISMATCH  NRMS=0.1312  (0.1207~0.1422)
+  [doc ] s37  DRIFT     NRMS=0.1289  (0.1139~0.1446)
+  [doc ] s37  NONLIN    NRMS=0.0821  (0.0694~0.1041)
+  [doc ] s37  OFFSET    NRMS=0.1445  (0.1324~0.1627)
+  [doc ] s37  NOISE     NRMS=0.1446  (0.1324~0.1626)
+  [doc ] s37  ALL_OFF   NRMS=0.0594  (0.0594~0.0594)
+  [swp] s37  code_all          NRMS=0.1564
+  [swp] s37  doc_all           NRMS=0.1321
+  [swp] s37  only_BITS         NRMS=0.1454
+  [swp] s37  only_SIGMA_MISMATCH NRMS=0.1589
+  [swp] s37  only_DRIFT        NRMS=0.1564
+  [swp] s37  only_BETA_H3      NRMS=0.1386
+  [swp] s37  only_SIGMA_OFFSET NRMS=0.1550
+  [swp] s37  only_SNR_DB       NRMS=0.1564
+  [var code] s37  NRMS=0.1545  最深饱和层=#9 (rms/V_SAT=0.31, sat_frac=0.0205)  head累加和 RMS=20.62 (1.29xV_SAT)
+  [var doc ] s37  NRMS=0.1444  最深饱和层=#9 (rms/V_SAT=0.33, sat_frac=0.0228)  head累加和 RMS=21.52 (1.34xV_SAT)
+
+[saved] /work/home/spotmaverick/nam_project/p1/out/p2_ablate_z100.json  总耗时 545s
+
+--- 口径 code: 基准中位 NRMS=0.1477 ---
+关掉这一项                   中位NRMS        降幅       剩余方差比
+量化                      0.1385    0.0092       0.880
+权重失配                    0.1534   -0.0057       1.079
+温漂                      0.1525   -0.0048       1.066
+Gilbert非线性(tanh+β)      0.0888    0.0589       0.361
+差分对失调                   0.1460    0.0017       0.977
+热噪声                     0.1477    0.0000       1.000
+全关(数字)                  0.0594    0.0883       0.162
+按降幅排序：Gilbert非线性(tanh+β)(0.0589) > 量化(0.0092) > 差分对失调(0.0017) > 热噪声(0.0000) > 温漂(-0.0048) > 权重失配(-0.0057)
+
+--- 口径 doc: 基准中位 NRMS=0.1446 ---
+关掉这一项                   中位NRMS        降幅       剩余方差比
+量化                      0.1417    0.0028       0.961
+权重失配                    0.1312    0.0133       0.824
+温漂                      0.1289    0.0157       0.794
+Gilbert非线性(tanh+β)      0.0814    0.0632       0.317
+差分对失调                   0.1445    0.0000       1.000
+热噪声                     0.1446    0.0000       1.000
+全关(数字)                  0.0594    0.0852       0.169
+按降幅排序：Gilbert非线性(tanh+β)(0.0632) > 温漂(0.0157) > 权重失配(0.0133) > 量化(0.0028) > 差分对失调(0.0000) > 热噪声(0.0000)
+
+--- 口径矛盾归因（code=0.1564 -> doc=0.1321，gap=-0.0243）---
+单改这一项为 doc 值                中位NRMS    相对code     占总gap
+only_BETA_H3                0.1386   -0.0178       73%
+only_BITS                   0.1454   -0.0110       45%
+only_SIGMA_MISMATCH         0.1589   +0.0025      -10%
+only_SIGMA_OFFSET           0.1550   -0.0013        5%
+only_SNR_DB                 0.1564   +0.0000       -0%
+only_DRIFT                  0.1564   +0.0000       -0%
+===== DONE rc=0 elapsed=559s =====
