@@ -1,0 +1,75 @@
+{
+  "segment": {
+    "start_s": 8.0,
+    "len_s": 5.0,
+    "sr": 48000,
+    "samples": 240000
+  },
+  "source": {
+    "dry": "/public/home/spotmaverick/nam_proj/data/tsa15_test_input.wav",
+    "real_amp": "/public/home/spotmaverick/nam_proj/data/tsa15_test_target.wav"
+  },
+  "models": {
+    "seed_s71_L10-ch32-g8-bigRF": {
+      "nrms": 0.05799635053911151,
+      "rmse": 0.015574590303003788,
+      "corr": 0.998336427379448,
+      "corr_best_shift": 0.998336427379448,
+      "best_shift_samples": 0,
+      "nrms_best_shift": 0.05799635053911151,
+      "max_abs_err": 0.3079948425292969,
+      "max_err_time_s": 0.0015625,
+      "rms_pred": 0.26807689666748047,
+      "rms_target": 0.2685443162918091,
+      "gain_pred_over_target": 0.998259432067745,
+      "crest_pred": 2.164565686814006,
+      "envelope_rms_err_mean": 0.01437587570399046,
+      "envelope_rms_err_p95": 0.019504790008068085,
+      "path": "/public/home/spotmaverick/nam_proj/waveform_cmp/models/s71.nam",
+      "description": "Seeded topological candidate",
+      "params": 18945,
+      "receptive_field": 5411
+    },
+    "nam_lite": {
+      "nrms": 0.08045495448125221,
+      "rmse": 0.02160572074353695,
+      "corr": 0.9968775370653368,
+      "corr_best_shift": 0.9968775370653368,
+      "best_shift_samples": 0,
+      "nrms_best_shift": 0.08045495448125221,
+      "max_abs_err": 0.26388514041900635,
+      "max_err_time_s": 0.0010416666666666667,
+      "rms_pred": 0.265529066324234,
+      "rms_target": 0.2685443162918091,
+      "gain_pred_over_target": 0.9887718719569274,
+      "crest_pred": 2.141884155837314,
+      "envelope_rms_err_mean": 0.02059302106499672,
+      "envelope_rms_err_p95": 0.02883109543472528,
+      "path": "/public/home/spotmaverick/nam_proj/waveform_cmp/models/nam_lite_tsa15.nam",
+      "description": "Official NAM Lite",
+      "params": 6553,
+      "receptive_field": 4093
+    },
+    "nam_full_standard": {
+      "nrms": 0.0697594134270166,
+      "rmse": 0.018733493983745575,
+      "corr": 0.9976227668818562,
+      "corr_best_shift": 0.9976227668818562,
+      "best_shift_samples": 0,
+      "nrms_best_shift": 0.0697594134270166,
+      "max_abs_err": 0.2975780665874481,
+      "max_err_time_s": 0.0010625,
+      "rms_pred": 0.26529499888420105,
+      "rms_target": 0.2685443162918091,
+      "gain_pred_over_target": 0.9879002562650959,
+      "crest_pred": 2.1868224070425377,
+      "envelope_rms_err_mean": 0.017503680661320686,
+      "envelope_rms_err_p95": 0.024559418484568593,
+      "path": "/public/home/spotmaverick/nam_proj/waveform_cmp/models/nam_standard_tsa15.nam",
+      "description": "Official NAM Standard (Full)",
+      "params": 13801,
+      "receptive_field": 4093
+    }
+  },
+  "device": "BW"
+}
