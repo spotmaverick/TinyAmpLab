@@ -496,3 +496,91 @@ Zenodo 数据集本地已有（`dataset_zenodo/`，含 Marshall JVM410H、Mesa B
 - [x] P3 逐算子失真归因（结论：head 单级占 85~87%；`err_out_frac` 是最强预测指标 r=+0.90；`amp_top1_frac` 是种子差异主因；「饱和深度」彻底作废，`P3_SHARP_ATTRIB_20261127.md`）
 - [ ] 与硬件方对齐交叉开关 vs 抽头的实际成本比
 - [ ] 与硬件方对齐「累加器独立电源域」的可行性 —— 12~16× 摆幅是否在工艺上可承受（这是 P-1 引出的新硬件问题）
+
+---
+
+## 2026-11-27 13:25 更新：P0a 13 种子扩展启动（3090 单卡）
+
+> 训练依赖已就位：bw2/z100 装了 PL2.5.6+auraloss0.4（见 `TRAIN_DEPS_TWO_MACHINES_20261127.md`）；
+> 新租 3090（`connect.nmb2.seetacloud.com:35597`，新镜像）预装 librosa1.0.1/PL2.6.1/wavio/soundfile，
+> 补装 auraloss0.4.0 后训练链路 smoke 通过（2ep 导出 model.nam）。
+
+### 关键决策：8 个新种子全部在 3090 单机训练
+- **种子选择**：s41/s43/s47/s53/s59/s61/s67/s71（质数，与历史 s7/s11/s23/s31/s37 同分布）
+- **为何不跨机**：3090 是 CUDA 路径，DIL329/head 等数值与 bw2/z100 的 DCU/HIP 路径不同
+  （smoke s7 seg0 dev=0.1056 vs bw2 0.1045，差 1%）。为让 top1 排序可比，
+  13 种子必须在同一台机器、同一脚本、同一精度路径下产出。
+- **为何不并行**：单训练进程 GPU 已达 98%（compute-bound），显存仅 1.2GB；
+  并行多进程不提升总吞吐，只会上下文切换拖慢。串行 8 种子 ≈ 3h。
+
+### 两条可检验预测（已拆为独立任务）
+1. **预测1**：`amp_top1_frac` 与音频无关 → 13 种子的 top1 排序可直接跨种子比。
+   判据：段内 σ / 种子间 σ < 0.30，且三段两两 Spearman ρ > 0.9。
+2. **预测2**：top1 越高 head 收益越大 → 单调性在 13 种子延续。
+   判据：top1 vs recovery@V48 的 ρ>0.6 且 p<0.05；找违反单调的个例。
+
+### 工程状态
+- 3090 项目根 `/root/autodl-tmp/proj`，种子 `p1/seeds/`（已传 5 个 + 8 个待训），
+  数据 `data/`（tsa15 6 个 wav），分析脚本 `p0a_analyze.py`（已上传，两段预测的后处理检验）。
+- 训练脚本 `/root/autodl-tmp/run8.sh`，后台 screen `job_1127_131923`，日志 `/root/autodl-tmp/p0a_logs/sXX.log`。
+- P4 脚本在 3090 跑通：自检 max|Δ|=0.00e+00，s7 三段 top1=0.357/0.355/0.367（跨段 3.4%，与 bw2 一致）。
+
+---
+
+## 2026-11-27 14:20 更新：3090 停用，改回 bw2+z100 双机训练（13 种子扩展）
+
+### 决策变更
+- 用户 13:27 关停 3090，回到 bw2/z100。8 个新种子（s41/43/47/53/59/61/67/71）拆分两机训练。
+- **关键约束发现**：
+  - bw2 组配额 `GrpJobs=N(1), gres/dcu=N(1)` —— 同用户仅 1 作业 1 卡，8 种子串行约 17h。
+    `--gres=dcu:8` 单作业被 sbatch 直接拒绝。
+  - z100 组配额 `GrpJobs=N(0)` —— 无限制，可 4 作业并行。
+- **分工**：bw2 训 s41/s43/s47/s53（串行），z100 训 s59/s61/s67/s71（并行）。
+  **分析统一在 z100 重算 13 种子的 top1/recovery**，保证同精度路径可比。
+
+### bw2 训练链路
+- 坏节点 `a02r3n12` 缺 `/opt/hyhal/lib` 且 DTK26 env.sh 未把 `.hyhal/hydm/lib` 加入 LD_LIBRARY_PATH，
+  导致 `libhydmi.so` 找不到、`torch.cuda.is_available()=False`（静默 CPU 降级风险）。
+- 解决：在 `p0a_train_one.sh` 加硬断言（无 DCU 直接 exit 9），并在 sbatch 加 `#SBATCH --exclude=a02r3n12`。
+  8 个首轮作业全部命中该节点被断言 abort（rc=9，6s），排除后 s41 落到 a02r4n05 正常训练。
+- smoke 2ep 验证 rc=0，导出 model.nam 408KB，2.17 it/s。
+
+### z100 训练链路（从零搭建）
+- 用 `torch21_env`（torch 2.1.0 + DCU Z100SM + numpy 1.26.4），非 `nam` conda env（后者是 CPU torch 2.6.0+cpu）。
+- 依赖补齐（逐轮 smoke 暴露）：wavio（本地 wheel 中转）、pydantic 2.14.4 + pydantic_core + typing_inspection、
+  matplotlib 3.10.9 全套（contourpy/cycler/fonttools/kiwisolver/pyparsing/PIL）、six 1.17。
+  均从 nam conda env（py3.10 同 ABI）复制。
+- 训练素材：`nam_project/p0a_train/`（nam 包 + train_seeded.py + 3 配置，数据复用 `nam_project/data/`）。
+- smoke 2ep 验证 rc=0，导出 s3.nam 408KB，1.38 it/s（约 3.3h/种子，4 个并行）。
+
+### 当前作业状态（14:20）
+- bw2：s41 RUNNING（epoch 88/300），s43/s47/s53 PENDING 排队。
+- z100：s59/s61/s67/s71 全部 RUNNING（b01r2n00/n10）。
+
+---
+
+## 2026-11-27 16:30 更新：bw 容器接入，三机重新分流
+
+> 3090 已于 13:27 由用户关停，**未采用**。改回 bw/bw2/z100 三机。
+> 完整调度分析见 `SCHED_OPT_20261127.md`。
+
+### 关键结论
+- **bw 容器真实配额是 15 核**（cgroup `cpu.max=1500000/100000`），`nproc` 报 128 是宿主机读数。
+  内存上限 59GB，显存 68.7GB 但 2 路时只用 4.13GB。
+- **bw 最优并发 = 2 路**：单路速率 1/2/3 路为 1.20/1.60/1.04 it/s，总吞吐 1.20/3.20/3.69——
+  3 路只 +15% 总吞吐却让单路掉 35%。瓶颈不是显存/CPU，是 18.9K 参数算子链的 kernel launch 开销。
+- **bw2 配额只限并发数不降单路速度**（单路 2.24 it/s > bw 双路 1.75），所以别把 bw2 任务搬来 bw。
+
+### 分流结果（无重复无遗漏，13 个）
+| 机器 | 种子 | 速率 |
+|---|---|---|
+| bw（2 路） | s47, s53 | 1.72 / 1.75 it/s |
+| bw2（1 路） | s43 | 2.24 it/s |
+| z100（4 路） | s59, s61, s67, s71 | 1.26~1.38 it/s |
+| 已完成并回传 | s7, s11, s23, s31, s37, s41 | — |
+
+已 `scancel` bw2 排队的 s47/s53；已清理 bw 上误起的 s41/s59/s61。
+
+### 为什么不动态迁移
+官方训练不存 checkpoint（只导出 nam），转机要从 ep0 重训。算过：bw 单跑 s47 需 1.97h，
+但 s53 转 z100 需 3.3h，总时长从 2.28h 恶化到 3.3h。**要支持迁移得先加 ModelCheckpoint 回调。**
