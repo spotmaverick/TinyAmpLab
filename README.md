@@ -15,7 +15,8 @@
 | 训练批次台账（含 P-1 纯仿真实验） | [`docs/reports/EXPERIMENT_LEDGER.md`](docs/reports/EXPERIMENT_LEDGER.md) |
 | head 累加链加法器失真实测 | [`docs/reports/P1_HEAD_ACCUM_20261127.md`](docs/reports/P1_HEAD_ACCUM_20261127.md) |
 | **误差源归因：非线性占退化 67~74%，也是方差的来源** | [`docs/reports/P2_ABLATE_20261127.md`](docs/reports/P2_ABLATE_20261127.md) |
-| **逐算子归因：退化的 85% 在 head 求和级，不在乘法器** | [`docs/reports/P3_SHARP_ATTRIB_20261127.md`](docs/reports/P3_SHARP_ATTRIB_20261127.md) |
+| **逐算子归因：坏种子的退化 85% 在 head 求和级，不在乘法器** | [`docs/reports/P3_SHARP_ATTRIB_20261127.md`](docs/reports/P3_SHARP_ATTRIB_20261127.md) |
+| **代理量跨音频验证 + head 级削顶因果干预（推翻「85%」的普适性）** | [`docs/reports/P4_PROXY_CAUSAL_20261127.md`](docs/reports/P4_PROXY_CAUSAL_20261127.md) |
 | 当前 WaveNet 架构族并行搜索计划 | [`docs/plans/ARCH_V2_PLAN.md`](docs/plans/ARCH_V2_PLAN.md) |
 | 三诊断实验裁决与 bug 记录 | [`docs/plans/DIAG_PLAN_REVIEW.md`](docs/plans/DIAG_PLAN_REVIEW.md) |
 | 如何跑起来 | 本文件下方「复现」章节 |

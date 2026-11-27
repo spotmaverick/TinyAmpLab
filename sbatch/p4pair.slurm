@@ -1,0 +1,17 @@
+#!/bin/bash
+#SBATCH -J p4pair
+#SBATCH -p hx1hdnormal
+#SBATCH -N 1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=24G
+#SBATCH --time=02:00:00
+#SBATCH --gres=dcu:1
+#SBATCH -o /public/home/spotmaverick/p26/p4pair-%j.out
+source ~/p26/bw2env.sh
+cd /public/home/spotmaverick/nam_proj
+export PYTHONPATH=/public/home/spotmaverick/t29:/public/home/spotmaverick/nam_proj:$PYTHONPATH
+export P4_REQUIRE_ACCEL=1
+echo "== PAIR $SLURM_JOB_ID on $(hostname) $(date +%F\ %T) =="
+$PY -u p4_paircheck.py
+echo "== DONE rc=$? =="

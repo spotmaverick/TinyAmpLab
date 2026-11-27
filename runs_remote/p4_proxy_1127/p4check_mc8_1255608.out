@@ -1,0 +1,41 @@
+WARNING: /opt/hyhal/lib/cmake/rocm_smi doesn't exist, please install the latest driver(version >= 6.3.15)
+The rocm_smi_lib will be used in default
+== CHECK 1255608 on a02r3n05 2026-11-27 11:36:17 ==
+[device] cuda  torch=2.9.0  hip=6.3.26093  count=1
+[device] BW
+/public/home/spotmaverick/nam_proj/nam/__init__.py:29: UserWarning: nam.train 未能导入（P-1 前向仿真不需要）: No module named 'pytorch_lightning'
+  _w.warn("nam.%s 未能导入（P-1 前向仿真不需要）: %s" % (_m, _e))
+=== s7  ng=82  head_idx=81  gmap[head_idx]=head
+
+=== 逐 MC 原始 NRMS（mc_seed=2000..2007）===
+            base   head_bypass     head_vinf    all_bypass
+        0.104490      0.094427      0.094427      0.077453
+        0.101717      0.107048      0.107048      0.086760
+        0.093730      0.098074      0.098074      0.074705
+        0.120578      0.104923      0.104923      0.100303
+        0.089575      0.102018      0.102018      0.077808
+        0.092179      0.110805      0.110805      0.080249
+        0.096854      0.090718      0.090718      0.074641
+        0.091031      0.113922      0.113922      0.083611
+
+=== 口径 1：先 RMS 聚合再相减（P3 口径，会产生符号随机）===
+  base − head_bypass  = -0.003782   (base=0.099233 head_bypass=0.103015)
+  base − head_vinf    = -0.003782   (base=0.099233 head_vinf=0.103015)
+  base − all_bypass   = +0.016904   (base=0.099233 all_bypass=0.082328)
+
+=== 口径 2：配对求差（正确做法，公共噪声抵消）===
+  base − head_bypass  = mean -0.003973 ± 0.013788   RMS +0.013496   (n=8)
+  base − head_vinf    = mean -0.003973 ± 0.013788   RMS +0.013496   (n=8)
+  base − all_bypass   = mean +0.016828 ± 0.006454   RMS +0.017878   (n=8)
+
+=== 配对差值的符号一致性（多少个 MC 次里 head 旁路是改善）===
+  head_bypass  改善 3/8 次   逐次: +0.0101 -0.0053 -0.0043 +0.0157 -0.0124 -0.0186 +0.0061 -0.0229
+  head_vinf    改善 3/8 次   逐次: +0.0101 -0.0053 -0.0043 +0.0157 -0.0124 -0.0186 +0.0061 -0.0229
+
+=== A 与 B 是否等价（mc_seed=2000 的预测张量）===
+  max|Δ| = 1.192e-07
+
+=== 可加性（同口径 2 配对）===
+  head 占比 = mean(head)/mean(all) = -23.6%
+  总退化 mean = +0.016828  (base=0.099233 floor=0.082328)
+== DONE rc=0 ==

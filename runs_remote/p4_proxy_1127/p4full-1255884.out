@@ -1,0 +1,136 @@
+WARNING: /opt/hyhal/lib/cmake/rocm_smi doesn't exist, please install the latest driver(version >= 6.3.15)
+The rocm_smi_lib will be used in default
+== P4 FULL 1255884 on a02r2n08 2026-11-27 11:51:58 ==
+[device] cuda  torch=2.9.0  hip=6.3.26093  count=1
+[device] BW
+[device] cuda torch=2.9.0 hip=6.3.26093
+[device] BW
+/public/home/spotmaverick/nam_proj/nam/__init__.py:29: UserWarning: nam.train 未能导入（P-1 前向仿真不需要）: No module named 'pytorch_lightning'
+  _w.warn("nam.%s 未能导入（P-1 前向仿真不需要）: %s" % (_m, _e))
+
+=== s7 (/public/home/spotmaverick/nam_proj/p1/seeds/s7.nam)
+  [selfcheck] 等价 max|Δ|=0.00e+00 ✓
+  [proxy] s7    seg0 dev=0.0992 dig=0.0823 drop=+0.0168 top1=0.356 crest=4.12 errOut=0.0681
+  [proxy] s7    seg1 dev=0.0955 dig=0.0799 drop=+0.0156 top1=0.354 crest=4.28 errOut=0.0612
+  [proxy] s7    seg2 dev=0.1072 dig=0.0893 drop=+0.0176 top1=0.366 crest=4.37 errOut=0.0634
+
+=== s11 (/public/home/spotmaverick/nam_proj/p1/seeds/s11.nam)
+  [selfcheck] 等价 max|Δ|=0.00e+00 ✓
+  [proxy] s11   seg0 dev=0.2074 dig=0.0891 drop=+0.1180 top1=0.641 crest=6.87 errOut=0.2152
+  [proxy] s11   seg1 dev=0.2076 dig=0.0868 drop=+0.1204 top1=0.639 crest=6.11 errOut=0.1899
+  [proxy] s11   seg2 dev=0.2087 dig=0.1010 drop=+0.1073 top1=0.642 crest=6.40 errOut=0.1990
+
+=== s23 (/public/home/spotmaverick/nam_proj/p1/seeds/s23.nam)
+  [selfcheck] 等价 max|Δ|=0.00e+00 ✓
+  [proxy] s23   seg0 dev=0.1166 dig=0.0963 drop=+0.0204 top1=0.561 crest=5.40 errOut=0.1186
+  [proxy] s23   seg1 dev=0.1137 dig=0.0934 drop=+0.0206 top1=0.560 crest=4.64 errOut=0.1082
+  [proxy] s23   seg2 dev=0.1193 dig=0.0976 drop=+0.0217 top1=0.564 crest=4.98 errOut=0.1085
+
+=== s31 (/public/home/spotmaverick/nam_proj/p1/seeds/s31.nam)
+  [selfcheck] 等价 max|Δ|=0.00e+00 ✓
+  [proxy] s31   seg0 dev=0.2328 dig=0.0888 drop=+0.1442 top1=0.626 crest=5.30 errOut=0.2018
+  [proxy] s31   seg1 dev=0.2305 dig=0.0829 drop=+0.1478 top1=0.625 crest=5.44 errOut=0.2021
+  [proxy] s31   seg2 dev=0.2387 dig=0.0900 drop=+0.1487 top1=0.626 crest=5.63 errOut=0.2065
+
+=== s37 (/public/home/spotmaverick/nam_proj/p1/seeds/s37.nam)
+  [selfcheck] 等价 max|Δ|=0.00e+00 ✓
+  [proxy] s37   seg0 dev=0.1477 dig=0.0876 drop=+0.0600 top1=0.429 crest=5.75 errOut=0.0737
+  [proxy] s37   seg1 dev=0.1425 dig=0.0837 drop=+0.0587 top1=0.428 crest=5.96 errOut=0.0712
+  [proxy] s37   seg2 dev=0.1499 dig=0.0924 drop=+0.0574 top1=0.437 crest=5.94 errOut=0.0734
+
+[saved] /public/home/spotmaverick/nam_proj/p1/out/p4_proxy_full_1127.json  耗时 71s
+
+--- proxy: pooled n=15（判据看 per_seg 三段是否都成立）---
+  amp_top1_frac        pooled r=+0.737 rho=+0.768 | per-seg rho: seg0:+0.80  seg1:+0.80  seg2:+0.80
+  head_err_out_frac    pooled r=+0.884 rho=+0.843 | per-seg rho: seg0:+0.80  seg1:+0.90  seg2:+0.90
+  head_crest           pooled r=+0.631 rho=+0.643 | per-seg rho: seg0:+0.40  seg1:+0.70  seg2:+0.70
+  max_err_out_any      pooled r=-0.181 rho=-0.289 | per-seg rho: seg0:-0.30  seg1:-0.30  seg2:-0.30
+== PROXY rc=0 ==
+[device] cuda  torch=2.9.0  hip=6.3.26093  count=1
+[device] BW
+[device] cuda torch=2.9.0 hip=6.3.26093
+[device] BW
+/public/home/spotmaverick/nam_proj/nam/__init__.py:29: UserWarning: nam.train 未能导入（P-1 前向仿真不需要）: No module named 'pytorch_lightning'
+  _w.warn("nam.%s 未能导入（P-1 前向仿真不需要）: %s" % (_m, _e))
+
+=== s7 (/public/home/spotmaverick/nam_proj/p1/seeds/s7.nam)
+  [selfcheck] 等价 max|Δ|=0.00e+00 ✓
+  [causal] s7    V_head=    16 Δ配对=+0.00000±0.00000 改善0/8 recov(x̄)=0.000 errOut=0.0681 crest=4.12
+  [causal] s7    V_head=    24 Δ配对=+0.00262±0.00675 改善5/8 recov(x̄)=0.014 errOut=0.0323 crest=4.12
+  [causal] s7    V_head=    32 Δ配对=+0.00079±0.00972 改善4/8 recov(x̄)=-0.184 errOut=0.0186 crest=4.12
+  [causal] s7    V_head=    48 Δ配对=-0.00152±0.01195 改善3/8 recov(x̄)=-0.396 errOut=0.0084 crest=4.12
+  [causal] s7    V_head=    64 Δ配对=-0.00252±0.01275 改善3/8 recov(x̄)=-0.484 errOut=0.0048 crest=4.12
+  [causal] s7    V_head=    96 Δ配对=-0.00331±0.01333 改善3/8 recov(x̄)=-0.552 errOut=0.0021 crest=4.12
+  [causal] s7    V_head=100000 Δ配对=-0.00397±0.01379 改善3/8 recov(x̄)=-0.608 errOut=0.0000 crest=4.12
+
+=== s11 (/public/home/spotmaverick/nam_proj/p1/seeds/s11.nam)
+  [selfcheck] 等价 max|Δ|=0.00e+00 ✓
+  [causal] s11   V_head=    16 Δ配对=+0.00000±0.00000 改善0/8 recov(x̄)=0.000 errOut=0.2152 crest=6.87
+  [causal] s11   V_head=    24 Δ配对=+0.07128±0.00430 改善8/8 recov(x̄)=0.626 errOut=0.1200 crest=6.87
+  [causal] s11   V_head=    32 Δ配对=+0.09466±0.00434 改善8/8 recov(x̄)=0.828 errOut=0.0745 crest=6.87
+  [causal] s11   V_head=    48 Δ配对=+0.10433±0.00395 改善8/8 recov(x̄)=0.907 errOut=0.0359 crest=6.87
+  [causal] s11   V_head=    64 Δ配对=+0.10502±0.00538 改善8/8 recov(x̄)=0.909 errOut=0.0208 crest=6.87
+  [causal] s11   V_head=    96 Δ配对=+0.10439±0.00711 改善8/8 recov(x̄)=0.900 errOut=0.0095 crest=6.87
+  [causal] s11   V_head=100000 Δ配对=+0.10316±0.00882 改善8/8 recov(x̄)=0.887 errOut=0.0000 crest=6.87
+
+=== s23 (/public/home/spotmaverick/nam_proj/p1/seeds/s23.nam)
+  [selfcheck] 等价 max|Δ|=0.00e+00 ✓
+  [causal] s23   V_head=    16 Δ配对=+0.00000±0.00000 改善0/8 recov(x̄)=0.000 errOut=0.1186 crest=5.40
+  [causal] s23   V_head=    24 Δ配对=+0.01441±0.00871 改善8/8 recov(x̄)=0.821 errOut=0.0620 crest=5.40
+  [causal] s23   V_head=    32 Δ配对=+0.01191±0.01355 改善6/8 recov(x̄)=0.515 errOut=0.0373 crest=5.40
+  [causal] s23   V_head=    48 Δ配对=+0.00648±0.01738 改善5/8 recov(x̄)=0.023 errOut=0.0175 crest=5.40
+  [causal] s23   V_head=    64 Δ配对=+0.00377±0.01877 改善4/8 recov(x̄)=-0.209 errOut=0.0101 crest=5.40
+  [causal] s23   V_head=    96 Δ配对=+0.00156±0.01976 改善4/8 recov(x̄)=-0.394 errOut=0.0045 crest=5.40
+  [causal] s23   V_head=100000 Δ配对=-0.00037±0.02056 改善3/8 recov(x̄)=-0.554 errOut=0.0000 crest=5.40
+
+=== s31 (/public/home/spotmaverick/nam_proj/p1/seeds/s31.nam)
+  [selfcheck] 等价 max|Δ|=0.00e+00 ✓
+  [causal] s31   V_head=    16 Δ配对=+0.00000±0.00000 改善0/8 recov(x̄)=0.000 errOut=0.2018 crest=5.30
+  [causal] s31   V_head=    24 Δ配对=+0.07075±0.00131 改善8/8 recov(x̄)=0.497 errOut=0.1130 crest=5.30
+  [causal] s31   V_head=    32 Δ配对=+0.09811±0.00212 改善8/8 recov(x̄)=0.688 errOut=0.0701 crest=5.30
+  [causal] s31   V_head=    48 Δ配对=+0.11486±0.00489 改善8/8 recov(x̄)=0.804 errOut=0.0337 crest=5.30
+  [causal] s31   V_head=    64 Δ配对=+0.11917±0.00664 改善8/8 recov(x̄)=0.833 errOut=0.0195 crest=5.30
+  [causal] s31   V_head=    96 Δ配对=+0.12147±0.00819 改善8/8 recov(x̄)=0.848 errOut=0.0089 crest=5.30
+  [causal] s31   V_head=100000 Δ配对=+0.12273±0.00962 改善8/8 recov(x̄)=0.855 errOut=0.0000 crest=5.30
+
+=== s37 (/public/home/spotmaverick/nam_proj/p1/seeds/s37.nam)
+  [selfcheck] 等价 max|Δ|=0.00e+00 ✓
+  [causal] s37   V_head=    16 Δ配对=+0.00000±0.00000 改善0/8 recov(x̄)=0.000 errOut=0.0737 crest=5.75
+  [causal] s37   V_head=    24 Δ配对=+0.00443±0.00480 改善6/8 recov(x̄)=0.066 errOut=0.0353 crest=5.75
+  [causal] s37   V_head=    32 Δ配对=+0.00397±0.00691 改善6/8 recov(x̄)=0.055 errOut=0.0205 crest=5.75
+  [causal] s37   V_head=    48 Δ配对=+0.00291±0.00852 改善6/8 recov(x̄)=0.034 errOut=0.0093 crest=5.75
+  [causal] s37   V_head=    64 Δ配对=+0.00238±0.00910 改善5/8 recov(x̄)=0.024 errOut=0.0053 crest=5.75
+  [causal] s37   V_head=    96 Δ配对=+0.00195±0.00952 改善5/8 recov(x̄)=0.016 errOut=0.0024 crest=5.75
+  [causal] s37   V_head=100000 Δ配对=+0.00158±0.00986 改善5/8 recov(x̄)=0.009 errOut=0.0000 crest=5.75
+
+[saved] /public/home/spotmaverick/nam_proj/p1/out/p4_proxy_causal_1127.json  耗时 148s
+
+--- causal: head V_SAT 扫描，回收率 = 配对改善 / 总退化 ---
+  （V16 是现状基线=0；Vinf 即 P3 的 head 全旁路。1.0=退化全在 head）
+  seed     top1      总Δ配对       V16       V24       V32       V48       V64       V96      Vinf
+  s7      0.356    0.0168      0.00      0.16      0.05     -0.09     -0.15     -0.20     -0.24
+  s11     0.641    0.1180      0.00      0.60      0.80      0.88      0.89      0.88      0.87
+  s23     0.561    0.0204      0.00      0.71      0.59      0.32      0.19      0.08     -0.02
+  s31     0.626    0.1442      0.00      0.49      0.68      0.80      0.83      0.84      0.85
+  s37     0.429    0.0600      0.00      0.07      0.07      0.05      0.04      0.03      0.03
+  mean                         0.00      0.41      0.44      0.39      0.36      0.33      0.30
+  std                          0.00      0.28      0.36      0.44      0.47      0.50      0.52
+
+  head err_out_frac 随 V_head 单调降（因果闭环的证据）：
+    s7        0.0681    0.0323    0.0186    0.0084    0.0048    0.0021    0.0000
+    s11       0.2152    0.1200    0.0745    0.0359    0.0208    0.0095    0.0000
+    s23       0.1186    0.0620    0.0373    0.0175    0.0101    0.0045    0.0000
+    s31       0.2018    0.1130    0.0701    0.0337    0.0195    0.0089    0.0000
+    s37       0.0737    0.0353    0.0205    0.0093    0.0053    0.0024    0.0000
+
+  配对改善的符号一致性（多少 MC 次里提高 V_head 真的变好）：
+    s7           0/8       5/8       4/8       3/8       3/8       3/8       3/8
+    s11          0/8       8/8       8/8       8/8       8/8       8/8       8/8
+    s23          0/8       8/8       6/8       5/8       4/8       4/8       3/8
+    s31          0/8       8/8       8/8       8/8       8/8       8/8       8/8
+    s37          0/8       6/8       6/8       6/8       5/8       5/8       5/8
+
+  top1 vs recovery@V48 : r=+0.960 rho=+1.000 (n=5)
+  top1 vs 总退化配对Δ   : r=+0.739 rho=+0.800 (n=5)
+== CAUSAL rc=0 ==
+== DONE 2026-11-27 11:56:18 ==

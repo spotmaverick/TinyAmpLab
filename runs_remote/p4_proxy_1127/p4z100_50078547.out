@@ -1,0 +1,127 @@
+== JOB 50078547 on b01r1n00 2026-11-27 12:04:40 ==
+[device] cuda  torch=2.1.0  hip=5.7.24164  count=1
+[device] Z100SM
+[device] cuda torch=2.1.0 hip=5.7.24164
+[device] Z100SM
+
+=== s7 (/work/home/spotmaverick/nam_project/p1/seeds/s7.nam)
+  [selfcheck] 等价 max|Δ|=0.00e+00 ✓
+  [causal] s7    V_head=    16 Δ配对=+0.00000±0.00000 改善0/4 recov(x̄)=0.000 errOut=0.0599 crest=4.09
+  [causal] s7    V_head=    24 Δ配对=+0.00645±0.00478 改善4/4 recov(x̄)=0.299 errOut=0.0282 crest=4.09
+  [causal] s7    V_head=    32 Δ配对=+0.00635±0.00709 改善3/4 recov(x̄)=0.280 errOut=0.0162 crest=4.09
+  [causal] s7    V_head=    48 Δ配对=+0.00537±0.00892 改善2/4 recov(x̄)=0.219 errOut=0.0073 crest=4.09
+  [causal] s7    V_head=    64 Δ配对=+0.00484±0.00959 改善2/4 recov(x̄)=0.187 errOut=0.0041 crest=4.09
+  [causal] s7    V_head=    96 Δ配对=+0.00440±0.01008 改善2/4 recov(x̄)=0.162 errOut=0.0018 crest=4.09
+  [causal] s7    V_head=100000 Δ配对=+0.00401±0.01048 改善2/4 recov(x̄)=0.140 errOut=0.0000 crest=4.09
+
+=== s11 (/work/home/spotmaverick/nam_project/p1/seeds/s11.nam)
+  [selfcheck] 等价 max|Δ|=0.00e+00 ✓
+  [causal] s11   V_head=    16 Δ配对=+0.00000±0.00000 改善0/4 recov(x̄)=0.000 errOut=0.1894 crest=6.80
+  [causal] s11   V_head=    24 Δ配对=+0.06922±0.00446 改善4/4 recov(x̄)=0.550 errOut=0.1028 crest=6.80
+  [causal] s11   V_head=    32 Δ配对=+0.09274±0.00521 改善4/4 recov(x̄)=0.735 errOut=0.0629 crest=6.80
+  [causal] s11   V_head=    48 Δ配对=+0.10423±0.00511 改善4/4 recov(x̄)=0.824 errOut=0.0299 crest=6.80
+  [causal] s11   V_head=    64 Δ配对=+0.10608±0.00571 改善4/4 recov(x̄)=0.838 errOut=0.0173 crest=6.80
+  [causal] s11   V_head=    96 Δ配对=+0.10646±0.00673 改善4/4 recov(x̄)=0.840 errOut=0.0078 crest=6.80
+  [causal] s11   V_head=100000 Δ配对=+0.10613±0.00796 改善4/4 recov(x̄)=0.836 errOut=0.0000 crest=6.80
+
+=== s23 (/work/home/spotmaverick/nam_project/p1/seeds/s23.nam)
+  [selfcheck] 等价 max|Δ|=0.00e+00 ✓
+  [causal] s23   V_head=    16 Δ配对=+0.00000±0.00000 改善0/4 recov(x̄)=0.000 errOut=0.1038 crest=5.44
+  [causal] s23   V_head=    24 Δ配对=+0.01924±0.00652 改善4/4 recov(x̄)=0.686 errOut=0.0533 crest=5.44
+  [causal] s23   V_head=    32 Δ配对=+0.01947±0.01083 改善4/4 recov(x̄)=0.624 errOut=0.0319 crest=5.44
+  [causal] s23   V_head=    48 Δ配对=+0.01621±0.01460 改善4/4 recov(x̄)=0.430 errOut=0.0149 crest=5.44
+  [causal] s23   V_head=    64 Δ配对=+0.01428±0.01603 改善3/4 recov(x̄)=0.328 errOut=0.0085 crest=5.44
+  [causal] s23   V_head=    96 Δ配对=+0.01263±0.01708 改善3/4 recov(x̄)=0.245 errOut=0.0038 crest=5.44
+  [causal] s23   V_head=100000 Δ配对=+0.01115±0.01794 改善2/4 recov(x̄)=0.171 errOut=0.0000 crest=5.44
+
+=== s31 (/work/home/spotmaverick/nam_project/p1/seeds/s31.nam)
+  [selfcheck] 等价 max|Δ|=0.00e+00 ✓
+  [causal] s31   V_head=    16 Δ配对=+0.00000±0.00000 改善0/4 recov(x̄)=0.000 errOut=0.1871 crest=5.29
+  [causal] s31   V_head=    24 Δ配对=+0.07040±0.00175 改善4/4 recov(x̄)=0.460 errOut=0.1030 crest=5.29
+  [causal] s31   V_head=    32 Δ配对=+0.09834±0.00170 改善4/4 recov(x̄)=0.642 errOut=0.0634 crest=5.29
+  [causal] s31   V_head=    48 Δ配对=+0.11642±0.00265 改善4/4 recov(x̄)=0.759 errOut=0.0302 crest=5.29
+  [causal] s31   V_head=    64 Δ配对=+0.12152±0.00390 改善4/4 recov(x̄)=0.792 errOut=0.0174 crest=5.29
+  [causal] s31   V_head=    96 Δ配对=+0.12450±0.00516 改善4/4 recov(x̄)=0.811 errOut=0.0079 crest=5.29
+  [causal] s31   V_head=100000 Δ配对=+0.12639±0.00638 改善4/4 recov(x̄)=0.823 errOut=0.0000 crest=5.29
+
+=== s37 (/work/home/spotmaverick/nam_project/p1/seeds/s37.nam)
+  [selfcheck] 等价 max|Δ|=0.00e+00 ✓
+  [causal] s37   V_head=    16 Δ配对=+0.00000±0.00000 改善0/4 recov(x̄)=0.000 errOut=0.0681 crest=5.73
+  [causal] s37   V_head=    24 Δ配对=+0.00664±0.00295 改善4/4 recov(x̄)=0.103 errOut=0.0325 crest=5.73
+  [causal] s37   V_head=    32 Δ配对=+0.00709±0.00435 改善4/4 recov(x̄)=0.109 errOut=0.0188 crest=5.73
+  [causal] s37   V_head=    48 Δ配对=+0.00669±0.00546 改善4/4 recov(x̄)=0.102 errOut=0.0085 crest=5.73
+  [causal] s37   V_head=    64 Δ配对=+0.00639±0.00587 改善3/4 recov(x̄)=0.097 errOut=0.0048 crest=5.73
+  [causal] s37   V_head=    96 Δ配对=+0.00614±0.00616 改善3/4 recov(x̄)=0.092 errOut=0.0022 crest=5.73
+  [causal] s37   V_head=100000 Δ配对=+0.00590±0.00640 改善3/4 recov(x̄)=0.088 errOut=0.0000 crest=5.73
+
+[saved] /work/home/spotmaverick/nam_project/p1/out/p4_proxy_z100causal.json  耗时 141s
+
+--- causal: head V_SAT 扫描，回收率 = 配对改善 / 总退化 ---
+  （V16 是现状基线=0；Vinf 即 P3 的 head 全旁路。1.0=退化全在 head）
+  seed     top1      总Δ配对       V16       V24       V32       V48       V64       V96      Vinf
+  s7      0.357    0.0203      0.00      0.32      0.31      0.27      0.24      0.22      0.20
+  s11     0.626    0.1272      0.00      0.54      0.73      0.82      0.83      0.84      0.83
+  s23     0.546    0.0303      0.00      0.63      0.63      0.53      0.46      0.41      0.36
+  s31     0.608    0.1537      0.00      0.46      0.64      0.76      0.79      0.81      0.82
+  s37     0.417    0.0636      0.00      0.10      0.11      0.11      0.10      0.10      0.09
+  mean                         0.00      0.41      0.49      0.49      0.49      0.47      0.46
+  std                          0.00      0.21      0.26      0.31      0.32      0.34      0.35
+
+  head err_out_frac 随 V_head 单调降（因果闭环的证据）：
+    s7        0.0599    0.0282    0.0162    0.0073    0.0041    0.0018    0.0000
+    s11       0.1894    0.1028    0.0629    0.0299    0.0173    0.0078    0.0000
+    s23       0.1038    0.0533    0.0319    0.0149    0.0085    0.0038    0.0000
+    s31       0.1871    0.1030    0.0634    0.0302    0.0174    0.0079    0.0000
+    s37       0.0681    0.0325    0.0188    0.0085    0.0048    0.0022    0.0000
+
+  配对改善的符号一致性（多少 MC 次里提高 V_head 真的变好）：
+    s7           0/4       4/4       3/4       2/4       2/4       2/4       2/4
+    s11          0/4       4/4       4/4       4/4       4/4       4/4       4/4
+    s23          0/4       4/4       4/4       4/4       3/4       3/4       2/4
+    s31          0/4       4/4       4/4       4/4       4/4       4/4       4/4
+    s37          0/4       4/4       4/4       4/4       3/4       3/4       3/4
+
+  top1 vs recovery@V48 : r=+0.928 rho=+0.900 (n=5)
+  top1 vs 总退化配对Δ   : r=+0.769 rho=+0.800 (n=5)
+== causal rc=0 ==
+--- s37 ---
+  rechannel  Δ配对=-0.00000±0.00000 改善 0/8  Δ聚合(P3)=-0.00000 ✓
+  L0         Δ配对=-0.00000±0.00000 改善 2/8  Δ聚合(P3)=-0.00000 ✗噪声
+  L1         Δ配对=-0.00002±0.00001 改善 0/8  Δ聚合(P3)=-0.00002 ✓
+  L2         Δ配对=-0.00001±0.00001 改善 1/8  Δ聚合(P3)=-0.00001 ✓
+  L3         Δ配对=+0.00000±0.00001 改善 7/8  Δ聚合(P3)=+0.00000 ✓
+  L4         Δ配对=+0.00004±0.00000 改善 8/8  Δ聚合(P3)=+0.00004 ✓
+  L5         Δ配对=-0.00016±0.00004 改善 0/8  Δ聚合(P3)=-0.00016 ✓
+  L6         Δ配对=-0.00126±0.00040 改善 0/8  Δ聚合(P3)=-0.00126 ✓
+  L7         Δ配对=+0.01191±0.00201 改善 8/8  Δ聚合(P3)=+0.01179 ✓
+  L8         Δ配对=+0.00431±0.00311 改善 7/8  Δ聚合(P3)=+0.00440 ✓
+  L9         Δ配对=+0.01604±0.00238 改善 8/8  Δ聚合(P3)=+0.01590 ✓
+  head       Δ配对=+0.00158±0.00986 改善 5/8  Δ聚合(P3)=+0.00169 ✗噪声
+  ALL        Δ配对=+0.06000±0.00765 改善 8/8  Δ聚合(P3)=+0.06011 ✓
+
+=== 汇总：稳健性矩阵（✓ = |mean|>2SEM 且 符号一致性>=6/8）===
+  组               s7     s11     s23     s31     s37
+  rechannel        ✗       ✓       ✓       ✓       ✓
+  L0               ✓       ✓       ✓       ✗       ✗
+  L1               ✗       ✗       ✗       ✓       ✓
+  L2               ✓       ✗       ✗       ✓       ✓
+  L3               ✓       ✓       ✗       ✓       ✓
+  L4               ✓       ✓       ✗       ✓       ✓
+  L5               ✓       ✗       ✗       ✓       ✓
+  L6               ✓       ✗       ✓       ✓       ✓
+  L7               ✗       ✓       ✗       ✓       ✓
+  L8               ✓       ✓       ✗       ✓       ✓
+  L9               ✓       ✓       ✗       ✓       ✓
+  head             ✗       ✓       ✗       ✓       ✗
+  ALL              ✓       ✓       ✓       ✓       ✓
+
+=== head 贡献：配对 vs 聚合，以及占 ALL 的比例 ===
+  seed       headΔ配对     headΔ聚合      ALLΔ配对    head/ALL       稳健?
+  s7        -0.00397    -0.00378    +0.01683      -23.6%       ✗噪声
+  s11       +0.10316    +0.10328    +0.11799       87.4%         ✓
+  s23       -0.00037    -0.00041    +0.02042       -1.8%       ✗噪声
+  s31       +0.12273    +0.12276    +0.14425       85.1%         ✓
+  s37       +0.00158    +0.00169    +0.06000        2.6%       ✗噪声
+
+[saved] /work/home/spotmaverick/nam_project/p1/out/p4_paircheck.json
+== DONE rc=0 elapsed=491s ==
