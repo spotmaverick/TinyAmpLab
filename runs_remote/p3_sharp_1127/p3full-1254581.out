@@ -1,0 +1,124 @@
+WARNING: /opt/hyhal/lib/cmake/rocm_smi doesn't exist, please install the latest driver(version >= 6.3.15)
+The rocm_smi_lib will be used in default
+== JOB 1254581 on a02r3n08 2026-11-27 10:32:39 ==
+  [layer] s7   L4         NRMS=0.0993  Δ=-0.0000
+  [layer] s7   L5         NRMS=0.0987  Δ=+0.0006
+  [layer] s7   L6         NRMS=0.0983  Δ=+0.0010
+  [layer] s7   L7         NRMS=0.1021  Δ=-0.0029
+  [layer] s7   L8         NRMS=0.0942  Δ=+0.0051
+  [layer] s7   L9         NRMS=0.0967  Δ=+0.0026
+  [layer] s7   head       NRMS=0.1030  Δ=-0.0038
+  [layer] s7   ALL        NRMS=0.0823  Δ=+0.0169
+  [call]  s7   完成（单调用粒度，82 次旁路）
+
+=== s11  (/public/home/spotmaverick/nam_proj/p1/seeds/s11.nam)
+  [stats] s11  NRMS=0.1807  coh=4.34  head=1.08xV_SAT  err_out top3: head#81=0.202, L8#70=0.159, L8#72=0.129
+  [layer] s11  BASE       NRMS=0.2074  Δ=+0.0000
+  [layer] s11  rechannel  NRMS=0.2074  Δ=-0.0000
+  [layer] s11  L0         NRMS=0.2074  Δ=+0.0000
+  [layer] s11  L1         NRMS=0.2074  Δ=+0.0000
+  [layer] s11  L2         NRMS=0.2074  Δ=-0.0000
+  [layer] s11  L3         NRMS=0.2074  Δ=+0.0000
+  [layer] s11  L4         NRMS=0.2074  Δ=-0.0000
+  [layer] s11  L5         NRMS=0.2074  Δ=+0.0000
+  [layer] s11  L6         NRMS=0.2074  Δ=-0.0000
+  [layer] s11  L7         NRMS=0.2079  Δ=-0.0005
+  [layer] s11  L8         NRMS=0.2039  Δ=+0.0035
+  [layer] s11  L9         NRMS=0.1957  Δ=+0.0117
+  [layer] s11  head       NRMS=0.1041  Δ=+0.1033
+  [layer] s11  ALL        NRMS=0.0891  Δ=+0.1183
+  [call]  s11  完成（单调用粒度，82 次旁路）
+
+=== s23  (/public/home/spotmaverick/nam_proj/p1/seeds/s23.nam)
+  [stats] s23  NRMS=0.1069  coh=4.19  head=1.35xV_SAT  err_out top3: L9#78=0.180, L8#72=0.119, head#81=0.113
+  [layer] s23  BASE       NRMS=0.1166  Δ=+0.0000
+  [layer] s23  rechannel  NRMS=0.1166  Δ=+0.0000
+  [layer] s23  L0         NRMS=0.1166  Δ=-0.0000
+  [layer] s23  L1         NRMS=0.1166  Δ=-0.0000
+  [layer] s23  L2         NRMS=0.1166  Δ=-0.0000
+  [layer] s23  L3         NRMS=0.1166  Δ=-0.0000
+  [layer] s23  L4         NRMS=0.1166  Δ=+0.0000
+  [layer] s23  L5         NRMS=0.1166  Δ=-0.0000
+  [layer] s23  L6         NRMS=0.1175  Δ=-0.0010
+  [layer] s23  L7         NRMS=0.1152  Δ=+0.0014
+  [layer] s23  L8         NRMS=0.1167  Δ=-0.0001
+  [layer] s23  L9         NRMS=0.1166  Δ=-0.0001
+  [layer] s23  head       NRMS=0.1170  Δ=-0.0004
+  [layer] s23  ALL        NRMS=0.0963  Δ=+0.0202
+  [call]  s23  完成（单调用粒度，82 次旁路）
+
+=== s31  (/public/home/spotmaverick/nam_proj/p1/seeds/s31.nam)
+  [stats] s31  NRMS=0.2238  coh=4.26  head=1.37xV_SAT  err_out top3: L9#78=0.237, L9#76=0.208, head#81=0.202
+  [layer] s31  BASE       NRMS=0.2328  Δ=+0.0000
+  [layer] s31  rechannel  NRMS=0.2328  Δ=+0.0000
+  [layer] s31  L0         NRMS=0.2328  Δ=-0.0000
+  [layer] s31  L1         NRMS=0.2328  Δ=+0.0001
+  [layer] s31  L2         NRMS=0.2330  Δ=-0.0002
+  [layer] s31  L3         NRMS=0.2328  Δ=+0.0000
+  [layer] s31  L4         NRMS=0.2328  Δ=-0.0000
+  [layer] s31  L5         NRMS=0.2327  Δ=+0.0001
+  [layer] s31  L6         NRMS=0.2324  Δ=+0.0004
+  [layer] s31  L7         NRMS=0.2269  Δ=+0.0060
+  [layer] s31  L8         NRMS=0.2418  Δ=-0.0090
+  [layer] s31  L9         NRMS=0.2142  Δ=+0.0186
+  [layer] s31  head       NRMS=0.1101  Δ=+0.1228
+  [layer] s31  ALL        NRMS=0.0888  Δ=+0.1440
+  [call]  s31  完成（单调用粒度，82 次旁路）
+
+=== s37  (/public/home/spotmaverick/nam_proj/p1/seeds/s37.nam)
+  [stats] s37  NRMS=0.1423  coh=4.63  head=1.32xV_SAT  err_out top3: L9#78=0.262, L8#70=0.199, L9#73=0.143
+  [layer] s37  BASE       NRMS=0.1477  Δ=+0.0000
+  [layer] s37  rechannel  NRMS=0.1477  Δ=-0.0000
+  [layer] s37  L0         NRMS=0.1477  Δ=-0.0000
+  [layer] s37  L1         NRMS=0.1477  Δ=-0.0000
+  [layer] s37  L2         NRMS=0.1477  Δ=-0.0000
+  [layer] s37  L3         NRMS=0.1477  Δ=+0.0000
+  [layer] s37  L4         NRMS=0.1477  Δ=+0.0000
+  [layer] s37  L5         NRMS=0.1479  Δ=-0.0002
+  [layer] s37  L6         NRMS=0.1490  Δ=-0.0013
+  [layer] s37  L7         NRMS=0.1359  Δ=+0.0118
+  [layer] s37  L8         NRMS=0.1433  Δ=+0.0044
+  [layer] s37  L9         NRMS=0.1318  Δ=+0.0159
+  [layer] s37  head       NRMS=0.1460  Δ=+0.0017
+  [layer] s37  ALL        NRMS=0.0876  Δ=+0.0601
+  [call]  s37  完成（单调用粒度，82 次旁路）
+
+[saved] /public/home/spotmaverick/nam_proj/p1/out/p3_sharp_bw2.json  总耗时 526s
+
+--- 种子层面（n=5，仅看方向）---
+seed      NRMS    coh   top1  head/Vsat
+s7      0.1045   4.50   0.37       1.17
+s11     0.2111   4.35   0.64       1.05
+s23     0.1231   4.22   0.56       1.33
+s31     0.2378   4.28   0.62       1.35
+s37     0.1545   4.62   0.43       1.29
+  phase_coh              vs NRMS: r=-0.33 rho=-0.20
+  cancel_ratio_raw       vs NRMS: r=+0.88 rho=+1.00
+  amp_top1_frac          vs NRMS: r=+0.78 rho=+0.80
+
+--- 逐层旁路：ΔNRMS 占比（各层独立旁路，占比之和可 >100%，说明层间有耦合）---
+层                s11      s23      s31      s37       s7
+rechannel      -0.0%     0.0%     0.0%    -0.0%    -0.0%
+head           87.3%    -2.0%    85.2%     2.8%   -22.4%
+L0              0.0%    -0.0%    -0.0%    -0.0%    -0.0%
+L1              0.0%    -0.0%     0.0%    -0.0%     0.2%
+L2             -0.0%    -0.0%    -0.1%    -0.0%    -0.7%
+L3              0.0%    -0.0%     0.0%     0.0%     0.1%
+L4             -0.0%     0.0%    -0.0%     0.1%    -0.2%
+L5              0.0%    -0.2%     0.1%    -0.3%     3.3%
+L6             -0.0%    -4.7%     0.3%    -2.1%     5.7%
+L7             -0.4%     6.9%     4.1%    19.6%   -17.2%
+L8              2.9%    -0.5%    -6.2%     7.3%    29.9%
+L9              9.9%    -0.3%    12.9%    26.5%    15.2%
+
+--- 设计指标筛选（n = 种子×层数，|rho| 越大越能预测退化）---
+指标                      n        r      rho   partial
+  (partial = 扣掉层深后的偏相关，选指标看这一列)
+sat_frac               60   +0.745   +0.281    +0.650
+err_out_frac           60   +0.562   +0.201    +0.376
+err_elem_frac          60   +0.524   +0.216    +0.321
+rms_over_vsat          60   +0.507   +0.204    +0.172
+absmax_over_vsat       60   +0.323   +0.216    +0.138
+kurt                   60   -0.149   -0.230    +0.018
+crest                  60   -0.312   -0.214    -0.014
+== DONE rc=0 elapsed=549s ==
