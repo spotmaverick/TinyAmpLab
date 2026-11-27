@@ -16,6 +16,12 @@
 s71 在此段的 NRMS 0.0580 是数字结果，不等同于 P0a 的器件 NRMS 0.1605。
 另：这里的 Lite/Full 是官方 NAM 四档中的 `lite` 与 `standard`；A2-slimmable 的 3ch/12ch 档位没有已导出的模型，若需要须另训。
 
+**训练 target 口径澄清（防误读）**：本对比里的三方（seed s71、官方 NAM Lite/Standard）**训练目标都是真实设备输出录音**，不是 NAM 的输出。
+证据：`config_data.json` 的 `y_path = tsa15_train_target.wav`；TSA15 来自 ToneTwist AFx Dataset（Zenodo），按 README §数据集与 `NAM_COMPARISON.md` §二，为真实电子管箱/过载设备的采集数据，train/val/test 独立划分。
+本节 baseline `tsa15_test_target.wav` 与训练 target 同源、仅段不同，故 NRMS 是"与真实设备输出的距离"，三方口径一致、公平。
+项目内确有以 NAM 输出为 target 的旧链路（`train_nam.py`/`arch_search.py` 默认 `data/nam_output.wav`，`data/_real_amp_attempt/`），那是**早期 40-block 原型/已放弃尝试，与目标拓扑和本次对比无关**。
+"真实音箱"的准确采集链路（箱体+麦克风 or 设备线路输出）以 ToneTwist 数据集文档为准，本报告不作超出数据集说明的断言；本对比只保证 target 是数据集提供的真实录音、非任何模型合成。
+
 ## 2. 全段波形差距（真实音箱为基线）
 
 | 输出 | 参数 | RF | NRMS ↓ | corr ↑ | RMS gain（越接近 1 越好） | 包络 RMS 误差 p95 ↓ | 最差 250 ms 窗口 |
