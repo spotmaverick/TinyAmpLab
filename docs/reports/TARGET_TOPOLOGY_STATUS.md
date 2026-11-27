@@ -582,5 +582,17 @@ Zenodo 数据集本地已有（`dataset_zenodo/`，含 Marshall JVM410H、Mesa B
 已 `scancel` bw2 排队的 s47/s53；已清理 bw 上误起的 s41/s59/s61。
 
 ### 为什么不动态迁移
-官方训练不存 checkpoint（只导出 nam），转机要从 ep0 重训。算过：bw 单跑 s47 需 1.97h，
-但 s53 转 z100 需 3.3h，总时长从 2.28h 恶化到 3.3h。**要支持迁移得先加 ModelCheckpoint 回调。**
+~~官方训练不存 checkpoint（只导出 nam），转机要从 ep0 重训。算过：bw 单跑 s47 需 1.97h，~~
+~~但 s53 转 z100 需 3.3h，总时长从 2.28h 恶化到 3.3h。**要支持迁移得先加 ModelCheckpoint 回调。**~~
+
+> **⚠️ 上述结论已于 17:05 更正（原文保留划线，便于回溯误判过程）**
+>
+> 事实是：**官方训练一直在存 checkpoint**，`checkpoint_epoch_{epoch}.ckpt` 每 epoch 一份，
+> 且含 `optimizer_states` / `lr_schedulers` / `epoch`，可直接续训。
+> 之前说"没有 checkpoint"是因为只查了 run 目录顶层，没进 `lightning_logs/version_N/checkpoints/`。
+>
+> 续训入口已补齐（`train_seeded.py --resume-from`），并做了真实故障注入演练：
+> s47 在 ep94 被 `kill -9` 后自动续训到 ep98，速率不变，**净损失 1 个 epoch**。
+>
+> 但"主动迁移"经重算仍是负收益（等机器空出的时间 > 迁移省下的时间），
+> 所以续训的价值定位是**故障自愈**，不是调度优化。详见 `CHECKPOINT_RESUME_20261127.md`。
