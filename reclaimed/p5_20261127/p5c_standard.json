@@ -1,0 +1,31 @@
+{
+  "nam": "models/nam_standard_tsa15.nam",
+  "mc": 4,
+  "rows": [
+    {
+      "k": 1.0,
+      "device_median": 0.09004483912457902,
+      "digital_median": 0.0721561260956866,
+      "gain_vs_k1": 0.0
+    },
+    {
+      "k": 2.0,
+      "device_median": 0.08615775004600573,
+      "digital_median": 0.0721561260956866,
+      "gain_vs_k1": 0.003887089078573283
+    },
+    {
+      "k": 4.0,
+      "device_median": 0.08539580448907129,
+      "digital_median": 0.0721561260956866,
+      "gain_vs_k1": 0.004649034635507726
+    },
+    {
+      "k": 8.0,
+      "device_median": 0.08522003470693157,
+      "digital_median": 0.0721561260956866,
+      "gain_vs_k1": 0.004824804417647446
+    }
+  ],
+  "digital_invariance_spread": 0.0
+}

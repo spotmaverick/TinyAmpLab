@@ -1,0 +1,68 @@
+{
+  "nam": "models/seeds/s71.nam",
+  "mc": 4,
+  "dialect": {
+    "BITS": 6,
+    "SIGMA_MISMATCH": 0.01,
+    "DRIFT": 0.03,
+    "BETA_H3": 0.002,
+    "V_SAT": 16.0,
+    "SIGMA_OFFSET": 0.005,
+    "SNR_DB": 70.0
+  },
+  "sanity_max_abs_diff": 4.675239324569702e-07,
+  "segments": [
+    "seg0",
+    "seg1",
+    "seg2"
+  ],
+  "baseline": {
+    "device_median": 0.1637234670484576,
+    "digital_median": 0.0586719230371761,
+    "per_seg": {
+      "seg0": {
+        "dev": 0.1637234670484576,
+        "dig": 0.0586719230371761
+      },
+      "seg1": {
+        "dev": 0.16232066435097467,
+        "dig": 0.05799635351994514
+      },
+      "seg2": {
+        "dev": 0.16802954865291164,
+        "dig": 0.06812522261174389
+      }
+    }
+  },
+  "decomp": [
+    {
+      "step": "baseline",
+      "device_median": 0.1637234670484576,
+      "digital_median": 0.0586719230371761,
+      "contribution": 0.07850622733363212
+    },
+    {
+      "step": "gilbert_off",
+      "device_median": 0.08521723971482549,
+      "digital_median": 0.0586719230371761,
+      "contribution": 0.0043872089211039605
+    },
+    {
+      "step": "quant_off",
+      "device_median": 0.08083003079372153,
+      "digital_median": 0.0586719230371761,
+      "contribution": 0.015539387794569953
+    },
+    {
+      "step": "mismatch_drift_off",
+      "device_median": 0.06529064299915158,
+      "digital_median": 0.0586719230371761,
+      "contribution": 9.995512304156184e-06
+    },
+    {
+      "step": "pure_digital",
+      "device_median": 0.06528064748684742,
+      "digital_median": 0.0586719230371761
+    }
+  ]
+}

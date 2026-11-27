@@ -104,16 +104,30 @@ def quant_sym(w, bits):
 
 
 class DevSim:
-    """一次蒙特卡洛采样的器件实例（与 analog_sim_generic.DevSim 同实现）。"""
+    """一次蒙特卡洛采样的器件实例（与 analog_sim_generic.DevSim 同实现）。
 
-    def __init__(self, sd, gen, sanity=False):
+    P5 扩展（默认全部为空 → 行为与原先逐位一致）：
+      vsat_map : {scope 前缀: V_SAT}   按层覆盖摆幅
+      bypass   : {scope 前缀}          该层 Gilbert 降为理想求和（等同关掉该层非线性）
+    scope 命名见 forward_array：`A{ai}.L{li}.conv|mix|l1x1`、`A{ai}.head`、`A{ai}.rc`
+    前缀匹配：写 `A0.L3` 即覆盖该层 conv+mix+l1x1 三处。
+    """
+
+    def __init__(self, sd, gen, sanity=False, over=None):
+        """over: 在量化/失配等**作用到权重之前**覆盖 DIALECT 参数（P5 分解用）。
+        若在构造后改 p，权重已按旧参数生成，改动无效——这是 P5 第一版分解的 bug。
+        """
         self.g = gen
         self.sanity = sanity
         p = dict(DIALECT)
         if sanity:
             p.update(SIGMA_MISMATCH=0.0, DRIFT=0.0, BETA_H3=0.0,
                      SIGMA_OFFSET=0.0, SNR_DB=999, V_SAT=1e9, BITS=64)
+        if over:
+            p.update(over)
         self.p = p
+        self.vsat_map = {}
+        self.bypass = set()
         self.w = {}
         for k, v in sd.items():
             if not torch.is_tensor(v):
@@ -133,14 +147,29 @@ class DevSim:
         return torch.empty(shape, device=DEVICE).normal_(
             0, 0.25 / (10 ** (self.p["SNR_DB"] / 20)), generator=self.g)
 
-    def _gilbert(self, prod):
+    def _match(self, scope, table):
+        """前缀匹配：表里任一 key 是 scope 的前缀即命中。"""
+        if not scope or not table:
+            return None
+        for k in table:
+            if scope == k or scope.startswith(k + "."):
+                return k
+        return None
+
+    def _gilbert(self, prod, scope=None):
+        # 该层旁路（关掉整套非线性，与 P2 的 BETA_H3=0 语义一致）
+        if self._match(scope, self.bypass) is not None:
+            return prod.sum(dim=2)
         if self.p["BETA_H3"] <= 0:
             return prod.sum(dim=2)
         vs = self.p["V_SAT"]
+        hit = self._match(scope, self.vsat_map)
+        if hit is not None:
+            vs = self.vsat_map[hit]
         xs = prod / vs
         return (vs * torch.tanh(prod * (1 + self.p["BETA_H3"] * xs.square()) / vs)).sum(dim=2)
 
-    def mac1x1(self, x, w, bias, groups=1):
+    def mac1x1(self, x, w, bias, groups=1, scope=None):
         """1x1 conv（groups 恒 1）：每个 (out,in) 一对一个 Gilbert 乘法器。"""
         if x.ndim == 2:
             x = x[:, None, :]
@@ -148,13 +177,13 @@ class DevSim:
         ww = self.w[w] if isinstance(w, str) else w
         Cout = ww.shape[0]
         prod = x[:, None, :, :] * ww.view(1, Cout, Cin, 1)      # (B,Cout,Cin,T)
-        y = self._gilbert(prod)
+        y = self._gilbert(prod, scope)
         if bias is not None:
             bb = self.w[bias] if isinstance(bias, str) else bias
             y = y + bb.view(1, -1, 1)
         return y
 
-    def conv(self, x, wkey, bkey, dilation, groups):
+    def conv(self, x, wkey, bkey, dilation, groups, scope=None):
         """因果分组 1D 卷积。
 
         注意：官方用 `nn.Conv1d(padding=0)`（**valid，不 pad**），再靠"末尾对齐"实现因果
@@ -177,7 +206,7 @@ class DevSim:
             prod = tg.unsqueeze(2) * wk.view(1, G, CoutG, CinG, 1)   # (B,G,CoutG,CinG,T)
             # _gilbert 沿 dim=2 求和，必须把输入通道搬到 dim=2（与参考实现一致）
             prod = prod.reshape(B, G * CoutG, CinG, T_out)
-            y = y + self._gilbert(prod).reshape(B, G, CoutG, T_out).reshape(B, Cout, T_out)
+            y = y + self._gilbert(prod, scope).reshape(B, G, CoutG, T_out).reshape(B, Cout, T_out)
         if bkey is not None and bkey in self.w:
             y = y + self.w[bkey].view(1, -1, 1)
         return y
@@ -257,17 +286,18 @@ def forward_array(dev, sd, arr, ai, x, cond, head_input=None):
     out_len = out_len_no_head            # 本层 head_rechannel 是 1-tap → RF 不额外增加
 
     # rechannel: 1x1，输入 → channels
-    x = dev.mac1x1(x, pre + "_rechannel.weight", None, groups=1)
+    x = dev.mac1x1(x, pre + "_rechannel.weight", None, groups=1, scope=f"A{ai}.rc")
 
     layers = sorted({int(k.split(".")[3]) for k in sd
                      if k.startswith(pre + "_layers.")})
     for li in layers:
         lp = f"{pre}_layers.{li}."
+        sc = f"A{ai}.L{li}"
         d = arr["dilations"][li]
-        zconv = dev.conv(x, lp + "_conv.weight", lp + "_conv.bias", d, g_in)
+        zconv = dev.conv(x, lp + "_conv.weight", lp + "_conv.bias", d, g_in, scope=sc + ".conv")
 
         # input_mixer: cond(1ch) → channels，每通道一个乘法器，按官方裁到 zconv 长度
-        mix = dev.mac1x1(cond, lp + "_input_mixer.weight", None, groups=1)
+        mix = dev.mac1x1(cond, lp + "_input_mixer.weight", None, groups=1, scope=sc + ".mix")
         mix = mix[:, :, -zconv.shape[2]:]
         z1len = min(zconv.shape[2], mix.shape[2])
         z1 = zconv[:, :, -z1len:] + mix[:, :, -z1len:]
@@ -277,14 +307,15 @@ def forward_array(dev, sd, arr, ai, x, cond, head_input=None):
 
         if arr["layer1x1_active"]:
             lo = dev.mac1x1(post, lp + "_layer1x1.weight", lp + "_layer1x1.bias",
-                            groups=arr["layer1x1_groups"])
+                            groups=arr["layer1x1_groups"], scope=sc + ".l1x1")
         else:
             lo = post
 
         # head_term：head1x1 若 active 则先 1x1 再裁；否则直接裁
         if arr["head1x1_active"]:
             hb = lp + "_head1x1.bias"
-            term = dev.mac1x1(post, lp + "_head1x1.weight", hb if hb in sd else None, 1)
+            term = dev.mac1x1(post, lp + "_head1x1.weight", hb if hb in sd else None, 1,
+                              scope=sc + ".h1x1")
             term = term[:, :, -out_len_no_head:]
         else:
             term = post[:, :, -out_len_no_head:]
@@ -297,7 +328,8 @@ def forward_array(dev, sd, arr, ai, x, cond, head_input=None):
     # head_rechannel：1x1，可带 bias
     hw = pre + "_head_rechannel.weight"
     hb = pre + "_head_rechannel.bias"
-    head_out = dev.mac1x1(head_input, hw, hb if hb in sd else None, groups=1)
+    head_out = dev.mac1x1(head_input, hw, hb if hb in sd else None, groups=1,
+                          scope=f"A{ai}.head")
     x = x[:, :, -out_len:]
     assert head_out.shape[2] == x.shape[2], f"array{ai} 长度不齐 {head_out.shape} vs {x.shape}"
     return head_out, x
