@@ -376,7 +376,7 @@ def main():
         print(f"[{name}] digital={row['digital']:.4f} free={row['free']:.4f} "
               f"best={row['best']:.4f}", flush=True)
 
-    seeds = [v["best"] for k, v in res["rows"].items() if "grid" in v and k.startswith("s")]
+    seeds = [v["best"] for k, v in res["rows"].items() if "grid" in v and k not in ("std", "lite")]   # 注意 std 也以 s 开头
     if seeds:
         res["median_best_13"] = float(np.median(seeds))
         res["n_seeds"] = len(seeds)
