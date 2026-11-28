@@ -109,12 +109,13 @@ def gilbert(prod, vsat, beta):
     """prod: (..., n_in, N) → (..., N)。沿倒数第二维（输入通道）求和。
 
     关键：tanh 必须作用在**每一个乘积**上，不能先把乘积线性和起来再非线性。
+    精度策略：非线性在 float32 做（与 A/C 一致），求和提升到 float64（B 的独立验证点）。
     """
     if beta <= 0:
         return prod.to(ACC).sum(dim=-2)
-    u = (prod / vsat).to(ACC)
+    u = prod / vsat
     y = vsat * tanh_via_sigmoid(u + beta * u * u * u)
-    return y.sum(dim=-2)
+    return y.to(ACC).sum(dim=-2)
 
 
 def act(z, kind):
@@ -217,8 +218,8 @@ def rfield(a):
     return 1 + sum((a["K"][i] - 1) * a["d"][i] for i in range(a["n"]))
 
 
-def run(sd, nam, x, vsat=VSAT, ideal=False, mc=0):
-    W = make_weights(sd, mc, ideal)
+def run(W, nam, x, vsat=VSAT, ideal=False, mc=0):
+    """W 必须是已经 make_weights 过的字典（准备一次、多次复用）。"""
     vs = 1e9 if ideal else float(vsat)
     be = 0.0 if ideal else BETA
     arrs = arrays_of(nam)
@@ -267,7 +268,7 @@ def run(sd, nam, x, vsat=VSAT, ideal=False, mc=0):
 # ---------------------------------------------------------------- 打分
 def nrms(p, y):
     n = min(p.shape[-1], y.shape[-1])
-    p, y = p[-n:].to(ACC), y[-n:].to(ACC)
+    p, y = p[-n:].to(DEV).to(ACC), y[-n:].to(DEV).to(ACC)
     return float(torch.linalg.vector_norm(p - y) / torch.linalg.vector_norm(y))
 
 
@@ -337,8 +338,10 @@ def main():
         sd = {k.removeprefix("_net."): v for k, v in net.state_dict().items()
               if k.endswith((".weight", ".bias"))}
 
+        arrs = arrays_of(nam)
+        W_id = make_weights(sd, 0, True)
         xt0 = segs[0][0]
-        mine = run(sd, nam, xt0, ideal=True)
+        mine = run(W_id, nam, xt0, ideal=True)
         with torch.no_grad():
             off = net(xt0[None, :].to(DEV))[0]
         n = min(mine.shape[0], off.shape[0])
@@ -349,7 +352,7 @@ def main():
             continue
 
         row = {"sanity": maxd}
-        row["digital"] = float(np.median([nrms(run(sd, nam, xt, ideal=True), yt)
+        row["digital"] = float(np.median([nrms(run(W_id, nam, xt, ideal=True), yt)
                                           for xt, yt in segs]))
         if a.sanity_only:
             res["rows"][name] = row
@@ -358,10 +361,12 @@ def main():
         grid = {}
         for k in (1, 32):
             sdk, namk = rebalance(sd, nam, k)
+            # 每个 (k, mc) 只准备一次权重：量化+失配是全流程最贵的一步
+            Wm = {m: make_weights(sdk, m, False) for m in range(a.mc)}
             for v in (16.0, 96.0):
                 per_seg = []
                 for xt, yt in segs:
-                    vv = [nrms(run(sdk, namk, xt, vsat=v, mc=m), yt) for m in range(a.mc)]
+                    vv = [nrms(run(Wm[m], namk, xt, vsat=v, mc=m), yt) for m in range(a.mc)]
                     per_seg.append(float(np.sqrt(np.mean(np.square(vv)))))
                 grid[f"k{k}_v{int(v)}"] = float(np.median(per_seg))
         row["grid"] = grid

@@ -238,7 +238,7 @@ def forward_stream(W, nam, arrs, x, vsat, ideal, mc, blk=BLK):
 
 def nrms(p, y):
     n = min(p.shape[-1], y.shape[-1])
-    p, y = p[-n:], y[-n:]
+    p, y = p[-n:].to(DEV), y[-n:].to(DEV)
     return float(torch.linalg.vector_norm(p - y) / torch.linalg.vector_norm(y))
 
 
@@ -323,10 +323,11 @@ def main():
         grid = {}
         for k in (1, 32):
             sdk, namk = rebalance(sd, nam, k)
+            Wm = {m: prep(sdk, m, False) for m in range(a.mc)}   # 每个 mc 只准备一次
             for v in (16.0, 96.0):
                 per_seg = []
                 for xt, yt in segs:
-                    vv = [nrms(forward_stream(prep(sdk, m, False), namk, arrs, xt, v, False, m), yt)
+                    vv = [nrms(forward_stream(Wm[m], namk, arrs, xt, v, False, m), yt)
                           for m in range(a.mc)]
                     per_seg.append(float(np.sqrt(np.mean(np.square(vv)))))
                 grid[f"k{k}_v{int(v)}"] = float(np.median(per_seg))

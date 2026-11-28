@@ -246,7 +246,7 @@ def forward(sd, nam, x, vsat_default=P_VSAT, bypass=(), vsat_map=None,
 # ------------------------------------------------------------------ 指标
 def nrms(p, y):
     n = min(p.shape[-1], y.shape[-1])
-    p, y = p[-n:], y[-n:]
+    p, y = p[-n:].to(DEV), y[-n:].to(DEV)      # 必须同设备，否则跨 DCU 会报 two devices
     return float(torch.linalg.vector_norm(p - y) / torch.linalg.vector_norm(y))
 
 
@@ -257,7 +257,9 @@ def load_pair(data):
     return xi, yi
 
 
-def seg(x, y, t0, ln=SEG_LEN):
+def seg(x, y, t0, ln=None):
+    # 注意：不能写 ln=SEG_LEN —— 默认参数在 def 时就绑定，--seg-len 会被吃掉
+    ln = SEG_LEN if ln is None else ln
     i = int(t0 * SR)
     j = int((t0 + ln) * SR)
     return torch.from_numpy(x[i:j].copy()), torch.from_numpy(y[i:j].copy())
