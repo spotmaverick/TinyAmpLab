@@ -1,0 +1,43 @@
+{
+  "nam": "models/seeds/s31.nam",
+  "mc": 4,
+  "rows": [
+    {
+      "k": 1.0,
+      "device_median": 0.23862452378738222,
+      "digital_median": 0.06153535852877954,
+      "gain_vs_k1": 0.0
+    },
+    {
+      "k": 2.0,
+      "device_median": 0.1410728985542002,
+      "digital_median": 0.06153535852877954,
+      "gain_vs_k1": 0.09755162523318203
+    },
+    {
+      "k": 4.0,
+      "device_median": 0.11665436893221226,
+      "digital_median": 0.06153535852877954,
+      "gain_vs_k1": 0.12197015485516996
+    },
+    {
+      "k": 8.0,
+      "device_median": 0.1121197442414473,
+      "digital_median": 0.06153535852877954,
+      "gain_vs_k1": 0.12650477954593492
+    },
+    {
+      "k": 16.0,
+      "device_median": 0.1111584854548255,
+      "digital_median": 0.06153535852877954,
+      "gain_vs_k1": 0.1274660383325567
+    },
+    {
+      "k": 32.0,
+      "device_median": 0.11093045098711621,
+      "digital_median": 0.06153535852877954,
+      "gain_vs_k1": 0.127694072800266
+    }
+  ],
+  "digital_invariance_spread": 0.0
+}

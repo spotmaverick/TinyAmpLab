@@ -1,0 +1,264 @@
+{
+  "nam": "models/nam_standard_tsa15.nam",
+  "regime": "pure",
+  "mc": 4,
+  "v_base": 16.0,
+  "v_high": 96.0,
+  "sanity_max_abs_diff": 4.544854164123535e-07,
+  "scopes": [
+    "A0.rc",
+    "A0.L0",
+    "A0.L1",
+    "A0.L2",
+    "A0.L3",
+    "A0.L4",
+    "A0.L5",
+    "A0.L6",
+    "A0.L7",
+    "A0.L8",
+    "A0.L9",
+    "A0.head",
+    "A1.rc",
+    "A1.L0",
+    "A1.L1",
+    "A1.L2",
+    "A1.L3",
+    "A1.L4",
+    "A1.L5",
+    "A1.L6",
+    "A1.L7",
+    "A1.L8",
+    "A1.L9",
+    "A1.head"
+  ],
+  "baseline": 0.09004483912457902,
+  "all_high": 0.08525043153980366,
+  "total_gain": 0.004794407584775354,
+  "singles": [
+    {
+      "scope": "A1.head",
+      "device_median": 0.08526501826369921,
+      "relief": 0.004779820860879802,
+      "share_of_total": 0.9969575544762044
+    },
+    {
+      "scope": "A1.rc",
+      "device_median": 0.09002051887812393,
+      "relief": 2.432024645508679e-05,
+      "share_of_total": 0.005072628061976991
+    },
+    {
+      "scope": "A0.head",
+      "device_median": 0.09003127731466316,
+      "relief": 1.3561809915851875e-05,
+      "share_of_total": 0.0028286727142092416
+    },
+    {
+      "scope": "A1.L9",
+      "device_median": 0.09003933674729198,
+      "relief": 5.502377287039395e-06,
+      "share_of_total": 0.00114766573132251
+    },
+    {
+      "scope": "A1.L3",
+      "device_median": 0.09004034853910962,
+      "relief": 4.490585469391073e-06,
+      "share_of_total": 0.0009366298943066359
+    },
+    {
+      "scope": "A1.L8",
+      "device_median": 0.09004048314959592,
+      "relief": 4.355974983091815e-06,
+      "share_of_total": 0.0009085533313697021
+    },
+    {
+      "scope": "A1.L4",
+      "device_median": 0.09004050852696015,
+      "relief": 4.330597618867893e-06,
+      "share_of_total": 0.000903260213549576
+    },
+    {
+      "scope": "A1.L5",
+      "device_median": 0.09004071485569938,
+      "relief": 4.124268879635018e-06,
+      "share_of_total": 0.0008602249197026215
+    },
+    {
+      "scope": "A0.L7",
+      "device_median": 0.09004112861511535,
+      "relief": 3.7105094636696867e-06,
+      "share_of_total": 0.0007739244939150383
+    },
+    {
+      "scope": "A0.L8",
+      "device_median": 0.09004164608754898,
+      "relief": 3.1930370300303768e-06,
+      "share_of_total": 0.000665991986198643
+    },
+    {
+      "scope": "A0.L5",
+      "device_median": 0.09004366188464275,
+      "relief": 1.1772399362702801e-06,
+      "share_of_total": 0.00024554440052376996
+    },
+    {
+      "scope": "A0.L2",
+      "device_median": 0.09004465156160868,
+      "relief": 1.8756297033573066e-07,
+      "share_of_total": 3.912119840026473e-05
+    },
+    {
+      "scope": "A0.L1",
+      "device_median": 0.09004470783054079,
+      "relief": 1.312940382247607e-07,
+      "share_of_total": 2.7384830326417192e-05
+    },
+    {
+      "scope": "A1.L1",
+      "device_median": 0.09004480823188135,
+      "relief": 3.08926976638757e-08,
+      "share_of_total": 6.443485898440403e-06
+    },
+    {
+      "scope": "A0.L0",
+      "device_median": 0.09004535436908088,
+      "relief": -5.152445018696827e-07,
+      "share_of_total": -0.00010746781385584367
+    },
+    {
+      "scope": "A0.rc",
+      "device_median": 0.09004550441831725,
+      "relief": -6.652937382389812e-07,
+      "share_of_total": -0.00013876453482003119
+    },
+    {
+      "scope": "A1.L6",
+      "device_median": 0.09004632085831012,
+      "relief": -1.4817337311012757e-06,
+      "share_of_total": -0.0003090546026596743
+    },
+    {
+      "scope": "A1.L7",
+      "device_median": 0.09004662095331181,
+      "relief": -1.781828732796975e-06,
+      "share_of_total": -0.00037164732061061603
+    },
+    {
+      "scope": "A0.L3",
+      "device_median": 0.09004713177448888,
+      "relief": -2.2926499098629982e-06,
+      "share_of_total": -0.0004781925335558267
+    },
+    {
+      "scope": "A0.L9",
+      "device_median": 0.09004745834547236,
+      "relief": -2.619220893340657e-06,
+      "share_of_total": -0.000546307514959303
+    },
+    {
+      "scope": "A0.L4",
+      "device_median": 0.09004822622392923,
+      "relief": -3.387099350216083e-06,
+      "share_of_total": -0.000706468795221295
+    },
+    {
+      "scope": "A0.L6",
+      "device_median": 0.09004848438849133,
+      "relief": -3.645263912319119e-06,
+      "share_of_total": -0.0007603158154293469
+    },
+    {
+      "scope": "A1.L0",
+      "device_median": 0.09004973437994192,
+      "relief": -4.895255362902251e-06,
+      "share_of_total": -0.0010210344607427912
+    },
+    {
+      "scope": "A1.L2",
+      "device_median": 0.09006789867007528,
+      "relief": -2.30595454962651e-05,
+      "share_of_total": -0.004809675666601795
+    }
+  ],
+  "cumulative": [
+    {
+      "n_high": 1,
+      "added": "A1.head",
+      "device_median": 0.08526501826369921,
+      "frac_of_total": 0.9969575544762044,
+      "set": [
+        "A1.head"
+      ]
+    },
+    {
+      "n_high": 2,
+      "added": "A1.rc",
+      "device_median": 0.08523546817433789,
+      "frac_of_total": 1.0031210040450653,
+      "set": [
+        "A1.head",
+        "A1.rc"
+      ]
+    }
+  ],
+  "m_min": {
+    "80pct": {
+      "n_high": 1,
+      "set": [
+        "A1.head"
+      ],
+      "device_median": 0.08526501826369921
+    },
+    "90pct": {
+      "n_high": 1,
+      "set": [
+        "A1.head"
+      ],
+      "device_median": 0.08526501826369921
+    },
+    "95pct": {
+      "n_high": 1,
+      "set": [
+        "A1.head"
+      ],
+      "device_median": 0.08526501826369921
+    },
+    "99pct": {
+      "n_high": 1,
+      "set": [
+        "A1.head"
+      ],
+      "device_median": 0.08526501826369921
+    }
+  },
+  "rec_set_grade": [
+    {
+      "v_high": 16.0,
+      "device_median": 0.09004483912457902
+    },
+    {
+      "v_high": 24.0,
+      "device_median": 0.08704261241217336
+    },
+    {
+      "v_high": 32.0,
+      "device_median": 0.08615775004600573
+    },
+    {
+      "v_high": 48.0,
+      "device_median": 0.08558439178287185
+    },
+    {
+      "v_high": 64.0,
+      "device_median": 0.08539580448907129
+    },
+    {
+      "v_high": 96.0,
+      "device_median": 0.08526501826369921
+    },
+    {
+      "v_high": 100000.0,
+      "device_median": 0.08516279223581522
+    }
+  ]
+}

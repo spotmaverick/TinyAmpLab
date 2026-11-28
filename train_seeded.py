@@ -65,6 +65,15 @@ except Exception:  # noqa: BLE001
 import nam.train.full as _full  # noqa: E402  确保模块已导入（其内部的 manual_seed(0) 已执行）
 from nam.util import timestamp as _timestamp  # noqa: E402
 
+# P6-A 的 QAT 补丁是可选的：脚本可能被复制到只跑推理的机器上（没有 scripts/ 目录）
+try:
+    import sys as _sys
+    from pathlib import Path as _Path
+    _sys.path.insert(0, str(_Path(__file__).resolve().parent / "scripts"))
+    import qat_patch as _qat  # noqa: E402
+except Exception:  # noqa: BLE001
+    _qat = None
+
 
 def set_seed(seed: int):
     random.seed(seed)
@@ -189,6 +198,13 @@ def main():
 
     # 关键：在官方 main 之前重设种子（续训同样要做，否则续训段的随机性不受控）
     set_seed(seed)
+
+    # P6-A：器件感知训练（QAT）。未设 NAM_QAT 时本段完全不介入，历史结果可复现。
+    qat_cfg = _qat.enable_from_env() if _qat is not None else None
+    if qat_cfg is not None:
+        with open(Path(outdir, "config_qat.json"), "w") as fp:
+            json.dump({"qat": qat_cfg, "seed": seed}, fp, indent=2)
+        print(f"[train_seeded] QAT enabled: {qat_cfg}", flush=True)
 
     _full.main(
         data_config,
