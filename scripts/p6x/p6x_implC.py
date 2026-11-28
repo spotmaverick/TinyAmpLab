@@ -228,11 +228,12 @@ def forward_stream(W, nam, arrs, x, vsat, ideal, mc, blk=BLK):
     for s in range(0, T, blk):
         e = min(s + blk, T)
         ws = max(0, s - (rf - 1))
-        win = pad[:, ws:e + rf - 1]                             # 历史 + 本块 + 尾部对齐所需
+        win = pad[:, ws:e + rf - 1]                             # 历史 + 本块
         y = net_once(W, nam, arrs, win, vsat, ideal, mc)
-        # win 覆盖的原始下标是 [ws, e)，输出 y 与 win 末尾对齐
-        take = e - ws
-        chunks.append(y[-take:])
+        # y 与 win 末尾对齐，长度 = e - ws；本块只取对应原始下标 [s, e) 的那段，
+        # 即 y 的**最后 (e-s) 个**元素（前面 (s-ws) 个是历史段的输出，必须丢弃）。
+        want = e - s
+        chunks.append(y[-want:])
     return torch.cat(chunks)[-T:]
 
 
